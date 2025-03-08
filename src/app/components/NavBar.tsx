@@ -39,7 +39,7 @@ const NavBar: React.FC = () => {
         scrollY === 0 ? "bg-transparent shadow-none" : isScrollingDown ? "hide bg-transparent shadow-none" : "show bg-white shadow-md"
       }`}
     >
-      <div className="w-[1300px] flex px-5 justify-between xl:gap-10 lg:px-20 items-center h-[90px]">
+      <div className="w-[1370px] flex px-5 justify-between xl:gap-10 lg:px-20 items-center h-[90px]">
         <Image 
           src="/logo.svg"
           width={210}

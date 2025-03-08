@@ -3,7 +3,7 @@ import Button from "./Button";
 
 const Hero: React.FC = () => {
   return (
-    <div className="flex flex-col-reverse gap-15 lg:flex-row items-center justify-center relative w-full h-full lg:h-[900px] overflow-hidden pt-[150px] px-10 z-30 pb-10">
+    <div className="flex flex-col-reverse gap-15 lg:flex-row items-center justify-center relative w-full h-full lg:h-[900px] overflow-hidden pt-[150px] px-10 z-30 lg:pb-10 pb-20">
       <img 
         src="/hero_bg2.png" 
         className="absolute top-0 left-0 w-full h-full object-cover animate-move-image z-10" 
@@ -11,7 +11,7 @@ const Hero: React.FC = () => {
       />
       <div className="light-effect"></div>
       <section className="flex flex-col gap-10 w-full lg:w-[40%] lg:min-w-[600px]">
-        <h1 className="w-[100%] lg:w-[600px] text-[48px] lg:text-[4.1em] leading-[1.4em] font-bold">Maximiza Ventas con Nuestro Terminal POS</h1>
+        <h1 className="w-[100%] lg:w-[600px] text-[48px] 2xl:text-[4em] xl:text-[3.8em] leading-[1.4em] font-bold">Maximiza Ventas con Nuestro Terminal POS</h1>
         <p className="text-[var(--gray-color)] font-normal w-[100%] lg:w-[90%] lg:min-w-[600px]">Nuestro software POS avanzado está diseñado para transformar tus operaciones comerciales. Con sus características potentes y una interfaz intuitiva, mejora la experiencia del cliente y optimiza tu eficiencia global.</p>
         <div className="flex gap-5" >
           <Button background="black" hover="primary" text="Producto demo" styles="py-[12px] px-[30px]"/>
