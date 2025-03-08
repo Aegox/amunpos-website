@@ -66,9 +66,9 @@ const NavBar: React.FC = () => {
         </section>
 
         {/* Ícono hamburguesa para móvil */}
-        <div className="xl:hidden">
+        <div className="xl:hidden pt-1">
           <button onClick={() => setIsMenuOpen(true)} aria-label="Abrir menú">
-            <FaBars className="w-8 h-8 mt-2 cursor-pointer" />
+            <img src="/bars.svg" alt="bars for menu mobile" className=" cursor-pointer w-[30px] h-[30px]"/>
           </button>
         </div>
       </div>
@@ -77,9 +77,9 @@ const NavBar: React.FC = () => {
       {isMenuOpen && (
         <div className="xl:hidden absolute top-0 left-0 w-full h-screen bg-white flex flex-col items-center justify-center gap-6 z-40 ">
           {/* Botón para cerrar el menú */}
-          <div className="absolute top-4 right-4">
+          <div className="absolute top-4 right-4 pt-4 pr-2">
             <button onClick={() => setIsMenuOpen(false)} aria-label="Cerrar menú">
-              <FaTimes className="w-8 h-8 cursor-pointer mt-3" />
+              <img src="/quit.svg" alt="x for menu mobile" className=" cursor-pointer w-[20px] h-[20px]"/>
             </button>
           </div>
           <ul className="flex flex-col gap-6 pl-5 text-3xl">
