@@ -1,7 +1,13 @@
 import React from  "react";
 import Card from "./Card";
 
-const cardData = [
+interface carDataProps {
+  title: string;
+  text: string;
+  icon: string;
+}
+
+const cardData: carDataProps[] = [
   { 
     title: "Adecuado para todos los tipos de negocios" , 
     text: "Nuestra satisfacción supera cualquier renuncia, incluso cuando parece insignificante.",
