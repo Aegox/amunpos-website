@@ -6,6 +6,8 @@ import Pricing from "./components/Pricing";
 import Testimonials from "./components/Testimonials";
 import Partners from "./components/Partners";
 import CallAction from "./components/CallAction";
+import Questions from "./components/Questions";
+import Contact from "./components/Contact";
 
 export default function Render() {
   return (
@@ -18,6 +20,8 @@ export default function Render() {
         <Testimonials/>
         <Partners/>
         <CallAction/>
+        <Questions/>
+        <Contact/>
       </div>
   );
 };
