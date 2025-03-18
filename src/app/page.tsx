@@ -8,6 +8,7 @@ import Partners from "./components/Partners";
 import CallAction from "./components/CallAction";
 import Questions from "./components/Questions";
 import Contact from "./components/Contact";
+import Footer from "./components/Footer";
 
 export default function Render() {
   return (
@@ -22,6 +23,7 @@ export default function Render() {
         <CallAction/>
         <Questions/>
         <Contact/>
+        <Footer/>
       </div>
   );
 };
