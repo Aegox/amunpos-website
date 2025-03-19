@@ -10,8 +10,8 @@ const CallAction: React.FC = () => {
         <h1 className="w-full text-[32px] mb-2 lg:w-[80%] font-bold text-center text-white 2xl:text-[50px] lg:text-[42px] leading-none lg:leading-[1.3em]">¡Mejora tu negocio con nuestras soluciones POS de vanguardia!</h1> 
         <p className="w-[95%] lg:w-[65%] text-center text-gray-400 text-[18px] font-normal">¡Experimenta el futuro de las transacciones! Agenda una demostración hoy y comprueba cómo nuestra solución POS puede revolucionar tu negocio.</p> 
         <div className="gap-5 flex justify-center mt-8 w-full">
-          <Button text="Prueba gratuita" theme="white" variant="normal" styles="px-[30px] py-[12px]" background="" hover=""/>
-          <Button text="Comprar ahora" theme="white" variant="inverted" styles="px-[30px] py-[12px]" background="" hover="black"/>
+          <Button text="Prueba gratuita" theme="white" variant="normal" styles="px-[30px] py-[12px]" />
+          <Button text="Comprar ahora" theme="white" variant="inverted" styles="px-[30px] py-[12px]"/>
         </div>
       </div>
     </section>
