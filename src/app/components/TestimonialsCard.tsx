@@ -9,7 +9,7 @@ type TestimonialsCardProps = {
   img: string;
 }
 
-const TestimonialsCard: React.FC = ({ client , rating , review , img ,company }) => {
+const TestimonialsCard: React.FC<TestimonialsCardProps> = ({ client , rating , review , img ,company }) => {
   return (
     <article className="2xl:max-w-[340px] w-full flex flex-col bg-white rounded-xl shadow-features p-[50px]">
       <header className="flex gap-3 pb-5 w-full">

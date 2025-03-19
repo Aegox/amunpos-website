@@ -3,7 +3,6 @@
 import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import Button from "./Button";
-import { FaBars, FaTimes } from "react-icons/fa";
 
 const NavBar: React.FC = () => {
   const [scrollY, setScrollY] = useState<number>(0);

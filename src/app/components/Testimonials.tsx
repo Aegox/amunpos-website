@@ -1,7 +1,6 @@
 "use client";
 import TestimonialsCard from "./TestimonialsCard";
 import React, { useState, useRef, useEffect } from 'react';
-import { AiOutlineLeft, AiOutlineRight } from 'react-icons/ai';
 
 interface testimonialsDataProps {
   client_name: string;
@@ -91,14 +90,6 @@ const Testimonials = () => {
             containerRef.current.style.transform = `translateX(${translateX}px)`;
         }
     }, [currentIndex, cardWidth]);
-
-    const handlePrev = () => {
-        setCurrentIndex(prev => Math.max(0, prev - 1));
-    };
-
-    const handleNext = () => {
-        setCurrentIndex(prev => Math.min(maxIndex, prev + 1));
-    };
 
     return (
         <section className="flex flex-col items-center w-full h-full py-25 px-10 overflow-x-hidden">
