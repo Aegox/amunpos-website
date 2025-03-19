@@ -4,7 +4,7 @@ import RatingStars from "./RatingStars";
 type TestimonialsCardProps = {
   client: string;
   company: string;
-  rating: string;
+  rating: number;
   review: string;
   img: string;
 }

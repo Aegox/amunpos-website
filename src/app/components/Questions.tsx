@@ -41,7 +41,7 @@ const Questions: React.FC = () => {
        <p className="w-full text-center text-[var(--primary-color)] text-[18px] font-semibold pb-2">¿Tienes alguna pregunta?</p>
        <h1 className="text-center pb-10 xl:pb-25 xl:w-[65%] text-[var(--heading-color)]  text-[2rem] 2xl:text-[42px] lg:text-[2.5em] leading-[1.4em] font-bold">Aquí hay algunas respuestas</h1>
        
-      <Accordion className="flex flex-col gap-6 w-full lg:w-[850px] ">
+      <Accordion className="flex flex-col gap-6 w-full lg:w-[850px] " type="multiple">
         {faqData.map((item, index) => (
             <AccordionItem className="acordion-container border-[0.1px] border-gray-400 rounded-lg px-5 lg:px-16 py-5 transition-all duration-400" value={`item-${index}`} key={index}>
             <AccordionTrigger className="text-[18px] transition-all duration-400 hover:text-[var(--primary-color)] lg:text-[22px] text-[var(--heading-color)] font-semibold no-underline hover:no-underline" style={{ textDecoration: 'none' }}>{item.question}</AccordionTrigger>
