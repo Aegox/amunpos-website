@@ -6,6 +6,11 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 
+interface FaqItem {
+  question: string;
+  answer: string;
+}
+
 const faqData: FaqItem[] = [
   {
     question: "¿Cómo beneficia un sistema POS a mi negocio?",
