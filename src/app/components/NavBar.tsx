@@ -61,7 +61,7 @@ const NavBar: React.FC = () => {
           <button className="cursor-pointer transition-colors duration-300 ease-in-out hover:text-[var(--primary-color)] text-[var(--heading-color)]">
             Iniciar sesión
           </button> 
-          <Button background="primary" hover="black" text="Registrarse" />
+          <Button variant="inverted" theme="black" text="Registrarse" />
         </section>
 
         {/* Ícono hamburguesa para móvil */}
@@ -92,7 +92,7 @@ const NavBar: React.FC = () => {
             <button className="cursor-pointer transition-colors duration-300 ease-in-out hover:text-[var(--primary-color)] text-[var(--heading-color)]" onClick={() => setIsMenuOpen(false)}>
               Iniciar sesión
             </button> 
-            <Button background="primary" hover="black" text="Registrarse" />
+            <Button variant="inverted" theme="black" text="Registrarse" />
           </div>
         </div>
       )}
