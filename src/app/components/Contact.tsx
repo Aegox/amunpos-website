@@ -8,7 +8,7 @@ const Contacto = () => {
         <div className="flex flex-col xl:flex-row-reverse items-center justify-center">
           <div className="flex justify-center w-full h-full min-w-[45%] md:w-[45%] 2xl:w-1/2 mb-6 xl:mb-0 xl:order-last">
             <div className="text-center">
-              <img src="/contacto2.png" alt="contact photo" className="md:min-w-[600px] w-auto h-auto md:min-h-[600px]" />
+              <img src="/contacto2.png" alt="contact photo" className="md:min-w-[500px] w-auto h-auto 2xl:h-[650px] md:min-h-[500px]" />
             </div>
           </div>
           <div className="px-4 w-full xl:w-1/2 xl:pl-6">

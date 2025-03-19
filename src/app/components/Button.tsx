@@ -5,9 +5,10 @@ interface ButtonProps {
   styles?: string;
   theme: "white" | "black";
   variant: "normal" | "inverted";
+  absolute?: boolean;
 }
 
-const Button: React.FC<ButtonProps> = ({ text, styles = "", theme, variant }) => {
+const Button: React.FC<ButtonProps> = ({ text, styles = "", theme, variant , absolute }) => {
   let baseBg = "";
   let baseText = "";
   let hoverBg = "";
@@ -50,7 +51,7 @@ const Button: React.FC<ButtonProps> = ({ text, styles = "", theme, variant }) =>
 
   return (
     <button
-      className={`${styles} relative overflow-hidden group cursor-pointer rounded-lg px-[20px] py-[8px] ${baseBg} ${baseText}`}
+      className={`${styles} ${ absolute ? "absolute" : "relative"} overflow-hidden group cursor-pointer rounded-lg px-[20px] py-[8px] ${baseBg} ${baseText}`}
     >
       <span className={`relative z-10 transition-colors duration-300 ${hoverText}`}>
         {text}
