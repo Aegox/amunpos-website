@@ -9,6 +9,7 @@ import CallAction from "./components/CallAction";
 import Questions from "./components/Questions";
 import Contact from "./components/Contact";
 import Footer from "./components/Footer";
+import Login from "./components/Login";
 
 export default function Render() {
   return (

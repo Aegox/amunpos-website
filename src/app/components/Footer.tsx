@@ -1,31 +1,16 @@
 import React from  "react";
 import Button from  "./Button";
-import { FaFacebookF, FaTwitter, FaLinkedinIn, FaInstagram } from 'react-icons/fa';
+import Socials from  "./Socials";
 
 const Footer: React.FC = () => {
   return (
-    <footer className="flex flex-col xl:gap-0 xl:items-center w-full bg-[var(--heading-color)] px-3  pt-[70px] xl:pt-[140px] xl:px-25">
+      <footer className="flex flex-col xl:gap-0 xl:items-center w-full bg-[var(--heading-color)] px-3  pt-[70px] xl:pt-[140px] xl:px-25">
     {/* Main Content Container */}
-    <div className="gap-8 h-full xl:w-[90%]  mb-[50px] xl:mb-[110px] flex flex-col xl:flex-row xl:justify-between  ">
+      <div className="gap-8 h-full xl:w-[90%]  mb-[50px] xl:mb-[110px] flex flex-col xl:flex-row xl:justify-between  ">
       <article>
         <img src="/logo.png" alt="amunpos logo" className="w-auto h-[25px] mb-8 mt-2"/>
         <p className="text-white w-full xl:w-[330px]">Nuestro software de punto de venta es una solución definitiva que transforma tus operaciones comerciales en una fuerza eficiente y fluida, destacando la simplicidad, versatilidad de vanguardia.</p>
-
-        {/* Social Media Links */}
-        <div className="social-buttons flex gap-4 pt-6">
-          <a href="https://www.facebook.com/" aria-label="Facebook" target="_blank" className="group border-1 border-white rounded-full p-2 transition duration-300  hover:border-[var(--primary-color)] hover:translate-y-[-2px] hover:shadow-md">
-            <FaFacebookF size={16} className="text-white group-hover:text-[var(--primary-color)] transition duration-300" />
-          </a>
-          <a href="https://twitter.com/" aria-label="Twitter" target="_blank" className="group border-1 border-white rounded-full p-2 transition duration-300  hover:border-[var(--primary-color)] hover:translate-y-[-2px] hover:shadow-md">
-            <FaTwitter size={16} className="text-white group-hover:text-[var(--primary-color)] transition duration-300" />
-          </a>
-          <a href="https://www.linkedin.com/" aria-label="LinkedIn" target="_blank" className="group border-1 border-white rounded-full p-2 transition duration-300  hover:border-[var(--primary-color)] hover:translate-y-[-2px] hover:shadow-md">
-            <FaLinkedinIn size={16} className="text-white group-hover:text-[var(--primary-color)] transition duration-300" />
-          </a>
-          <a href="https://www.instagram.com/" aria-label="Instagram" target="_blank" className="group border-1 border-white rounded-full p-2 transition duration-300  hover:border-[var(--primary-color)] hover:translate-y-[-2px] hover:shadow-md">
-            <FaInstagram size={16} className="text-white group-hover:text-[var(--primary-color)] transition duration-300" />
-          </a>
-        </div>
+        <Socials/>
 
       </article>
 
