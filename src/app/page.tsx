@@ -10,6 +10,8 @@ import Questions from "./components/Questions";
 import Contact from "./components/Contact";
 import Footer from "./components/Footer";
 import Login from "./components/Login";
+import Register from "./components/Register";
+import SessionComponent from "./components/SessionComponent";
 
 export default function Render() {
   return (
@@ -25,6 +27,7 @@ export default function Render() {
         <Questions/>
         <Contact/>
         <Footer/>
+        <SessionComponent Component={Login} title="Incia sesion en tu cuenta" description="Usa tus credenciales para iniciar sesion" buttonText="Inciar sesion" question={true}/>
       </div>
   );
 };

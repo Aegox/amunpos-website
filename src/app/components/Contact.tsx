@@ -40,9 +40,7 @@ const Contacto = () => {
                 <div className="h-[30px] lg:h-[30px]"></div>
               </div>
               <div className="md:px-[12px] w-full h-full">
-                <button type="submit">
-                  <Button text="Enviar mensaje" theme="black" variant="inverted" styles="px-[30px] py-[12px]"/>
-                </button>
+                <Button text="Enviar mensaje" theme="black" variant="inverted" styles="px-[30px] py-[12px]"/>
                 <div id="cs_result"></div>
               </div>
             </form>
