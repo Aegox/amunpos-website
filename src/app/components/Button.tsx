@@ -6,9 +6,10 @@ interface ButtonProps {
   theme: "white" | "black";
   variant: "normal" | "inverted";
   absolute?: boolean;
+  onClick?: (event: React.MouseEvent<HTMLButtonElement>) => void; // Agrega la propiedad onClick
 }
 
-const Button: React.FC<ButtonProps> = ({ text, styles = "", theme, variant , absolute }) => {
+const Button: React.FC<ButtonProps> = ({ text, styles = "", theme, variant, absolute, onClick }) => {
   let baseBg = "";
   let baseText = "";
   let hoverBg = "";
@@ -16,32 +17,23 @@ const Button: React.FC<ButtonProps> = ({ text, styles = "", theme, variant , abs
 
   if (theme === "white") {
     if (variant === "normal") {
-      // Tema white, variante normal: fondo blanco, texto negro.
-      // En hover: fondo primario y texto blanco.
       baseBg = "bg-white";
       baseText = "text-black";
       hoverBg = "bg-[var(--primary-color)]";
       hoverText = "group-hover:text-white";
     } else {
-      // Tema white, variante invertida: fondo primario, texto blanco.
-      // En hover: fondo blanco y texto negro.
       baseBg = "bg-[var(--primary-color)]";
       baseText = "text-white";
       hoverBg = "bg-white";
       hoverText = "group-hover:text-black";
     }
   } else {
-    // theme === "black"
     if (variant === "normal") {
-      // Tema black, variante normal: fondo negro, texto blanco.
-      // En hover: fondo primario y texto se mantiene blanco.
       baseBg = "bg-black";
       baseText = "text-white";
       hoverBg = "bg-[var(--primary-color)]";
       hoverText = "";
     } else {
-      // Tema black, variante invertida: fondo primario, texto blanco.
-      // En hover: fondo negro y texto se mantiene blanco.
       baseBg = "bg-[var(--primary-color)]";
       baseText = "text-white";
       hoverBg = "bg-black";
@@ -51,7 +43,8 @@ const Button: React.FC<ButtonProps> = ({ text, styles = "", theme, variant , abs
 
   return (
     <button
-      className={`${styles} ${ absolute ? "absolute" : "relative"} overflow-hidden group cursor-pointer rounded-lg px-[20px] py-[8px] ${baseBg} ${baseText}`}
+      className={`${styles} ${absolute ? "absolute" : "relative"} overflow-hidden group cursor-pointer rounded-lg px-[20px] py-[8px] ${baseBg} ${baseText}`}
+      onClick={onClick} // Agrega el evento onClick al botón
     >
       <span className={`relative z-10 transition-colors duration-300 ${hoverText}`}>
         {text}

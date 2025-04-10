@@ -1,5 +1,4 @@
 import Hero from "./components/Hero";
-import Features from "./components/Features";
 import SoftwareFeatures from "./components/SoftwareFeatures";
 import UseCases from "./components/UseCases";
 import Pricing from "./components/Pricing";
@@ -9,15 +8,12 @@ import CallAction from "./components/CallAction";
 import Questions from "./components/Questions";
 import Contact from "./components/Contact";
 import Footer from "./components/Footer";
-import Login from "./components/Login";
-import Register from "./components/Register";
-import SessionComponent from "./components/SessionComponent";
+import AuthModal from "./components/AuthModal";
 
 export default function Render() {
   return (
       <div>
         <Hero/>
-        <Features/>
         <SoftwareFeatures/>
         <UseCases/>
         <Pricing/>
@@ -27,7 +23,7 @@ export default function Render() {
         <Questions/>
         <Contact/>
         <Footer/>
-        <SessionComponent Component={Login} title="Incia sesion en tu cuenta" description="Usa tus credenciales para iniciar sesion" buttonText="Inciar sesion" question={true}/>
+        <AuthModal/>
       </div>
   );
 };

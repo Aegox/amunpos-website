@@ -1,5 +1,4 @@
 'use client';
-
 import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import Button from "./Button";
@@ -32,6 +31,11 @@ const NavBar: React.FC = () => {
     };
   }, []);
 
+  const handleClick = (type) => {
+    localStorage.setItem('lastAction', type); // Guarda el tipo de acción en Local Storage
+    // Lógica adicional para manejar la URL o redirección si es necesario
+  };
+
   return (
     <nav
         className={`fixed flex top-0 h-[90px] w-full xl:justify-center transition-all duration-300 navbar-slide z-50 ${
@@ -58,10 +62,14 @@ const NavBar: React.FC = () => {
 
         {/* Botones para pantallas grandes */}
         <section className="hidden xl:flex gap-10">
-          <button className="cursor-pointer transition-colors duration-300 ease-in-out hover:text-[var(--primary-color)] text-[var(--heading-color)]">
+          <button className="cursor-pointer transition-colors duration-300 ease-in-out hover:text-[var(--primary-color)] text-[var(--heading-color)]" onClick={() => {
+            handleClick("login");
+          }}>
             Iniciar sesión
           </button> 
-          <Button variant="inverted" theme="black" text="Registrarse" />
+          <Button variant="inverted" theme="black" text="Registrarse" onClick={() => {
+            handleClick("register");
+          }} />
         </section>
 
         {/* Ícono hamburguesa para móvil */}
@@ -89,10 +97,16 @@ const NavBar: React.FC = () => {
             <li className="cursor-pointer transition-colors duration-300 ease-in-out hover:text-[var(--primary-color)]" onClick={() => setIsMenuOpen(false)}>Contacto</li>
           </ul>
           <div className="flex flex-col gap-6 text-3xl">
-            <button className="cursor-pointer transition-colors duration-300 ease-in-out hover:text-[var(--primary-color)] text-[var(--heading-color)]" onClick={() => setIsMenuOpen(false)}>
+            <button className="cursor-pointer transition-colors duration-300 ease-in-out hover:text-[var(--primary-color)] text-[var(--heading-color)]" onClick={() => {
+              setIsMenuOpen(false);
+              handleClick("login");
+            }}>
               Iniciar sesión
             </button> 
-            <Button variant="inverted" theme="black" text="Registrarse" />
+            <Button variant="inverted" theme="black" text="Registrarse" onClick={() => {
+              setIsMenuOpen(false);
+              handleClick("register");
+            }} />
           </div>
         </div>
       )}
