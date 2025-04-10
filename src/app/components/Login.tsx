@@ -14,11 +14,11 @@ const Login: React.FC  = () => {
           <input type="password" name="password" className="bg-white block w-full py-[11px] pl-[45px] text-gray-700 placeholder-gray-600 border-[0.3px] border-gray-400 rounded-md transition-colors duration-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500" placeholder="Contraseña" required />
         </div>
         <div className="flex justify-between w-full">
-         <label className="flex items-center gap-2 text-[var(--body-color)]">
+         <label className="text-[14px] md:text-[1rem] flex items-center gap-2 text-[var(--body-color)]">
           <input type="checkbox"/>
           Recordarme
         </label>
-        <span className="cursor-pointer text-[var(--primary-color)]">Olvidaste tu contraseña?</span>
+          <span className="text-[14px] md:text-[1rem] cursor-pointer text-[var(--primary-color)]">Olvidaste tu contraseña?</span>
       </div>
       </form>
   )

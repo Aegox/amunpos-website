@@ -18,7 +18,7 @@ const SessionComponent: React.FC<SessionComponentProps> = ({ Component, title, d
   };
 
   return (
-    <div className="w-[450px] flex flex-col justify-center items-center z-[102] absolute top-1/6 left-1/3 bg-white rounded-3xl shadow-md shadow-white p-10 pt-12">
+    <div className="relative 2xl:-top-1/8 w-[95%] md:w-[450px] flex flex-col justify-center items-center z-[102] bg-white rounded-3xl shadow-md shadow-white p-10 pt-12">
       <button 
         className="cursor-pointer p-2 rounded-sm bg-red-400 hover:bg-[var(--body-color)] absolute right-6 top-8 "
         onClick={handleClose} // Llama a handleClose al hacer clic

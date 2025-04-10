@@ -1,4 +1,6 @@
+'use client';
 import React from "react";
+import { motion } from "framer-motion";
 
 interface Caracteristica {
   id: number;
@@ -32,8 +34,22 @@ const caracteristicas: Caracteristica[] = [
 const SoftwareFeatures: React.FC = () => {
   return (
     <section className="flex flex-col xl:flex-row w-full xl:w-auto items-center xl:justify-center pt-5 pb-20 gap-10">
-      <img src="/illustration.svg" alt="a people paying with a card of money" className="w-[90%] 2xl:w-[36%] xl:w-[40%]" /> 
-      <div className="pt-10 flex flex-col w-full px-5 xl:w-[45%]">
+      <motion.div
+        initial={{ opacity: 0, x: -50 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true, amount: 0.3 }}
+            transition={{ duration: 0.4 }}
+            className="w-[90%] 2xl:w-[36%] xl:w-[40%]"
+       >
+      <img src="/illustration.svg" alt="a people paying with a card of money" className="" /> 
+      </motion.div>
+      <motion.div
+        initial={{ opacity: 0, y: 0 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.3 }}
+            transition={{ duration: 0.9 }}
+            className="pt-10 flex flex-col w-full px-5 xl:w-[45%]"
+       >
         <p className="w-2/3 text-[var(--primary-color)] text-[18px] pb-2 font-semibold">Características clave del software</p>
         <h1 className="pb-12 2xl:w-[90%] xl:w-[100%] text-[var(--heading-color)]  text-[2rem] 2xl:text-[3em] lg:text-[2.5em] leading-[1.4em] font-bold">Características potentes con un diseño increíble</h1>
         <div className="flex flex-wrap gap-5 w-full">
@@ -45,7 +61,7 @@ const SoftwareFeatures: React.FC = () => {
             </article>
           ))}
         </div>
-      </div>
+      </motion.div>
     </section>
   );
 };

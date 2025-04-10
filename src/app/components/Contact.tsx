@@ -1,16 +1,31 @@
+'use client';
+import { motion } from "framer-motion";
+import React from "react";
 import Button from "./Button";
 
-const Contacto = () => {
+const Contacto: React.FC  = () => {
   return (
+    <motion.div
+           initial={{ opacity: 0, y: 0 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.3 }}
+            transition={{ duration: 0.7 }}
+    >
     <div id="contacto" className="relative">
       <div className="h-[50px] lg:h-[40px]"></div>
       <div className="container mx-auto">
         <div className="flex flex-col xl:flex-row-reverse items-center justify-center">
-          <div className="flex justify-center w-full h-full min-w-[45%] md:w-[45%] 2xl:w-1/2 mb-6 xl:mb-0 xl:order-last">
+          <motion.div 
+            initial={{ opacity: 0, x: -50 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true, amount: 0.3 }}
+            transition={{ duration: 0.4 }}
+            className="flex justify-center w-full h-full min-w-[45%] md:w-[45%] 2xl:w-1/2 mb-6 xl:mb-0 xl:order-last"
+          >
             <div className="text-center">
               <img src="/contacto2.png" alt="contact photo" className="md:min-w-[500px] w-auto h-auto 2xl:h-[650px] md:min-h-[500px]" />
             </div>
-          </div>
+          </motion.div>
           <div className="px-4 w-full xl:w-1/2 xl:pl-6">
             <div className="">
               <p className="md:pl-4 w-full text-[var(--primary-color)] text-[18px] font-semibold pb-2">Contactanos</p>
@@ -49,6 +64,7 @@ const Contacto = () => {
       </div>
       <div className="h-[150px] lg:h-[80px]"></div>
     </div>
+    </motion.div>
   );
 };
 

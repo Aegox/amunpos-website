@@ -1,4 +1,6 @@
+'use client';
 import React from "react";
+import { motion } from "framer-motion";
 import PricingCard from "./PricingCard";
 
 interface PricingPlan {
@@ -67,7 +69,21 @@ const Pricing: React.FC = () => {
 
       {/* Contenido principal */}
       <div className="z-10 flex flex-col items-center w-full">
+      <motion.div
+        initial={{ opacity: 0, y: -20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.3 }}
+            transition={{ duration: 0.7 }}
+       >
         <p className="w-full text-center text-[var(--primary-color)] text-[18px] font-semibold pb-2">Nuestros precios</p>
+      </motion.div>
+      <motion.div
+            initial={{ opacity: 0, y: 0 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.3 }}
+            transition={{ duration: 0.7 }}
+className="z-10 flex flex-col items-center w-full"
+       >
         <h1 className="text-center pb-10 xl:pb-25 xl:w-[65%] text-[var(--heading-color)]  text-[2rem] 2xl:text-[3em] lg:text-[2.5em] leading-[1.4em] font-bold">Planes transparentes, encuentra el ajuste perfecto que necesitas</h1>
         <div className="flex flex-col 2xl:px-35 xl:px-20 xl:flex-row w-full gap-6 items-center">
           {pricingPlans.map((plan) => (
@@ -82,6 +98,7 @@ const Pricing: React.FC = () => {
             />
           ))}
         </div>
+      </motion.div>
       </div>
     </section>
   );

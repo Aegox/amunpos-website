@@ -1,11 +1,26 @@
+'use client';
+import { motion } from "framer-motion";
 import React from "react";
 
 const Partners: React.FC = () => {
   return (
-    <div className="pb-20 h-full w-full px-5">
+    <motion.div
+           initial={{ opacity: 0, y: 0 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.3 }}
+            transition={{ duration: 0.7 }}
+            className="pb-20 h-full w-full px-5"
+    >
+    <motion.div
+           initial={{ opacity: 0, y: -25 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.3 }}
+            transition={{ duration: 0.8 }}
+    >
       <h1 className="w-full text-center pb-10 text-[var(--heading-color)] font-semibold text-[18px]">
         Nuestros patrocinadores a nivel mundial
       </h1>
+    </motion.div>
       <ul className="flex w-full justify-center flex-wrap gap-5 lg:gap-15">
         <li>
           <img 
@@ -50,7 +65,7 @@ const Partners: React.FC = () => {
           />
         </li>
       </ul>
-    </div>
+    </motion.div>
   );
 };
 

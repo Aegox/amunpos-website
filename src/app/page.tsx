@@ -1,5 +1,6 @@
 import Hero from "./components/Hero";
 import SoftwareFeatures from "./components/SoftwareFeatures";
+import Features from "./components/Features";
 import UseCases from "./components/UseCases";
 import Pricing from "./components/Pricing";
 import Testimonials from "./components/Testimonials";
@@ -14,6 +15,7 @@ export default function Render() {
   return (
       <div>
         <Hero/>
+        <Features/>
         <SoftwareFeatures/>
         <UseCases/>
         <Pricing/>

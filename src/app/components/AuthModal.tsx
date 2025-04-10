@@ -1,4 +1,3 @@
-
 'use client';
 import React, { useState, useEffect } from 'react';
 import SessionComponent from './SessionComponent';
@@ -18,11 +17,7 @@ const AuthModal = () => {
     }, 100);
     return () => clearInterval(intervalId);
   }, [lastAction]);
-    if (lastAction) {
-      document.body.style.overflow = 'hidden';
-    } else {
-      document.body.style.overflow = 'auto';
-    }
+
   // Renderiza el modal
   const renderModal = (
     Component: React.ComponentType,
@@ -31,31 +26,18 @@ const AuthModal = () => {
     buttonText: string,
     question: boolean
   ) => (
-    <div className="fixed inset-0 z-[100] hide-scrollbar overflow-y-auto bg-[rgba(0,0,0,0.5)]">
+    <div className="fixed inset-0 z-[100] w-full overflow-y-auto bg-[rgba(0,0,0,0.5)] scrollbar-hidden backdrop-blur-sm">
       {/* Usamos flex para centrar y min-h-screen para ocupar al menos la pantalla completa */}
-      <div className="flex min-h-screen items-center justify-center">
-        {/* Contenedor del modal con altura limitada y scroll interno */}
-        <div className="relative w-full max-w-md p-4 bg-white rounded-lg shadow-lg max-h-[90vh] overflow-y-auto hide-scrollbar">
-          <SessionComponent 
-            Component={Component} 
-            title={title} 
-            description={description} 
-            buttonText={buttonText} 
-            question={question} 
-          />
-        </div>
+      <div className="w-full flex min-h-screen  md:h-[140vh] items-center justify-center">
+        {/* Contenedor del modal */}
+        <SessionComponent 
+          Component={Component} 
+          title={title} 
+          description={description} 
+          buttonText={buttonText} 
+          question={question} 
+        />
       </div>
-      {/* Estilos para ocultar la scrollbar */}
-      <style jsx>{`
-        .hide-scrollbar {
-          scrollbar-width: none;    /* Firefox */
-          -ms-overflow-style: none; /* IE y Edge */
-        }
-        .hide-scrollbar::-webkit-scrollbar {
-          width: 0;  /* Hace que no se muestre en Chrome, Safari y Opera */
-          height: 0;
-        }
-      `}</style>
     </div>
   );
 
