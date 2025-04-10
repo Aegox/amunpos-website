@@ -8,7 +8,7 @@ interface CardProps {
 
 const Card: React.FC<CardProps> = ({ title, text, icon }) => {
   return (
-  <article className="flex flex-col justify-between gap-3 bg-white w-full sm:w-[45%] xl:w-[22%] px-[20px] pt-[45px] pb-[40px] rounded-xl transition-transform duration-400 hover:shadow-2xl hover:-translate-y-2 shadow-features z-30">
+    <article className="flex flex-col justify-between gap-3 bg-white w-full sm:w-[45%] xl:w-[20%] px-[20px] pt-[45px] pb-[40px] rounded-xl transition-transform duration-400 hover:shadow-2xl hover:-translate-y-2 shadow-features z-30">
       <img src={icon} alt="a shop svg for section features" className="h-[55px] w-[57px]"/>
       <h3 className="text-[var(--heading-color)] text-[1.4rem]">{title}</h3>
       <p className="text-[var(--body-color)]">{text}</p>

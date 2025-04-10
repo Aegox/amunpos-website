@@ -9,9 +9,10 @@ const Contacto: React.FC  = () => {
            initial={{ opacity: 0, y: 0 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, amount: 0.3 }}
-            transition={{ duration: 0.7 }}
+            transition={{ duration: 0.6 }}
+           
     >
-    <div id="contacto" className="relative">
+    <div id="Contacto" className="relative">
       <div className="h-[50px] lg:h-[40px]"></div>
       <div className="container mx-auto">
         <div className="flex flex-col xl:flex-row-reverse items-center justify-center">
@@ -19,7 +20,7 @@ const Contacto: React.FC  = () => {
             initial={{ opacity: 0, x: -50 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true, amount: 0.3 }}
-            transition={{ duration: 0.4 }}
+            transition={{ duration: 0.6 }}
             className="flex justify-center w-full h-full min-w-[45%] md:w-[45%] 2xl:w-1/2 mb-6 xl:mb-0 xl:order-last"
           >
             <div className="text-center">

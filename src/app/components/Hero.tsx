@@ -3,7 +3,7 @@ import Button from "./Button";
 
 const Hero: React.FC = () => {
   return (
-    <div className="relative flex flex-col-reverse gap-15 lg:flex-row items-center justify-center relative w-full h-full lg:h-[900px] overflow-hidden pt-[150px] px-10 z-30 lg:pb-10 pb-20">
+    <div id="Inicio" className="relative flex flex-col-reverse gap-15 lg:flex-row items-center justify-center relative w-full h-full lg:h-[900px] overflow-hidden pt-[150px] px-10 z-30 lg:pb-10 pb-20">
 <div className="absolute z-30 -top-20 -right-20 w-[450px] h-[450px] bg-[var(--primary-color)] rounded-full filter blur-3xl opacity-15"></div>
       <img 
         src="/hero_bg2.png" 

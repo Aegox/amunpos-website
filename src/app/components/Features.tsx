@@ -34,7 +34,7 @@ const cardData: CardDataProps[] = [
 
 const Features: React.FC = () => {
   return (
-    <div className="relative w-full pt-35 pb-32 flex flex-col items-center">
+    <div id="Caracteristicas" className="relative w-full pt-35 pb-32 flex flex-col items-center">
       <motion.div
         initial={{ opacity: 0, y: -20 }}
             whileInView={{ opacity: 1, y: 0 }}

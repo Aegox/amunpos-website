@@ -93,7 +93,7 @@ const Testimonials = () => {
     }, [currentIndex, cardWidth]);
 
     return (
-        <section className="flex flex-col items-center w-full h-full py-25 px-10 overflow-x-hidden">
+        <section id="Testimonios" className="flex flex-col items-center w-full h-full py-25 px-10 overflow-x-hidden">
           <motion.div
         initial={{ opacity: 0, y: -20 }}
             whileInView={{ opacity: 1, y: 0 }}

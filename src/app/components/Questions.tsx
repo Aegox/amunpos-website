@@ -44,6 +44,7 @@ const Questions: React.FC = () => {
             viewport={{ once: true, amount: 0.3 }}
             transition={{ duration: 0.7 }}
             className="flex flex-col items-center py-28 px-5 lg:px-[10%] w-full h-full "
+            id="Faq"
     >
     <motion.div
            initial={{ opacity: 0, y: -25 }}
