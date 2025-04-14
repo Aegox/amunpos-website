@@ -1,18 +1,16 @@
-
 import React from "react";
-import Button from "./Button";
 import Socials from "./Socials";
 import { MdClose } from 'react-icons/md';
+import { FcGoogle } from "react-icons/fc";
 
 interface SessionComponentProps {
   Component: React.FC;
   title: string;
   description: string;
-  buttonText: string;
   question: boolean;
 }
 
-const SessionComponent: React.FC<SessionComponentProps> = ({ Component, title, description, buttonText, question }) => {
+const SessionComponent: React.FC<SessionComponentProps> = ({ Component, title, description,  question }) => {
   const handleClose = () => {
     localStorage.removeItem('lastAction'); // Elimina el valor de lastAction
   };
@@ -29,10 +27,17 @@ const SessionComponent: React.FC<SessionComponentProps> = ({ Component, title, d
       <h1 className="text-center pb-2 text-[var(--heading-color)]  text-[22px] leading-[1.4em] font-bold">{title}</h1>
       <p className="w-full text-center text-[var(--body-color)] pb-8">{description}</p>
       <Component />
-      <Button text={buttonText} styles="w-full py-[12px] px-[30px] mb-8"/>
       <span className="cursor-pointer text-[var(--body-color)]">O incia sesión con </span>
-      <Socials styles="text-black mb-5 "/>
-      {question && <p className="text-[var(--body-color)]">No tienes una cuenta? <strong className="ml-2 cursor-pointer text-[var(--primary-color)]">Registrate Ahora</strong></p>}
+      <a
+        href="https://www.google.com/"
+        aria-label="Google"
+        target="_blank"
+        className={`group border-1 rounded-full my-4 mb-6 p-2 transition duration-300 
+        border-black hover:border-[var(--primary-color)] hover:translate-y-[-2px] hover:shadow-md`}
+      >
+        <FcGoogle size={18} className="transition duration-300" />
+      </a>
+      {question ? <p className="text-[var(--body-color)]">No tienes una cuenta? <strong className="ml-2 cursor-pointer text-[var(--primary-color)]">Registrate Ahora</strong></p> : <p className="text-[var(--body-color)]">Ya tienes una cuenta? <strong className="ml-2 cursor-pointer text-[var(--primary-color)]">Inicia sesión</strong></p> }
     </div>
   );
 };
