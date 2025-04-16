@@ -5,12 +5,11 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { MdOutlineEmail, MdLockOutline, MdVisibility, MdVisibilityOff } from "react-icons/md";
-import { FiUser } from "react-icons/fi";
+import useCreateClient from "../hooks/useCreateClient";
 
-// Esquema de validación con Zod
+// Validación con Zod
 const formSchema = z
   .object({
-    fullName: z.string().min(1, "El nombre completo es requerido"),
     email: z
       .string()
       .min(1, "El correo electrónico es requerido")
@@ -35,7 +34,6 @@ const formSchema = z
     path: ["confirmPassword"],
   });
 
-// Inferir el tipo a partir del esquema Zod
 type RegisterFormData = z.infer<typeof formSchema>;
 
 const Register: React.FC = () => {
@@ -43,36 +41,29 @@ const Register: React.FC = () => {
     register,
     handleSubmit,
     formState: { errors },
+    reset,
   } = useForm<RegisterFormData>({
     resolver: zodResolver(formSchema),
   });
 
-  // Estado para alternar visibilidad de la contraseña
+  const { createClient, loading, error } = useCreateClient();
   const [showPassword, setShowPassword] = useState(false);
+  const [successMessage, setSuccessMessage] = useState("");
 
-  const onSubmit = (data: RegisterFormData) => {
-    console.log("Datos del registro:", data);
-    // Aquí puedes manejar el registro con una API o lógica personalizada
+  const onSubmit = async (data: RegisterFormData) => {
+    const { email, password } = data;
+
+    const result = await createClient({ email, password });
+
+    if (result?.token) {
+      localStorage.setItem("token", result.token);
+      setSuccessMessage("¡Cuenta creada exitosamente!");
+      reset();
+    }
   };
 
   return (
     <form className="w-full" onSubmit={handleSubmit(onSubmit)}>
-      {/* Nombre Completo */}
-      <div className="relative mb-6">
-        <FiUser color="gray" size={24} className="absolute left-3 top-3" />
-        <input
-          type="text"
-          {...register("fullName")}
-          className={`bg-white block w-full py-[11px] pl-[45px] text-gray-700 placeholder-gray-600 border-[0.3px] rounded-md transition-colors duration-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500 ${
-            errors.fullName ? "border-red-500" : "border-gray-400"
-          }`}
-          placeholder="Nombre completo"
-        />
-        {errors.fullName && (
-          <p className="text-red-500 text-sm mt-1">{errors.fullName.message}</p>
-        )}
-      </div>
-
       {/* Correo Electrónico */}
       <div className="relative mb-6">
         <MdOutlineEmail color="gray" size={24} className="absolute left-3 top-3" />
@@ -143,7 +134,20 @@ const Register: React.FC = () => {
         )}
       </div>
 
-      <Button text={"Registrarse"} styles="w-full py-3 px-8 mb-6" />
+      {/* Mensajes */}
+      {error && (
+        <p className="text-red-500 text-sm text-center mb-4">{error}</p>
+      )}
+      {successMessage && (
+        <p className="text-green-600 text-sm text-center mb-4">{successMessage}</p>
+      )}
+
+      {/* Botón de Registro */}
+      <Button
+        text={"Registrarse"}
+        styles={`w-full py-3 px-8 mb-6 ${loading ? "opacity-70 cursor-not-allowed" : ""}`}
+        loading={loading}
+      />
     </form>
   );
 };

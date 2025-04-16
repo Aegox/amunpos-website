@@ -27,7 +27,7 @@ const SessionComponent: React.FC<SessionComponentProps> = ({ Component, title, d
       <h1 className="text-center pb-2 text-[var(--heading-color)]  text-[22px] leading-[1.4em] font-bold">{title}</h1>
       <p className="w-full text-center text-[var(--body-color)] pb-8">{description}</p>
       <Component />
-      <span className="cursor-pointer text-[var(--body-color)]">O incia sesión con </span>
+      <span className="cursor-pointer text-[var(--body-color)]">{ title == "Registra tu cuenta" ? "O Registrate con" : "O incia sesión con"}</span>
       <a
         href="https://www.google.com/"
         aria-label="Google"
