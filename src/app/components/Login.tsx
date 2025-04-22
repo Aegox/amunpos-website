@@ -4,6 +4,7 @@ import Button from "./Button";
 import { useForm } from "react-hook-form";
 import { MdOutlineEmail, MdLockOutline, MdVisibility, MdVisibilityOff } from "react-icons/md";
 import useClientLogin from "../hooks/useClientLogin";
+import { useRouter } from "next/navigation"; 
 
 const Login: React.FC = () => {
   const { register, handleSubmit, formState: { errors }, reset } = useForm();
@@ -12,19 +13,16 @@ const Login: React.FC = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState(""); // Estado para el mensaje de error
   const [successMessage, setSuccessMessage] = useState(""); // Estado para el mensaje de éxito
+  const router = useRouter();
 
   const onSubmit = async (data) => {
     setError(""); // Limpiar el mensaje de error antes de realizar el inicio de sesión
-    setSuccessMessage(""); // Limpiar el mensaje de éxito
-    console.log(data)
-    // Aquí estamos enviando los datos correctamente al backend
     const response = await loginClient(data);
-
-    // Si hay un error, mostrar el mensaje de error
     if (response?.error) {
       setError(response.error); // Si hay un error, se muestra el mensaje en rojo
     } else if (response?.message) {
-      setSuccessMessage(response.message); // Si es exitoso, se muestra el mensaje en verde
+      router.push("/dashboard");
+      localStorage.removeItem("lastAction")
     }
 
     reset(); // Opcional, para limpiar los campos

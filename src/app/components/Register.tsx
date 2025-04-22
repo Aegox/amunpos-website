@@ -1,6 +1,7 @@
 'use client';
 import React, { useState } from "react";
 import Button from "./Button";
+import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -49,6 +50,7 @@ const Register: React.FC = () => {
   const { createClient, loading, error } = useCreateClient();
   const [showPassword, setShowPassword] = useState(false);
   const [successMessage, setSuccessMessage] = useState("");
+  const router = useRouter();
 
   const onSubmit = async (data: RegisterFormData) => {
     const { email, password } = data;
@@ -57,8 +59,9 @@ const Register: React.FC = () => {
 
     if (result?.token) {
       localStorage.setItem("token", result.token);
-      setSuccessMessage("¡Cuenta creada exitosamente!");
       reset();
+        localStorage.removeItem("lastAction")
+        router.push("/onboarding"); // 👈 Redirigimos
     }
   };
 

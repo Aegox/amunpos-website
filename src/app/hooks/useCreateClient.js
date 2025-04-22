@@ -11,7 +11,7 @@ const useCreateClient = () => {
     setError(null);
 
     try {
-    const response = await fetch("http://localhost:5432/client/create", {
+    const response = await fetch("http://localhost:8081/client/create", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

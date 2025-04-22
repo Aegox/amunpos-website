@@ -14,6 +14,9 @@ const SessionComponent: React.FC<SessionComponentProps> = ({ Component, title, d
   const handleClose = () => {
     localStorage.removeItem('lastAction'); // Elimina el valor de lastAction
   };
+  const handleTo = (type) => {
+    localStorage.setItem("lastAction", type)
+  }
 
   return (
     <div className="relative 2xl:-top-1/8 w-[95%] md:w-[450px] flex flex-col justify-center items-center z-[102] bg-white rounded-3xl shadow-md shadow-white p-10 pt-12">
@@ -37,7 +40,7 @@ const SessionComponent: React.FC<SessionComponentProps> = ({ Component, title, d
       >
         <FcGoogle size={18} className="transition duration-300" />
       </a>
-      {question ? <p className="text-[var(--body-color)]">No tienes una cuenta? <strong className="ml-2 cursor-pointer text-[var(--primary-color)]">Registrate Ahora</strong></p> : <p className="text-[var(--body-color)]">Ya tienes una cuenta? <strong className="ml-2 cursor-pointer text-[var(--primary-color)]">Inicia sesión</strong></p> }
+      {question ? <p className="text-[var(--body-color)]">No tienes una cuenta? <button onClick={()=> { handleTo("register")}} ><strong className="ml-2 cursor-pointer text-[var(--primary-color)]">Registrate Ahora</strong></button></p> : <p className="text-[var(--body-color)]">Ya tienes una cuenta? <button onClick={()=>{handleTo("login")}} ><strong className="ml-2 cursor-pointer text-[var(--primary-color)]">Inicia sesión</strong></button></p> }
     </div>
   );
 };
