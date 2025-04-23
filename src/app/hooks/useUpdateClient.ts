@@ -11,7 +11,7 @@ const useUpdateClient = () => {
     setError(null);
 
     try {
-      const response = await fetch("http://localhost:8081/client/update", {
+      const response = await fetch("http://localhost:8082/client/update", {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",

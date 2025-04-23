@@ -12,7 +12,7 @@ export const useGenerateCode = () => {
     setError(null);
     setSuccess(null);
     try {
-      const response = await fetch('http://localhost:8081/auth/generateCode', {
+      const response = await fetch('http://localhost:8082/auth/generateCode', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email }),

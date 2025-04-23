@@ -1,8 +1,9 @@
 'use client';
 import { motion } from "framer-motion";
-import React, { useState } from "react";
+import React from "react";
 import { useForm } from "react-hook-form";
 import Button from "./Button";
+import useSendEmail from "../hooks/useSendEmail"; // Importamos el hook
 
 type FormValues = {
   name: string;
@@ -13,38 +14,27 @@ type FormValues = {
 };
 
 const Contacto: React.FC = () => {
-  const {
-    register,
-    handleSubmit,
-    formState: { isSubmitting, errors },
-    reset,
-  } = useForm<FormValues>();
-
-  const [submitError, setSubmitError] = useState<string | null>(null);
-  const [submitSuccess, setSubmitSuccess] = useState<string | null>(null);
+  const { register, handleSubmit, formState: { errors }, reset } = useForm<FormValues>();
+  const { sendEmail, loading, error, success } = useSendEmail();
 
   const onSubmit = async (data: FormValues) => {
-    setSubmitError(null);
-    setSubmitSuccess(null);
-
     try {
-      const res = await fetch('/api/contact', {
-        method: 'POST',
-        body: JSON.stringify(data),
-        headers: {
-          'Content-Type': 'application/json',
-        },
+      await sendEmail({
+        to: data.email, // Aquí debes poner el correo de destino real
+        subject: data.subject,
+        text: `
+          Nombre: ${data.name}
+          Correo: ${data.email}
+          Teléfono: ${data.phone}
+          Mensaje: ${data.message}
+        `,
       });
 
-      if (res.ok) {
-        setSubmitSuccess("Mensaje enviado con éxito.");
+      if (success) {
         reset();
-      } else {
-        setSubmitError("Ocurrió un error al enviar el mensaje.");
       }
     } catch (err) {
-      console.error(err);
-      setSubmitError("Error del servidor. Inténtalo más tarde.");
+      console.error("Error al enviar el correo:", err);
     }
   };
 
@@ -140,13 +130,12 @@ const Contacto: React.FC = () => {
                   <div className="h-[30px] lg:h-[30px]"></div>
                 </div>
 
-                {/* Mensajes de estado */}
                 <div className="md:px-[12px] w-full mb-4">
-                  {submitError && (
-                    <p className="text-red-600 text-sm ">{submitError}</p>
+                  {error && (
+                    <p className="text-red-600 text-sm">{error}</p>
                   )}
-                  {submitSuccess && (
-                    <p className="text-green-600 text-sm ">{submitSuccess}</p>
+                  {success && (
+                    <p className="text-green-600 text-sm">Mensaje enviado con éxito.</p>
                   )}
                 </div>
 
@@ -156,10 +145,11 @@ const Contacto: React.FC = () => {
                     theme="black"
                     variant="inverted"
                     styles="px-[30px] py-[12px]"
-                    loading={isSubmitting}
+                    loading={loading}
                   />
                 </div>
               </form>
+
             </div>
           </div>
         </div>

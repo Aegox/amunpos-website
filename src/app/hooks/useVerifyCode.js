@@ -10,7 +10,7 @@ export const useVerifyCode = () => {
     setLoading(true);
     setError(null);
     try {
-      const response = await fetch('http://localhost:8081/auth/verifyCode', {
+      const response = await fetch('http://localhost:8082/auth/verifyCode', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, code }),

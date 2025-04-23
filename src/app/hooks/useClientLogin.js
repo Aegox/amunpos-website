@@ -15,7 +15,7 @@ const useClientLogin = () => {
     setMessage("");
 
     try {
-      const res = await fetch("http://localhost:8081/client/login", {
+      const res = await fetch("http://localhost:8082/client/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password }),
