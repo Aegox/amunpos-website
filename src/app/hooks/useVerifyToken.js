@@ -14,7 +14,7 @@ export const useVerifyToken = (token) => {
       }
 
       try {
-        const response = await fetch("http://localhost:8081/auth/verify", {
+        const response = await fetch("http://localhost:8081/auth/verifyToken", {
           method: "POST",
           headers: {
             Authorization: `Bearer ${token}`,

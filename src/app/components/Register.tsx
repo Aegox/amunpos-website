@@ -1,12 +1,11 @@
 'use client';
+
 import React, { useState } from "react";
 import Button from "./Button";
-import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { MdOutlineEmail, MdLockOutline, MdVisibility, MdVisibilityOff } from "react-icons/md";
-import useCreateClient from "../hooks/useCreateClient";
 
 // Validación con Zod
 const formSchema = z
@@ -22,7 +21,7 @@ const formSchema = z
           /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[^A-Za-z0-9]).{8,}$/.test(val),
         {
           message:
-            "minimo 8 caracteres, mayusculas, minusculas, numeros y símbolos",
+            "mínimo 8 caracteres, mayúsculas, minúsculas, números y símbolos",
         }
       ),
     confirmPassword: z.string().min(1, "La confirmación de contraseña es requerida"),
@@ -37,7 +36,12 @@ const formSchema = z
 
 type RegisterFormData = z.infer<typeof formSchema>;
 
-const Register: React.FC = () => {
+// Props: recibe onRegister para enviar email+password al flujo padre
+interface RegisterProps {
+  onRegister: (email: string, password: string) => void;
+}
+
+const Register: React.FC<RegisterProps> = ({ onRegister }) => {
   const {
     register,
     handleSubmit,
@@ -47,22 +51,12 @@ const Register: React.FC = () => {
     resolver: zodResolver(formSchema),
   });
 
-  const { createClient, loading, error } = useCreateClient();
   const [showPassword, setShowPassword] = useState(false);
-  const [successMessage, setSuccessMessage] = useState("");
-  const router = useRouter();
 
-  const onSubmit = async (data: RegisterFormData) => {
+  const onSubmit = (data: RegisterFormData) => {
     const { email, password } = data;
-
-    const result = await createClient({ email, password });
-
-    if (result?.token) {
-      localStorage.setItem("token", result.token);
-      reset();
-        localStorage.removeItem("lastAction")
-        router.push("/onboarding"); // 👈 Redirigimos
-    }
+    onRegister(email, password);
+    reset();
   };
 
   return (
@@ -94,16 +88,11 @@ const Register: React.FC = () => {
           }`}
           placeholder="Contraseña"
         />
-        {/* Ícono de visibilidad */}
         <div
           className="absolute right-3 top-3 cursor-pointer"
           onClick={() => setShowPassword(!showPassword)}
         >
-          {showPassword ? (
-            <MdVisibilityOff color="gray" size={20} />
-          ) : (
-            <MdVisibility color="gray" size={20} />
-          )}
+          {showPassword ? <MdVisibilityOff size={20} /> : <MdVisibility size={20} />}
         </div>
         {errors.password && (
           <p className="text-red-500 text-sm mt-1">{errors.password.message}</p>
@@ -127,29 +116,23 @@ const Register: React.FC = () => {
       </div>
 
       {/* Términos y Condiciones */}
-      <div className="flex flex-col justify-between w-full mb-6">
-        <label className="flex items-center gap-2 text-[var(--body-color)]">
-          <input type="checkbox" {...register("termsAccepted")} />
+      <div className="flex items-center mb-6">
+        <input type="checkbox" {...register("termsAccepted")} />
+        <label className="ml-2 text-[var(--body-color)]">
           Acepto términos y condiciones
         </label>
-        {errors.termsAccepted && (
-          <p className="text-red-500 text-sm">{errors.termsAccepted.message}</p>
-        )}
       </div>
-
-      {/* Mensajes */}
-      {error && (
-        <p className="text-red-500 text-sm text-center mb-4">{error}</p>
-      )}
-      {successMessage && (
-        <p className="text-green-600 text-sm text-center mb-4">{successMessage}</p>
+      {errors.termsAccepted && (
+        <p className="text-red-500 text-sm mb-4">
+          {errors.termsAccepted.message}
+        </p>
       )}
 
       {/* Botón de Registro */}
       <Button
-        text={"Registrarse"}
-        styles={`w-full py-3 px-8 mb-6 ${loading ? "opacity-70 cursor-not-allowed" : ""}`}
-        loading={loading}
+        text="Registrarse"
+        styles="w-full py-3 px-8 mb-6"
+        loading={false}
       />
     </form>
   );

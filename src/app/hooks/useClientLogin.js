@@ -5,9 +5,14 @@ const useClientLogin = () => {
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState("");
 
+  const setCookie = (name, value, days) => {
+    const expires = new Date(Date.now() + days * 864e5).toUTCString();
+    document.cookie = `${name}=${encodeURIComponent(value)}; expires=${expires}; path=/; Secure; SameSite=Strict`;
+  };
+
   const loginClient = async ({ email, password }) => {
     setLoading(true);
-    setMessage(""); // Limpiar mensaje anterior
+    setMessage("");
 
     try {
       const res = await fetch("http://localhost:8081/client/login", {
@@ -20,16 +25,16 @@ const useClientLogin = () => {
 
       if (!res.ok) {
         setMessage(data.message || "Error al iniciar sesión");
-        return { error: data.message || "Error al iniciar sesión" }; // Retornar el mensaje de error
+        return { error: data.message || "Error al iniciar sesión" };
       } else {
         setMessage("Inicio de sesión exitoso");
-        localStorage.setItem("token", data.token);
-        localStorage.setItem("user", JSON.stringify(data.user));
-        return { message: "Inicio de sesión exitoso" }; // Retornar el mensaje de éxito
+        setCookie("token", data.token, 7); // Cookie válida 7 días
+        setCookie("user", JSON.stringify(data.user), 7);
+        return { message: "Inicio de sesión exitoso" };
       }
     } catch (error) {
       setMessage("Error en el servidor");
-      return { error: "Error en el servidor" }; // Retornar el mensaje de error en caso de fallo en el servidor
+      return { error: "Error en el servidor" };
     } finally {
       setLoading(false);
     }

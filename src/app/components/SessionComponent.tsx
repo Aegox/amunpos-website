@@ -1,5 +1,4 @@
 import React from "react";
-import Socials from "./Socials";
 import { MdClose } from 'react-icons/md';
 import { FcGoogle } from "react-icons/fc";
 

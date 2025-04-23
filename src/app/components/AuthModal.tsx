@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import SessionComponent from './SessionComponent';
 import Login from './Login';
-import Register from './Register';
+import RegisterFlow from './RegisterFlow';
 
 const AuthModal = () => {
   const [lastAction, setLastAction] = useState(localStorage.getItem('lastAction'));
@@ -44,7 +44,7 @@ const AuthModal = () => {
   if (lastAction === "login") {
     return renderModal(Login, "Inicia sesión en tu cuenta", "Usa tus credenciales para iniciar sesión", "Iniciar sesión", true);
   } else if (lastAction === "register") {
-    return renderModal(Register, "Registra tu cuenta", "Crea una cuenta nueva", "Registrar", false);
+    return renderModal(RegisterFlow, "Registra tu cuenta", "Crea una cuenta nueva", "Registrar", false);
   }
 
   return null;

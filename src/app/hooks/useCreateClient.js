@@ -1,4 +1,4 @@
-"use client";
+'use client';
 import { useState } from "react";
 
 const useCreateClient = () => {
@@ -6,16 +6,19 @@ const useCreateClient = () => {
   const [error, setError] = useState(null);
   const [createdClient, setCreatedClient] = useState(null);
 
+  const setCookie = (name, value, days) => {
+    const expires = new Date(Date.now() + days * 864e5).toUTCString();
+    document.cookie = `${name}=${encodeURIComponent(value)}; expires=${expires}; path=/; Secure; SameSite=Strict`;
+  };
+
   const createClient = async (clientData) => {
     setLoading(true);
     setError(null);
 
     try {
-    const response = await fetch("http://localhost:8081/client/create", {
+      const response = await fetch("http://localhost:8081/client/create", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify(clientData),
       });
 
@@ -26,6 +29,8 @@ const useCreateClient = () => {
 
       const data = await response.json();
       setCreatedClient(data);
+      setCookie("token", data.token, 7); // Guardar cookie
+      setCookie("user", JSON.stringify(data.user), 7);
       return data;
     } catch (err) {
       setError(err.message);
