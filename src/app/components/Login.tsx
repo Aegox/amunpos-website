@@ -3,24 +3,24 @@ import React, { useState } from "react";
 import Button from "./Button";
 import { useForm } from "react-hook-form";
 import { MdOutlineEmail, MdLockOutline, MdVisibility, MdVisibilityOff } from "react-icons/md";
-import useClientLogin from "../hooks/useClientLogin";
+import { useUserLogin } from "../hooks/useUserLogin";
 import { useRouter } from "next/navigation"; 
 
 const Login: React.FC = () => {
   const { register, handleSubmit, formState: { errors }, reset } = useForm();
-  const { loginClient, loading, message } = useClientLogin();
+  const { loginUser, loading, error, user } = useUserLogin();
   
   const [showPassword, setShowPassword] = useState(false);
-  const [error, setError] = useState(""); // Estado para el mensaje de error
+  const [errorState, setErrorState] = useState(""); // Estado para el mensaje de error
   const [successMessage, setSuccessMessage] = useState(""); // Estado para el mensaje de éxito
   const router = useRouter();
 
   const onSubmit = async (data) => {
-    setError(""); // Limpiar el mensaje de error antes de realizar el inicio de sesión
-    const response = await loginClient(data);
+    setErrorState(""); // Limpiar el mensaje de error antes de realizar el inicio de sesión
+    const response = await loginUser(data);
     if (response?.error) {
-      setError(response.error); // Si hay un error, se muestra el mensaje en rojo
-    } else if (response?.message) {
+      setErrorState(response.error); // Si hay un error, se muestra el mensaje en rojo
+    } else if (response) {
       router.push("/dashboard");
       localStorage.removeItem("lastAction")
     }
@@ -74,8 +74,8 @@ const Login: React.FC = () => {
       </div>
 
       {/* Mensajes */}
-      {error && (
-        <p className="text-red-500 text-sm text-center mb-4">{error}</p> // Mostrar mensaje de error en rojo
+      {errorState && (
+        <p className="text-red-500 text-sm text-center mb-4">{errorState}</p> // Mostrar mensaje de error en rojo
       )}
       {successMessage && (
         <p className="text-green-600 text-sm text-center mb-4">{successMessage}</p> // Mostrar mensaje de éxito en verde
@@ -92,4 +92,3 @@ const Login: React.FC = () => {
 };
 
 export default Login;
-

@@ -2,7 +2,7 @@
 import React, { useState } from "react";
 import Register from "./Register";
 import VerifyCode from "./VerifyCode";
-import useCreateClient from "../hooks/useCreateClient";
+import { useUserRegister } from "../hooks/useUserRegister";
 import { useGenerateCode } from "../hooks/useGenerateCode";
 import { useVerifyCode } from "../hooks/useVerifyCode";
 import { useRouter } from "next/navigation";
@@ -12,7 +12,7 @@ const RegisterFlow: React.FC = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
-  const { createClient } = useCreateClient();
+  const { registerUser } = useUserRegister();
   const { generateCode, loading: loadingGenerate, error: errorGenerate } = useGenerateCode();
   const { verifyCode, loading: loadingVerify, error: errorVerify } = useVerifyCode();
   const router = useRouter();
@@ -36,7 +36,8 @@ const RegisterFlow: React.FC = () => {
       return;
     }
 
-    const result = await createClient({ email, password });
+    const result = await registerUser({ email, password });
+    console.log(result)
     if (result?.token) {
       document.cookie = `token=${result.token}; path=/; Secure; SameSite=Strict`;
       localStorage.removeItem('lastAction');

@@ -1,4 +1,3 @@
-
 import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
 
@@ -20,7 +19,7 @@ export function middleware(request: NextRequest) {
 
   // Si el usuario ya tiene token y quiere ir a login/register
   if (token && authRoutes.some(route => pathname.startsWith(route))) {
-    return NextResponse.redirect(new URL('/dashboard', request.url))
+    return NextResponse.redirect(new URL('/onboarding', request.url))
   }
 
   // Si todo bien, dejar pasar

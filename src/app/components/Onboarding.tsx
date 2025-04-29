@@ -2,10 +2,12 @@
 
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-import useUpdateClient from "../hooks/useUpdateClient";
+import { useUserEdit } from "../hooks/useUserEdit"; 
 import { motion } from "framer-motion";
 import Button from "./Button";
 import { useRouter } from "next/navigation";  // Esto es para redirigir en Next.js
+import { getCookie } from "../utils/cookie";
+import { useVerifyToken } from "../hooks/useVerifyToken";
 
 interface BusinessFormData {
   businessName: string;
@@ -15,7 +17,6 @@ interface BusinessFormData {
 
 const BusinessFormModal: React.FC = () => {
   const [isOpen, setIsOpen] = useState(true);
-  const token = localStorage.getItem("token");
   const router = useRouter(); // Hook para redirección
 
   const {
@@ -25,14 +26,18 @@ const BusinessFormModal: React.FC = () => {
   } = useForm<BusinessFormData>();
 
   const {
-    updateClient,
+    editUser,
     loading,
     error,
-  } = useUpdateClient();
+  } = useUserEdit();
+
+  // Obtener el token de la cookie (ejemplo: 'token')
+  const token = typeof window !== 'undefined' ? getCookie('token') : null;
+  const { loading: loadingToken, isValid, errorMsg } = useVerifyToken(token);
 
   const onSubmit = async (data: BusinessFormData) => {
-    if (token) {
-      const clientUpdated = await updateClient(token, data);
+    if (token && isValid) {
+      const clientUpdated = await editUser(token, data);
 
       if (clientUpdated) {
         // Si el cliente fue actualizado correctamente, redirigimos al dashboard
@@ -42,13 +47,15 @@ const BusinessFormModal: React.FC = () => {
         console.error("Error al actualizar cliente:", error);
       }
     } else {
-      console.error("Token no encontrado en localStorage");
+      console.error("Token no encontrado o inválido");
     }
 
     setIsOpen(false);
   };
 
-  if (!isOpen) return null;
+  // Esperar a que termine la verificación del token
+  if (loadingToken) return null;
+  if (!isOpen || !isValid) return null;
 
   return (
     <motion.div
@@ -145,4 +152,3 @@ const BusinessFormModal: React.FC = () => {
 };
 
 export default BusinessFormModal;
-
