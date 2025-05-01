@@ -12,7 +12,7 @@ export const useUserProfile = () => {
     setError(null);
     setProfile(null);
     try {
-      const response = await fetch(`${getApiUrl()}/user/${userId}`, {
+      const response = await fetch(`${getApiUrl()}/user/edit`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',

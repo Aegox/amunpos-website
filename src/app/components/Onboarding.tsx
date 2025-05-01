@@ -1,23 +1,22 @@
 "use client";
 
-import { useState } from "react";
+import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useUserEdit } from "../hooks/useUserEdit"; 
 import { motion } from "framer-motion";
 import Button from "./Button";
-import { useRouter } from "next/navigation";  // Esto es para redirigir en Next.js
+import { useRouter } from "next/navigation";
 import { getCookie } from "../utils/cookie";
-import { useVerifyToken } from "../hooks/useVerifyToken";
 
 interface BusinessFormData {
-  businessName: string;
-  businessType: string;
+  companyName: string;
+  companyType: string;
   employeeRange: string;
 }
 
-const BusinessFormModal: React.FC = () => {
-  const [isOpen, setIsOpen] = useState(true);
-  const router = useRouter(); // Hook para redirección
+const BusinessFormModal = () => {
+  const router = useRouter();
+  const [error, setError] = useState<string | null>(null);
 
   const {
     register,
@@ -28,34 +27,28 @@ const BusinessFormModal: React.FC = () => {
   const {
     editUser,
     loading,
-    error,
+    error: errorEdit,
   } = useUserEdit();
 
-  // Obtener el token de la cookie (ejemplo: 'token')
-  const token = typeof window !== 'undefined' ? getCookie('token') : null;
-  const { loading: loadingToken, isValid, errorMsg } = useVerifyToken(token);
-
   const onSubmit = async (data: BusinessFormData) => {
-    if (token && isValid) {
-      const clientUpdated = await editUser(token, data);
-
-      if (clientUpdated) {
-        // Si el cliente fue actualizado correctamente, redirigimos al dashboard
-        router.push("/dashboard");
-      } else {
-        // Manejo de errores si la actualización falla
-        console.error("Error al actualizar cliente:", error);
+    try {
+      const token = typeof window !== 'undefined' ? getCookie('token') : null;
+      if (!token) {
+        setError("No hay token válido");
+        return;
       }
-    } else {
-      console.error("Token no encontrado o inválido");
+
+      const clientUpdated = await editUser(token, data);
+      
+      if (clientUpdated) {
+        window.location.href = 'http://localhost:5173/';
+      } else {
+        setError("Error al actualizar los datos");
+      }
+    } catch (err) {
+      setError("Error en el servidor");
     }
-
-    setIsOpen(false);
   };
-
-  // Esperar a que termine la verificación del token
-  if (loadingToken) return null;
-  if (!isOpen || !isValid) return null;
 
   return (
     <motion.div
@@ -80,28 +73,28 @@ const BusinessFormModal: React.FC = () => {
 
           {/* Nombre del negocio */}
           <div>
-            <label htmlFor="businessName" className="block text-sm font-medium text-gray-700">
+            <label htmlFor="companyName" className="block text-sm font-medium text-gray-700">
               Nombre de tu negocio
             </label>
             <input
-              id="businessName"
+              id="companyName"
               type="text"
-              {...register("businessName", { required: "El nombre del negocio es obligatorio" })}
+              {...register("companyName", { required: "El nombre del negocio es obligatorio" })}
               className={`bg-white block w-full py-[10px] px-3 text-gray-700 placeholder-gray-600 border-[0.3px] rounded-md transition-colors duration-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500 ${errors.businessName ? "border-red-500" : ""}`}
             />
-            {errors.businessName && (
-              <p className="text-red-500 text-sm mt-1">{errors.businessName.message}</p>
+            {errors.companyName && (
+              <p className="text-red-500 text-sm mt-1">{errors.companyName.message}</p>
             )}
           </div>
 
           {/* Tipo de negocio */}
           <div>
-            <label htmlFor="businessType" className="block text-sm font-medium text-gray-700">
+            <label htmlFor="companyType" className="block text-sm font-medium text-gray-700">
               Tipo de negocio
             </label>
             <select
-              id="businessType"
-              {...register("businessType", { required: "Selecciona el tipo de negocio" })}
+              id="companyType"
+              {...register("companyType", { required: "Selecciona el tipo de negocio" })}
               className={`bg-white block w-full py-[11px] px-3 pr-5 text-gray-700 border-[0.3px] rounded-md transition-colors duration-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500 ${errors.businessType ? "border-red-500" : ""}`}
             >
               <option value="">Seleccione una opción</option>
@@ -114,8 +107,8 @@ const BusinessFormModal: React.FC = () => {
               <option value="tecnologia">Tecnología</option>
               <option value="servicios">Servicios</option>
             </select>
-            {errors.businessType && (
-              <p className="text-red-500 text-sm mt-1">{errors.businessType.message}</p>
+            {errors.companyType && (
+              <p className="text-red-500 text-sm mt-1">{errors.companyType.message}</p>
             )}
           </div>
 
@@ -143,7 +136,11 @@ const BusinessFormModal: React.FC = () => {
 
           {/* Botón de continuar */}
           <div>
-            <Button text="Continuar" styles="w-full" loading={loading} />
+            <Button 
+              text="Continuar" 
+              styles="w-full" 
+              loading={loading} 
+            />
           </div>
         </form>
       </div>

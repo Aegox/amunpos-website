@@ -5,17 +5,27 @@ import { useRouter } from "next/navigation";
 import { useVerifyToken } from "../hooks/useVerifyToken";
 import { FaSpinner } from "react-icons/fa";
 import Onboarding from "../components/Onboarding";
+import { getCookie } from "../utils/cookie";
 
 const OnboardingPage = () => {
   const router = useRouter();
   const [token, setToken] = useState<string | null>(null);
 
   useEffect(() => {
-    const storedToken = localStorage.getItem("token");
-    setToken(storedToken);
+    const storedToken = typeof window !== 'undefined' ? getCookie('token') : null;
+    setToken(storedToken || null);
   }, []);
 
-  const { loading, isValid } = useVerifyToken(token);
+  const { verifyToken, loading, isValid, errorMsg } = useVerifyToken();
+
+  useEffect(() => {
+    const checkToken = async () => {
+      if (token) {
+        await verifyToken(token);
+      }
+    };
+    checkToken();
+  }, [token, verifyToken]);
 
   useEffect(() => {
     if (!loading && isValid === false) {
@@ -23,10 +33,19 @@ const OnboardingPage = () => {
     }
   }, [loading, isValid, router]);
 
-  if (!token || loading || isValid === null) {
+  if (loading || isValid === null) {
     return (
       <div className="flex justify-center items-center h-screen">
         <FaSpinner size={40} className="animate-spin" />
+      </div>
+    );
+  }
+
+  if (errorMsg) {
+    return (
+      <div className="flex flex-col justify-center items-center h-screen">
+        <FaSpinner size={40} className="animate-spin mb-4" />
+        <p className="text-red-500">{errorMsg}</p>
       </div>
     );
   }

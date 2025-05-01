@@ -4,6 +4,7 @@ import { usePathname, useRouter } from 'next/navigation';
 import Image from 'next/image';
 import Link from 'next/link';
 import Button from './Button';
+import { getCookie } from '../utils/cookie';
 
 const NavBar: React.FC = () => {
   const pathname = usePathname();
@@ -19,7 +20,8 @@ const NavBar: React.FC = () => {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
 
   useEffect(() => {
-    const token = localStorage.getItem('token');
+    const token = getCookie('token');
+    setIsAuthenticated(!!token);
 
     let lastScrollY = window.scrollY;
 
@@ -36,6 +38,11 @@ const NavBar: React.FC = () => {
   }, []);
 
   const handleClick = (type: string) => {
+    const token = getCookie('token');
+    if (token) {
+      window.location.href = 'http://localhost:5173/';
+      return;
+    }
     localStorage.setItem('lastAction', type);
   };
 

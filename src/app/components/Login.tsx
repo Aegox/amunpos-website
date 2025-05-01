@@ -21,7 +21,7 @@ const Login: React.FC = () => {
     if (response?.error) {
       setErrorState(response.error); // Si hay un error, se muestra el mensaje en rojo
     } else if (response) {
-      router.push("/dashboard");
+      window.location.href = 'http://localhost:5173/';
       localStorage.removeItem("lastAction")
     }
 
