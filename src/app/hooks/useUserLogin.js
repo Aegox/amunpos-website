@@ -28,7 +28,6 @@ export const useUserLogin = () => {
         return false;
       }
       setCookie('token', data.token, 7);
-      setCookie('user', JSON.stringify(data), 7);
       setUser(data);
       return data;
     } catch (err) {

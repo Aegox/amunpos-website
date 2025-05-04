@@ -41,7 +41,7 @@ const RegisterFlow: React.FC = () => {
     if (result?.token) {
       document.cookie = `token=${result.token}; path=/; Secure; SameSite=Strict`;
       localStorage.removeItem('lastAction');
-      window.location.href = 'http://localhost:5173/';
+      window.location.href = 'http://localhost:3000/onboarding';
     }
   };
 
