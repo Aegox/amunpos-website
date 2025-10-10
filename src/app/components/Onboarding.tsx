@@ -5,8 +5,8 @@ import { useForm } from "react-hook-form";
 import { useUserEdit } from "../hooks/useUserEdit"; 
 import { motion } from "framer-motion";
 import Button from "./Button";
-import { useRouter } from "next/navigation";
 import { getCookie } from "../utils/cookie";
+import Image from 'next/image';
 
 interface BusinessFormData {
   companyName: string;
@@ -15,8 +15,7 @@ interface BusinessFormData {
 }
 
 const BusinessFormModal = () => {
-  const router = useRouter();
-  const [error, setError] = useState<string | null>(null);
+  const [, setError] = useState<string | null>(null);
 
   const {
     register,
@@ -27,7 +26,6 @@ const BusinessFormModal = () => {
   const {
     editUser,
     loading,
-    error: errorEdit,
   } = useUserEdit();
 
   const onSubmit = async (data: BusinessFormData) => {
@@ -45,7 +43,7 @@ const BusinessFormModal = () => {
       } else {
         setError("Error al actualizar los datos");
       }
-    } catch (err) {
+    } catch {
       setError("Error en el servidor");
     }
   };
@@ -59,8 +57,10 @@ const BusinessFormModal = () => {
       className="fixed inset-0 bg-gray-50 flex items-center justify-center"
     >
       <div className="absolute z-30 -top-20 -right-20 w-[400px] h-[400px] bg-[var(--primary-color)] rounded-full filter blur-3xl opacity-15"></div>
-      <img 
+      <Image 
         src="/hero_bg2.png" 
+        layout="fill"
+        objectFit="cover"
         className="absolute top-0 left-0 w-full h-full object-cover animate-move-image z-10" 
         alt="a hero sprite"
       />
@@ -80,7 +80,7 @@ const BusinessFormModal = () => {
               id="companyName"
               type="text"
               {...register("companyName", { required: "El nombre del negocio es obligatorio" })}
-              className={`bg-white block w-full py-[10px] px-3 text-gray-700 placeholder-gray-600 border-[0.3px] rounded-md transition-colors duration-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500 ${errors.businessName ? "border-red-500" : ""}`}
+              className={`bg-white block w-full py-[10px] px-3 text-gray-700 placeholder-gray-600 border-[0.3px] rounded-md transition-colors duration-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500 ${errors.companyName ? "border-red-500" : ""}`}
             />
             {errors.companyName && (
               <p className="text-red-500 text-sm mt-1">{errors.companyName.message}</p>
@@ -95,7 +95,7 @@ const BusinessFormModal = () => {
             <select
               id="companyType"
               {...register("companyType", { required: "Selecciona el tipo de negocio" })}
-              className={`bg-white block w-full py-[11px] px-3 pr-5 text-gray-700 border-[0.3px] rounded-md transition-colors duration-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500 ${errors.businessType ? "border-red-500" : ""}`}
+              className={`bg-white block w-full py-[11px] px-3 pr-5 text-gray-700 border-[0.3px] rounded-md transition-colors duration-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500 ${errors.companyType ? "border-red-500" : ""}`}
             >
               <option value="">Seleccione una opción</option>
               <option value="restaurante">Restaurante</option>
@@ -140,6 +140,8 @@ const BusinessFormModal = () => {
               text="Continuar" 
               styles="w-full" 
               loading={loading} 
+              theme="black"
+              variant="inverted"
             />
           </div>
         </form>

@@ -2,6 +2,7 @@
 import React from "react";
 import { motion } from "framer-motion";
 import PricingCard from "./PricingCard";
+import Image from 'next/image';
 
 interface PricingPlan {
   id: number;
@@ -64,8 +65,8 @@ const Pricing: React.FC = () => {
   return (
     <section id="Planes" className="relative flex flex-col justify-center items-center px-5 pb-22 pt-30 bg-[var(--body-color)] pricing-gradient">
       {/* Imágenes en el fondo */}
-      <img src="/Vector3.svg" alt="a vector shape" className="absolute top-45 right-0 z-[-1]" />
-      <img src="/dot.svg" alt="a vector shape" className="absolute top-80 left-50 z-[-1]" />
+      <Image src="/Vector3.svg" alt="a vector shape" layout="fill" objectFit="contain" className="absolute top-45 right-0 z-[-1]" />
+      <Image src="/dot.svg" alt="a vector shape" layout="fill" objectFit="contain" className="absolute top-80 left-50 z-[-1]" />
 
       {/* Contenido principal */}
       <div className="z-10 flex flex-col items-center w-full">

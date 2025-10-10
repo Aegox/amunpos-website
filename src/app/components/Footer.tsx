@@ -1,6 +1,7 @@
 import React from  "react";
 import Button from  "./Button";
 import Socials from  "./Socials";
+import Image from 'next/image';
 
 const Footer: React.FC = () => {
   return (
@@ -8,9 +9,9 @@ const Footer: React.FC = () => {
     {/* Main Content Container */}
       <div className="gap-8 h-full xl:w-[90%]  mb-[50px] xl:mb-[110px] flex flex-col xl:flex-row xl:justify-between  ">
       <article>
-        <img src="/logo.png" alt="amunpos logo" className="w-auto h-[25px] mb-8 mt-2"/>
+        <Image src="/logo.png" alt="amunpos logo" width={150} height={25} className="w-auto h-[25px] mb-8 mt-2"/>
         <p className="text-white w-full xl:w-[330px]">Nuestro software de punto de venta es una solución definitiva que transforma tus operaciones comerciales en una fuerza eficiente y fluida, destacando la simplicidad, versatilidad de vanguardia.</p>
-        <Socials/>
+        <Socials styles=""/>
 
       </article>
 
@@ -32,7 +33,7 @@ const Footer: React.FC = () => {
         <div className="relative flex items-center justify-center ">
           <input placeholder="Tu correo electronico" className="w-full border-0 py-[11px] px-[20px] bg-white rounded-md focus:outline-none"/>
           <Button text="Enviar" theme="black" variant="inverted" styles="right-1" absolute={true}/>
-          <img src="/Vector.svg" alt="a vector shape" className="hidden xl:block xl:absolute xl:visible top-45 right-0" />
+          <Image src="/Vector.svg" alt="a vector shape" layout="fill" objectFit="contain" className="hidden xl:block xl:absolute xl:visible top-45 right-0" />
         </div>
       </form>
     </div>

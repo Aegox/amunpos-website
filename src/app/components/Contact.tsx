@@ -4,6 +4,7 @@ import React from "react";
 import { useForm } from "react-hook-form";
 import Button from "./Button";
 import useSendEmail from "../hooks/useSendEmail"; // Importamos el hook
+import Image from 'next/image';
 
 type FormValues = {
   name: string;
@@ -57,9 +58,11 @@ const Contacto: React.FC = () => {
               className="flex justify-center w-full h-full min-w-[45%] md:w-[45%] 2xl:w-1/2 mb-6 xl:mb-0 xl:order-last"
             >
               <div className="text-center">
-                <img
+                <Image
                   src="/contacto2.png"
                   alt="contact photo"
+                  width={500}
+                  height={650}
                   className="md:min-w-[500px] w-auto h-auto 2xl:h-[650px] md:min-h-[500px]"
                 />
               </div>

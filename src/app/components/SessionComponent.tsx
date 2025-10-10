@@ -1,11 +1,13 @@
 import React from "react";
 import { MdClose } from 'react-icons/md';
 import { FcGoogle } from "react-icons/fc";
+import Image from 'next/image';
 
 interface SessionComponentProps {
-  Component: React.FC;
+  Component: React.ComponentType;
   title: string;
   description: string;
+  buttonText: string;
   question: boolean;
 }
 
@@ -13,7 +15,7 @@ const SessionComponent: React.FC<SessionComponentProps> = ({ Component, title, d
   const handleClose = () => {
     localStorage.removeItem('lastAction'); // Elimina el valor de lastAction
   };
-  const handleTo = (type) => {
+  const handleTo = (type: string) => {
     localStorage.setItem("lastAction", type)
   }
 
@@ -25,7 +27,7 @@ const SessionComponent: React.FC<SessionComponentProps> = ({ Component, title, d
       >
         <MdClose size={20} className="text-white" />
       </button>
-      <img src="/logo.png" alt="logo de amunpos" className="h-[20px] w-auto mb-6"/>
+      <Image src="/logo.png" alt="logo de amunpos" width={150} height={20} className="h-[20px] w-auto mb-6"/>
       <h1 className="text-center pb-2 text-[var(--heading-color)]  text-[22px] leading-[1.4em] font-bold">{title}</h1>
       <p className="w-full text-center text-[var(--body-color)] pb-8">{description}</p>
       <Component />

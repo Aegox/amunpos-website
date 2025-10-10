@@ -31,9 +31,14 @@ const useSendEmail = () => {
       }
 
       setSuccess(true);
-    } catch (err: any) {
+    } catch (err) {
       console.error('Error al enviar el correo:', err);
-      setError(err.message || 'Error al enviar el correo');
+      if (err instanceof Error) {
+        setError(err.message);
+      } else {
+        setError('An unknown error occurred');
+      }
+
     } finally {
       setLoading(false);
     }

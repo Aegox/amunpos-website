@@ -4,6 +4,7 @@ import { AiOutlineShop, AiOutlineShoppingCart, AiOutlineCoffee, AiOutlineShoppin
 import { FaHotel, FaSpa } from 'react-icons/fa';
 import { IoIosCart } from 'react-icons/io';
 import { motion } from "framer-motion";
+import Image from 'next/image';
 
 const UseCases: React.FC = () => {
   return (
@@ -15,7 +16,7 @@ const UseCases: React.FC = () => {
             transition={{ duration: 0.4 }}
             className="w-[90%] pb-10 2xl:w-[38%] xl:w-[40%]"
        >
-      <img src="/illustration1.svg" alt="a people paying with a card of money" /> 
+      <Image src="/illustration1.svg" alt="a people paying with a card of money" width={500} height={500} /> 
       </motion.div>
       <motion.div 
             initial={{ opacity: 0, x: 0 }}

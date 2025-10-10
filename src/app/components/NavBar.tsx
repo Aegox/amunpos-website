@@ -10,10 +10,6 @@ const NavBar: React.FC = () => {
   const pathname = usePathname();
   const router = useRouter();
 
-  if (pathname === '/onboarding' || pathname === '/dashboard') {
-    return null;
-  }
-
   const [scrollY, setScrollY] = useState<number>(0);
   const [isScrollingDown, setIsScrollingDown] = useState<boolean>(false);
   const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
@@ -50,6 +46,10 @@ const NavBar: React.FC = () => {
     localStorage.removeItem('token');
     router.push('/');
   };
+
+  if (pathname === '/onboarding' || pathname === '/dashboard') {
+    return null;
+  }
 
   return (
     <nav
@@ -104,9 +104,11 @@ const NavBar: React.FC = () => {
         {/* Ícono hamburguesa para móvil */}
         <div className="xl:hidden pt-1">
           <button onClick={() => setIsMenuOpen(true)} aria-label="Abrir menú">
-            <img
+            <Image
               src="/bars.svg"
               alt="bars for menu mobile"
+              width={30}
+              height={30}
               className="cursor-pointer w-[30px] h-[30px]"
             />
           </button>
@@ -118,9 +120,11 @@ const NavBar: React.FC = () => {
         <div className="xl:hidden absolute top-0 left-0 w-full h-screen bg-white flex flex-col items-center justify-center gap-6 z-40">
           <div className="absolute top-4 right-4 pt-4 pr-2">
             <button onClick={() => setIsMenuOpen(false)} aria-label="Cerrar menú">
-              <img
+              <Image
                 src="/quit.svg"
                 alt="x for menu mobile"
+                width={20}
+                height={20}
                 className="cursor-pointer w-[20px] h-[20px]"
               />
             </button>

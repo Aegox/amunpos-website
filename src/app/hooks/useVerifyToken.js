@@ -33,7 +33,7 @@ export const useVerifyToken = () => {
         setErrorMsg(data.message || "Token inválido");
         return false;
       }
-    } catch (error) {
+    } catch {
       setErrorMsg("Error al verificar token");
       return false;
     } finally {

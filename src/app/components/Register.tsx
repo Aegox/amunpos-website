@@ -39,9 +39,10 @@ type RegisterFormData = z.infer<typeof formSchema>;
 // Props: recibe onRegister para enviar email+password al flujo padre
 interface RegisterProps {
   onRegister: (email: string, password: string) => void;
+  loading: boolean;
 }
 
-const Register: React.FC<RegisterProps> = ({ onRegister }) => {
+const Register: React.FC<RegisterProps> = ({ onRegister, loading }) => {
   const {
     register,
     handleSubmit,
@@ -132,7 +133,9 @@ const Register: React.FC<RegisterProps> = ({ onRegister }) => {
       <Button
         text="Registrarse"
         styles="w-full py-3 px-8 mb-6"
-        loading={false}
+        loading={loading}
+        theme="black"
+        variant="inverted"
       />
     </form>
   );

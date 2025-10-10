@@ -1,6 +1,7 @@
 'use client';
 import React from "react";
 import { motion } from "framer-motion";
+import Image from 'next/image';
 
 interface Caracteristica {
   id: number;
@@ -41,7 +42,7 @@ const SoftwareFeatures: React.FC = () => {
             transition={{ duration: 0.4 }}
             className="w-[90%] 2xl:w-[36%] xl:w-[40%]"
        >
-      <img src="/illustration.svg" alt="a people paying with a card of money" className="" /> 
+      <Image src="/illustration.svg" alt="a people paying with a card of money" width={500} height={500} className="" /> 
       </motion.div>
       <motion.div
         initial={{ opacity: 0, y: 0 }}

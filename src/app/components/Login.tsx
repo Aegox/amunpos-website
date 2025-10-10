@@ -4,25 +4,30 @@ import Button from "./Button";
 import { useForm } from "react-hook-form";
 import { MdOutlineEmail, MdLockOutline, MdVisibility, MdVisibilityOff } from "react-icons/md";
 import { useUserLogin } from "../hooks/useUserLogin";
-import { useRouter } from "next/navigation"; 
+
+interface LoginFormData {
+  email: string;
+  password: string;
+}
 
 const Login: React.FC = () => {
-  const { register, handleSubmit, formState: { errors }, reset } = useForm();
-  const { loginUser, loading, error, user } = useUserLogin();
+  const { register, handleSubmit, formState: { errors }, reset } = useForm<LoginFormData>();
+  const { loginUser, loading } = useUserLogin();
   
   const [showPassword, setShowPassword] = useState(false);
   const [errorState, setErrorState] = useState(""); // Estado para el mensaje de error
-  const [successMessage, setSuccessMessage] = useState(""); // Estado para el mensaje de éxito
-  const router = useRouter();
+  const [successMessage] = useState(""); // Estado para el mensaje de éxito
 
-  const onSubmit = async (data) => {
+  const onSubmit = async (data: LoginFormData) => {
     setErrorState(""); // Limpiar el mensaje de error antes de realizar el inicio de sesión
     const response = await loginUser(data);
     if (response?.error) {
       setErrorState(response.error); // Si hay un error, se muestra el mensaje en rojo
     } else if (response) {
-      window.location.href = 'http://localhost:5173/';
-      localStorage.removeItem("lastAction")
+      if (typeof window !== "undefined") {
+        window.localStorage.removeItem("lastAction");
+        window.location.href = "http://localhost:5173/";
+      }
     }
 
     reset(); // Opcional, para limpiar los campos
@@ -42,7 +47,7 @@ const Login: React.FC = () => {
           placeholder="Correo electrónico"
         />
         {errors.email && (
-          <p className="text-red-500 text-sm mt-1">{errors.email.message}</p>
+          <p className="text-red-500 text-sm mt-1">{String(errors.email.message)}</p>
         )}
       </div>
 
@@ -69,7 +74,7 @@ const Login: React.FC = () => {
           )}
         </div>
         {errors.password && (
-          <p className="text-red-500 text-sm mt-1">{errors.password.message}</p>
+          <p className="text-red-500 text-sm mt-1">{String(errors.password.message)}</p>
         )}
       </div>
 
@@ -86,6 +91,8 @@ const Login: React.FC = () => {
         text={"Iniciar sesión"}
         styles={`w-full py-3 px-8 mb-6 ${loading ? "opacity-70 cursor-not-allowed" : ""}`}
         loading={loading}
+        theme="black"
+        variant="inverted"
       />
     </form>
   );

@@ -5,7 +5,6 @@ import VerifyCode from "./VerifyCode";
 import { useUserRegister } from "../hooks/useUserRegister";
 import { useGenerateCode } from "../hooks/useGenerateCode";
 import { useVerifyCode } from "../hooks/useVerifyCode";
-import { useRouter } from "next/navigation";
 
 const RegisterFlow: React.FC = () => {
   const [step, setStep] = useState<'register' | 'verify'>('register');
@@ -15,7 +14,6 @@ const RegisterFlow: React.FC = () => {
   const { registerUser } = useUserRegister();
   const { generateCode, loading: loadingGenerate, error: errorGenerate } = useGenerateCode();
   const { verifyCode, loading: loadingVerify, error: errorVerify } = useVerifyCode();
-  const router = useRouter();
 
   const handleRegister = async (emailInput: string, passwordInput: string) => {
     setEmail(emailInput);

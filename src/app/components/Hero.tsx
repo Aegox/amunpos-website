@@ -1,13 +1,16 @@
 import React from "react";
 import Button from "./Button";
+import Image from 'next/image';
 
 const Hero: React.FC = () => {
   return (
     <div id="Inicio" className="relative flex flex-col-reverse gap-15 lg:flex-row items-center justify-center relative w-full h-full lg:h-[900px] overflow-hidden pt-[150px] px-10 z-30 lg:pb-10 pb-20">
 <div className="absolute z-30 -top-20 -right-20 w-[450px] h-[450px] bg-[var(--primary-color)] rounded-full filter blur-3xl opacity-15"></div>
-      <img 
+      <Image 
         src="/hero_bg2.png" 
-        className="absolute top-0 left-0 w-full h-full object-cover animate-move-image z-10" 
+        layout="fill"
+        objectFit="cover"
+        className="absolute top-0 left-0 w-full h-full animate-move-image z-10" 
         alt="a hero sprite"
       />
       <div className="light-effect"></div>
@@ -19,7 +22,7 @@ const Hero: React.FC = () => {
           <Button theme="black" variant="inverted" text="Prueba gratis" styles="py-[12px] px-[30px]"/>
         </div>
       </section>
-      <img src="hero_img.png" alt="a seller employer" className="z-20 object-cover w-[90%] h-[60%] lg:w-[450px] lg:min-w-[350px]"/>
+      <Image src="/hero_img.png" alt="a seller employer" width={450} height={600} className="z-20 object-cover w-[90%] h-[60%] lg:w-[450px] lg:min-w-[350px]"/>
 
     </div>
   );

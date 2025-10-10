@@ -1,5 +1,6 @@
 import React from "react";
 import { AiOutlineCheck, AiOutlineClose } from 'react-icons/ai';
+import Image from 'next/image';
 
 
 type PricingCardProps = {
@@ -21,7 +22,7 @@ const PricingCard: React.FC<PricingCardProps> = ({ id, icon, title, target, pric
     {isDefault && (<div className="bg-[var(--red-color)] py-1 w-[220px] text-center rotate-40 text-white font-bold top-8 right-[-50px] absolute transform-[45]">Más popular</div>)}
       <header className="flex w-full h-auto gap-4 pl-4">
         <div className={`group-hover:border-white group-hover:bg-white ${isDefault ? 'border-white bg-white' : ''} w-[60px] h-[60px] xl:w-[80px] xl:h-[80px] flex justify-center items-center border-1 rounded-[100%]`}>
-          <img src={icon} alt="a icon of price plan" />
+          <Image src={icon} alt="a icon of price plan" width={40} height={40} />
         </div>
         <div className="flex flex-col w-auto">
           <h1 className={`pb-1 2xl:w-[90%] xl:w-[100%] text-[${isDefault ? 'white' : 'var(--heading-color)'}] group-hover:text-white text-[1.875rem] leading-[1.4em] font-bold`}>{title}</h1>

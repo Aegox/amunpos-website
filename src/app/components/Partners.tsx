@@ -1,6 +1,7 @@
 'use client';
 import { motion } from "framer-motion";
 import React from "react";
+import Image from 'next/image';
 
 const Partners: React.FC = () => {
   return (
@@ -23,44 +24,56 @@ const Partners: React.FC = () => {
     </motion.div>
       <ul className="flex w-full justify-center flex-wrap gap-5 lg:gap-15">
         <li>
-          <img 
+          <Image 
             src="/brand_1.svg" 
             alt="a partner of amunpos in the world"
+            width={100}
+            height={50}
             className="filter grayscale transition duration-300 hover:grayscale-0" 
           />
         </li>       
         <li>
-          <img 
+          <Image 
             src="/brand_2.svg" 
             alt="a partner of amunpos in the world"
+            width={100}
+            height={50}
             className="filter grayscale transition duration-300 hover:grayscale-0" 
           />
         </li>
         <li>
-          <img 
+          <Image 
             src="/brand_3.svg" 
             alt="a partner of amunpos in the world"
+            width={100}
+            height={50}
             className="filter grayscale transition duration-300 hover:grayscale-0" 
           />
         </li>
         <li>
-          <img 
+          <Image 
             src="/brand_4.svg" 
             alt="a partner of amunpos in the world"
+            width={100}
+            height={50}
             className="filter grayscale transition duration-300 hover:grayscale-0" 
           />
         </li>
         <li>
-          <img 
+          <Image 
             src="/brand_5.svg" 
             alt="a partner of amunpos in the world"
+            width={100}
+            height={50}
             className="filter grayscale transition duration-300 hover:grayscale-0" 
           />
         </li>
         <li>
-          <img 
+          <Image 
             src="/brand_6.svg" 
             alt="a partner of amunpos in the world"
+            width={100}
+            height={50}
             className="filter grayscale transition duration-300 hover:grayscale-0" 
           />
         </li>
