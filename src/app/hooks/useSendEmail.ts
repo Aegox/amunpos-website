@@ -1,5 +1,6 @@
 'use client';
 import { useState } from 'react';
+import { getApiUrl } from '../utils/api';
 
 interface SendEmailParams {
   to: string;
@@ -17,7 +18,7 @@ const useSendEmail = () => {
     setError(null);
     setSuccess(false);
     try {
-      const response = await fetch('http://localhost:8083/mails/send', {
+      const response = await fetch(`${getApiUrl()}/mails/send`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

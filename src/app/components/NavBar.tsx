@@ -36,7 +36,7 @@ const NavBar: React.FC = () => {
   const handleClick = (type: string) => {
     const token = getCookie('token');
     if (token) {
-      window.location.href = 'http://localhost:5173/';
+      window.location.href = 'https://amun-pos.vercel.app/';
       return;
     }
     window.localStorage.setItem('lastAction', type);
