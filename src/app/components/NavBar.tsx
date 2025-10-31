@@ -39,11 +39,11 @@ const NavBar: React.FC = () => {
       window.location.href = 'http://localhost:5173/';
       return;
     }
-    localStorage.setItem('lastAction', type);
+    window.localStorage.setItem('lastAction', type);
   };
 
   const handleLogout = () => {
-    localStorage.removeItem('token');
+    window.localStorage.removeItem('token');
     router.push('/');
   };
 
