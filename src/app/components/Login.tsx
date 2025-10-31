@@ -26,7 +26,7 @@ const Login: React.FC = () => {
     } else if (response) {
       if (typeof window !== "undefined") {
         window.localStorage.removeItem("lastAction");
-        window.location.href = "https://amun-pos-git-produccion-aegoxs-projects.vercel.app/";
+        window.location.href = "https://amun-pos.vercel.app/";
       }
     }
 

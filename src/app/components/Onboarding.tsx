@@ -39,7 +39,7 @@ const BusinessFormModal = () => {
       const clientUpdated = await editUser(token, data);
       
       if (clientUpdated) {
-        window.location.href = 'https://amun-pos-git-produccion-aegoxs-projects.vercel.app/';
+        window.location.href = 'https://amun-pos.vercel.app/';
       } else {
         setError("Error al actualizar los datos");
       }
