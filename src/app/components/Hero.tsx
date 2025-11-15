@@ -4,7 +4,7 @@ import Image from 'next/image';
 
 const Hero: React.FC = () => {
   return (
-    <div id="Inicio" className="relative flex flex-col-reverse gap-15 lg:flex-row items-center justify-center relative w-full h-full 2xl:h-[900px] xl:h-[700px] overflow-hidden pt-[75px] xl:pt-[60px] px-10 z-30 xl:pb-10 pb-20 lg:pt-30">
+    <div id="Inicio" className="relative flex flex-col-reverse gap-15 lg:flex-row items-center justify-center relative w-full h-full 2xl:h-[900px] xl:h-[700px] overflow-hidden pt-[75px] xl:pt-[70px] lg:px-10 px-5 z-30 xl:pb-10 pb-20 lg:pt-30">
     <div className="absolute z-30 -top-20 -right-20 w-[450px] h-[450px] bg-[var(--primary-color)] rounded-full filter blur-3xl opacity-15"></div>
       <Image 
         src="/hero_bg2.png" 
@@ -22,7 +22,7 @@ const Hero: React.FC = () => {
           <Button theme="black" variant="inverted" text="Prueba gratis" styles="py-[12px] px-[30px]"/>
         </div>
       </section>
-      <Image src="/hero_img.png" alt="a seller employer" width={450} height={600} className="z-20 object-cover w-[32%] h-auto xl:w-[32%] xl:h-auto"/>
+      <Image src="/hero_img.png" alt="a seller employer" width={450} height={600} className="z-100 object-cover w-[100%] h-auto pt-[50px] lg:pt-0 lg:w-[32%]"/>
 
     </div>
   );

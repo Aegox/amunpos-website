@@ -53,7 +53,7 @@ const NavBar: React.FC = () => {
 
   return (
     <nav
-      className={`fixed flex top-0 h-[90px] w-full xl:justify-center transition-all duration-300 navbar-slide z-50 ${
+      className={`fixed flex top-0 xl:h-[90px] h-[80px] w-full xl:justify-center transition-all duration-300 navbar-slide z-50 ${
         scrollY === 0
           ? 'bg-transparent shadow-none'
           : isScrollingDown
@@ -61,14 +61,15 @@ const NavBar: React.FC = () => {
           : 'show bg-white shadow-md'
       }`}
     >
-      <div className="w-[1370px] flex px-5 justify-between xl:gap-10 lg:px-20 items-center h-[90px]">
+      <div className="w-[1370px] flex pr-5 justify-between xl:gap-10 lg:gap-5 lg:px-20 items-center xl:h-[90px] h-[80px]">
         <Link href="/">
           <Image
             src="/logo.svg"
-            width={210}
-            height={210}
             alt="logo"
-            className="pb-2 cursor-pointer z-50"
+            objectFit='contain'
+            width={200}
+            height={25}
+            className="pb-2 xl:w-[210px] lg:w-[180px] w-[200px] h-auto cursor-pointer z-100"
           />
         </Link>
 
@@ -107,9 +108,9 @@ const NavBar: React.FC = () => {
             <Image
               src="/bars.svg"
               alt="bars for menu mobile"
-              width={30}
-              height={30}
-              className="cursor-pointer w-[30px] h-[30px]"
+              width={35}
+              height={35}
+              className="cursor-pointer h-auto"
             />
           </button>
         </div>
