@@ -33,7 +33,7 @@ const Footer: React.FC = () => {
         <div className="relative flex items-center justify-center ">
           <input placeholder="Tu correo electronico" className="w-full border-0 py-[11px] px-[20px] bg-white rounded-md focus:outline-none"/>
           <Button text="Enviar" theme="black" variant="inverted" styles="right-1" absolute={true}/>
-          <Image src="/Vector.svg" alt="a vector shape" layout="fill" objectFit="contain" className="hidden xl:block xl:absolute xl:visible top-45 right-0" />
+          <Image src="/Vector.svg" alt="a vector shape" width={300} height={300} objectFit="contain" className="hidden xl:block xl:absolute xl:visible top-45 right-0" />
         </div>
       </form>
     </div>
