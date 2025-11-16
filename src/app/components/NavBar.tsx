@@ -61,15 +61,15 @@ const NavBar: React.FC = () => {
           : 'show bg-white shadow-md'
       }`}
     >
-      <div className="w-[1370px] flex pr-5 justify-between xl:gap-10 lg:gap-5 lg:px-20 items-center xl:h-[90px] h-[80px]">
-        <Link href="/">
+      <div className="lg:w-[1370px] w-[100%] pr-5 flex justify-between xl:px-20 xl:gap-10 items-center px-0 lg:h-[90px] h-[80px]">
+        <Link className="z-[100]" href="/">
           <Image
             src="/logo.svg"
             alt="logo"
             objectFit='contain'
             width={200}
             height={25}
-            className="pb-2 xl:w-[210px] lg:w-[180px] w-[200px] h-auto cursor-pointer z-100"
+            className="pb-2 xl:w-[210px] lg:w-[230px] w-[200px] h-auto cursor-pointer"
           />
         </Link>
 
@@ -118,19 +118,19 @@ const NavBar: React.FC = () => {
 
       {/* Menú móvil */}
       {isMenuOpen && (
-        <div className="xl:hidden absolute top-0 left-0 w-full h-screen bg-white flex flex-col items-center justify-center gap-6 z-40">
+        <div className="xl:hidden pl-10 absolute top-0 left-0 w-full h-screen pt-[90px] bg-white flex flex-col gap-6 z-30">
           <div className="absolute top-4 right-4 pt-4 pr-2">
             <button onClick={() => setIsMenuOpen(false)} aria-label="Cerrar menú">
               <Image
                 src="/quit.svg"
                 alt="x for menu mobile"
-                width={20}
-                height={20}
-                className="cursor-pointer w-[20px] h-[20px]"
+                width={25}
+                height={25}
+                className="cursor-pointer w-[25px] h-[25px]"
               />
             </button>
           </div>
-          <ul className="flex flex-col gap-6 pl-5 text-3xl">
+          <ul className="flex flex-col gap-5 text-[1.15em]">
             {['Inicio', 'Caracteristicas', 'Planes', 'Testimonios', 'Contacto'].map(item => (
               <li
                 key={item}
@@ -141,11 +141,11 @@ const NavBar: React.FC = () => {
               </li>
             ))}
           </ul>
-          <div className="flex flex-col gap-6 text-3xl">
+          <div className="flex flex-col items-start gap-6 text-[1.15em]">
             {!isAuthenticated ? (
               <>
                 <button
-                  className="cursor-pointer transition-colors duration-300 ease-in-out hover:text-[var(--primary-color)] text-[var(--heading-color)]"
+                  className="w-[100px] cursor-pointer transition-colors duration-300 ease-in-out hover:text-[var(--primary-color)] text-[var(--heading-color)]"
                   onClick={() => {
                     setIsMenuOpen(false);
                     handleClick('login');
@@ -178,6 +178,7 @@ const NavBar: React.FC = () => {
                   variant="inverted"
                   theme="black"
                   text="Cerrar sesión"
+                  styles="w-[159px] text-[1em]"
                   onClick={() => {
                     setIsMenuOpen(false);
                     handleLogout();

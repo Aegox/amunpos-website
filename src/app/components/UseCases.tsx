@@ -14,7 +14,7 @@ const UseCases: React.FC = () => {
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true, amount: 0.3 }}
             transition={{ duration: 0.4 }}
-            className="w-[90%] pb-10 2xl:w-[38%] xl:w-[40%]"
+            className="w-[90%] pb-10 2xl:w-[38%] xl:w-[40%] md:w-[50%]"
        >
       <Image src="/illustration1.svg" alt="a people paying with a card of money" width={500} height={500} /> 
       </motion.div>

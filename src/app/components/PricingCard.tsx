@@ -18,7 +18,7 @@ const PricingCard: React.FC<PricingCardProps> = ({ id, icon, title, target, pric
   const isDefault = id === 2;
 
   return (
-    <article className={`z-50 overflow-hidden relative text-white group transition-colors duration-400 ${isDefault ? 'bg-[var(--primary-color)]' : 'bg-white'} hover:bg-[var(--primary-color)] w-full px-8 py-10 rounded-[1rem] shadow-2xl`}>
+    <article className={`z-50 overflow-hidden relative text-white group transition-colors duration-400 ${isDefault ? 'bg-[var(--primary-color)]' : 'bg-white'} hover:bg-[var(--primary-color)] w-full md:w-[80%] px-8 py-10 rounded-[1rem] shadow-2xl`}>
     {isDefault && (<div className="bg-[var(--red-color)] py-1 w-[220px] text-center rotate-40 text-white font-bold top-8 right-[-50px] absolute transform-[45]">Más popular</div>)}
       <header className="flex w-full h-auto gap-4 pl-4">
         <div className={`group-hover:border-white group-hover:bg-white ${isDefault ? 'border-white bg-white' : ''} w-[60px] h-[60px] xl:w-[80px] xl:h-[80px] flex justify-center items-center border-1 rounded-[100%]`}>
