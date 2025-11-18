@@ -53,7 +53,7 @@ const NavBar: React.FC = () => {
 
   return (
     <nav
-      className={`fixed flex top-0 xl:h-[90px] h-[80px] w-full xl:justify-center transition-all duration-300 navbar-slide z-50 ${
+      className={`fixed flex top-0 xl:h-[90px] h-[80px]  xl:justify-center transition-all duration-300 navbar-slide z-50 ${
         scrollY === 0
           ? 'bg-transparent shadow-none'
           : isScrollingDown
@@ -61,7 +61,7 @@ const NavBar: React.FC = () => {
           : 'show bg-white shadow-md'
       }`}
     >
-      <div className="lg:w-[1370px] w-[100%] pr-5 flex justify-between xl:px-20 xl:gap-10 items-center px-0 lg:h-[90px] h-[80px]">
+      <div className="lg:w-[1370px] w-screen pr-5 flex justify-between items-center xl:px-20 xl:gap-10 px-0 lg:h-[90px] h-[80px]">
         <Link className="z-[100]" href="/">
           <Image
             src="/logo.svg"
