@@ -2,7 +2,6 @@
 import React from "react";
 import { motion } from "framer-motion";
 import PricingCard from "./PricingCard";
-import Image from 'next/image';
 
 interface PricingPlan {
   id: number;
@@ -65,28 +64,28 @@ const Pricing: React.FC = () => {
   return (
     <section id="Planes" className="relative flex flex-col justify-center items-center px-5 pb-22 pt-30 bg-[var(--body-color)] pricing-gradient">
       {/* Imágenes en el fondo */}
-      <Image src="/Vector3.svg" alt="a vector shape" layout="fill" objectFit="contain" className="absolute top-45 right-0 z-[-1]" />
-      <Image src="/dot.svg" alt="a vector shape" objectFit="contain" width={170} height={170} className="absolute top-74 left-45 z-[-1]" />
+      <img src="/Vector3.svg" alt="a vector shape" className="absolute top-45 right-0 z-[-1]" />
+      <img src="/dot.svg" alt="a vector shape" className="absolute top-80 left-50 z-[-1]" />
 
       {/* Contenido principal */}
       <div className="z-10 flex flex-col items-center w-full">
       <motion.div
         initial={{ opacity: 0, y: -20 }}
             whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, amount: 0.3 }}
-            transition={{ duration: 0.7 }}
+            viewport={{ once: true, amount: 0.1 }}
+            transition={{ duration: 0.3 }}
        >
         <p className="w-full text-center text-[var(--primary-color)] text-[18px] font-semibold pb-2">Nuestros precios</p>
       </motion.div>
       <motion.div
             initial={{ opacity: 0, y: 0 }}
             whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, amount: 0.3 }}
-            transition={{ duration: 0.7 }}
-className="z-10 flex flex-col items-center w-full"
+            viewport={{ once: true, amount: 0.2 }}
+            transition={{ duration: 0.5 }}
+            className="z-10 flex flex-col items-center w-full"
        >
-        <h1 className="text-center pb-10 xl:pb-25 xl:w-[65%] text-[var(--heading-color)]  text-[2.6rem] 2xl:text-[3em] lg:text-[2.5em] leading-[1.4em] font-bold">Planes transparentes, encuentra el ajuste perfecto que necesitas</h1>
-        <div className="flex flex-col lg:flex-row 2xl:px-35 xl:px-25 w-full gap-5 items-center">
+        <h1 className="text-center pb-10 xl:pb-25 xl:w-[65%] text-[var(--heading-color)]  text-[2rem] 2xl:text-[3em] lg:text-[2.5em] leading-[1.4em] font-bold">Planes transparentes, encuentra el ajuste perfecto que necesitas</h1>
+        <div className="flex flex-col 2xl:px-35 xl:px-20 xl:flex-row w-full gap-6 items-center">
           {pricingPlans.map((plan) => (
             <PricingCard
               key={plan.id}
@@ -106,4 +105,5 @@ className="z-10 flex flex-col items-center w-full"
 };
 
 export default Pricing;
+
 
