@@ -5,7 +5,7 @@ import Image from 'next/image';
 const Hero: React.FC = () => {
   return (
     <div id="Inicio" className="relative flex flex-col-reverse gap-15 lg:gap-5 xl:gap-15 lg:flex-row items-center justify-center relative w-full h-full lg:h-screen overflow-hidden pt-[75px] xl:pt-[100px] lg:px-10 px-5 z-30 xl:pb-10 pb-20 lg:pt-30">
-    <div className="absolute z-30 -top-20 -right-20 w-[450px] h-[450px] bg-[var(--primary-color)] rounded-full filter blur-3xl opacity-15"></div>
+    <div className="absolute z-30 -top-20 w-full h-[450px] bg-[var(--primary-color)] rounded-full filter blur-3xl opacity-15"></div>
       <Image 
         src="/hero_bg2.png" 
         layout="fill"

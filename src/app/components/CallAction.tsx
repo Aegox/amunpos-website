@@ -15,7 +15,7 @@ const CallAction: React.FC = () => {
           <Button text="Comprar ahora" theme="white" variant="inverted" styles="px-[30px] py-[12px]"/>
         </div>
       </div>
-<div className="absolute z-30 -bottom-30 left-0 w-[400px] h-[400px] bg-[var(--primary-color)] rounded-full filter blur-3xl opacity-10"></div>
+<div className="absolute z-30 -bottom-30 left-0 w-full lg:w-[400px] h-[400px] bg-[var(--primary-color)] rounded-full filter blur-3xl opacity-10"></div>
     </section>
   );
 };

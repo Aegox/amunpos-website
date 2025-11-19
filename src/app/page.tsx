@@ -17,7 +17,6 @@ export default function Render() {
         <Hero/>
         <Features/>
         <SoftwareFeatures/>
-        <UseCases/>
         <Pricing/>
         <Testimonials/>
         <Partners/>

@@ -63,7 +63,7 @@ const Features: React.FC = () => {
       </h1>
       </motion.div>
 
-      <Image src="/Vector.svg" alt="shape vector for background features" width={400} height={400} className="absolute right-0 top-[32%]"/>
+      <Image src="/Vector.svg" alt="shape vector for background features" width={350} height={350} className="absolute right-0 top-[32%]"/>
       <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
