@@ -10,7 +10,7 @@ const UseCases: React.FC = () => {
   return (
     <section className="flex flex-col lg:flex-row-reverse justify-center items-center px-5 py-22">
       <motion.div
-        initial={{ opacity: 0, x: 50 }}
+        initial={{ opacity: 0, x: -50 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true, amount: 0.3 }}
             transition={{ duration: 0.4 }}
