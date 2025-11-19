@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { usePathname, useRouter } from 'next/navigation';
 import Image from 'next/image';
 import Link from 'next/link';
+import { motion, AnimatePresence } from 'framer-motion';
 import Button from './Button';
 import { getCookie } from '../utils/cookie';
 
@@ -18,6 +19,27 @@ const NavBar: React.FC = () => {
   useEffect(() => {
     const token = getCookie('token');
     setIsAuthenticated(!!token);
+  }, []);
+
+  // Efecto para manejar el scroll cuando el menú está abierto
+  useEffect(() => {
+    if (typeof document !== 'undefined') {
+      if (isMenuOpen) {
+        document.body.style.overflow = 'hidden';
+      } else {
+        document.body.style.overflow = 'auto';
+      }
+
+      // Limpieza al desmontar el componente
+      return () => {
+        document.body.style.overflow = 'auto';
+      };
+    }
+  }, [isMenuOpen]);
+
+  // Efecto para manejar el scroll del navbar
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
 
     let lastScrollY = window.scrollY;
 
@@ -53,7 +75,7 @@ const NavBar: React.FC = () => {
 
   return (
     <nav
-      className={`fixed flex top-0 xl:h-[90px] h-[80px]  xl:justify-center transition-all duration-300 navbar-slide z-50 ${
+      className={`fixed flex top-0 xl:h-[90px] h-[80px]  w-full xl:justify-center transition-all duration-300 navbar-slide z-50 ${
         scrollY === 0
           ? 'bg-transparent shadow-none'
           : isScrollingDown
@@ -102,34 +124,62 @@ const NavBar: React.FC = () => {
               />
         </section>
 
-        {/* Ícono hamburguesa para móvil */}
-        <div className="xl:hidden pt-1">
-          <button onClick={() => setIsMenuOpen(true)} aria-label="Abrir menú">
-            <Image
-              src="/bars.svg"
-              alt="bars for menu mobile"
-              width={35}
-              height={35}
-              className="cursor-pointer h-auto"
+        {/* Botón de hamburguesa animado */}
+        <div className="xl:hidden pt-1 z-40">
+          <button 
+            onClick={() => setIsMenuOpen(!isMenuOpen)} 
+            className="w-12 h-12 flex flex-col justify-center items-center relative"
+            aria-label={isMenuOpen ? 'Cerrar menú' : 'Abrir menú'}
+          >
+            <motion.span 
+              className="w-8 h-0.5 bg-black absolute rounded-full"
+              animate={isMenuOpen ? 'open' : 'closed'}
+              variants={{
+                closed: { rotate: 0, y: -7 },
+                open: { rotate: 45, y: 0 }
+              }}
+              transition={{ duration: 0.2 }}
+            />
+            <motion.span 
+              className="w-8 h-0.5 bg-black absolute rounded-full"
+              animate={isMenuOpen ? 'open' : 'closed'}
+              variants={{
+                closed: { opacity: 1 },
+                open: { opacity: 0 }
+              }}
+              transition={{ duration: 0.1 }}
+            />
+            <motion.span 
+              className="w-8 h-0.5 bg-black absolute rounded-full"
+              animate={isMenuOpen ? 'open' : 'closed'}
+              variants={{
+                closed: { rotate: 0, y: 7 },
+                open: { rotate: -45, y: 0 }
+              }}
+              transition={{ duration: 0.2 }}
             />
           </button>
         </div>
       </div>
 
       {/* Menú móvil */}
-      {isMenuOpen && (
-        <div className="xl:hidden pl-10 absolute top-0 left-0 w-full h-screen pt-[90px] bg-white flex flex-col gap-6 z-30">
-          <div className="absolute top-4 right-4 pt-4 pr-2">
-            <button onClick={() => setIsMenuOpen(false)} aria-label="Cerrar menú">
-              <Image
-                src="/quit.svg"
-                alt="x for menu mobile"
-                width={25}
-                height={25}
-                className="cursor-pointer w-[25px] h-[25px]"
-              />
-            </button>
-          </div>
+      <AnimatePresence>
+        {isMenuOpen && (
+          <motion.div 
+            className="xl:hidden pl-10 fixed top-0 left-0 w-full h-screen pt-[90px] bg-white flex flex-col gap-6 z-30"
+            initial={{ x: '-100%' }}
+            animate={{ x: 0 }}
+            exit={{ x: '-100%' }}
+            transition={{
+              type: 'tween',
+              duration: 0.4,
+              ease: [0.4, 0, 0.2, 1],
+              times: [0, 0.6, 1]
+            }}
+          >
+            <div className="absolute top-4 right-4 pt-4 pr-2">
+              {/* El botón de cierre se ha eliminado ya que usamos el botón de hamburguesa animado */}
+            </div>
           <ul className="flex flex-col gap-5 text-[1.15em]">
             {['Inicio', 'Caracteristicas', 'Planes', 'Testimonios', 'Contacto'].map(item => (
               <li
@@ -145,7 +195,7 @@ const NavBar: React.FC = () => {
             {!isAuthenticated ? (
               <>
                 <button
-                  className="w-[100px] cursor-pointer transition-colors duration-300 ease-in-out hover:text-[var(--primary-color)] text-[var(--heading-color)]"
+                  className="w-[150px] text-[1em] text-left cursor-pointer transition-colors duration-300 ease-in-out hover:text-[var(--primary-color)] text-[var(--heading-color)]"
                   onClick={() => {
                     setIsMenuOpen(false);
                     handleClick('login');
@@ -187,11 +237,11 @@ const NavBar: React.FC = () => {
               </>
             )}
           </div>
-        </div>
+        </motion.div>
       )}
-    </nav>
+    </AnimatePresence>
+  </nav>
   );
 };
 
 export default NavBar;
-
