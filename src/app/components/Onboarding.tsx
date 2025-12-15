@@ -39,8 +39,11 @@ const BusinessFormModal = () => {
       const clientUpdated = await editUser(token, data);
       
       if (clientUpdated) {
-        const isProduction = window.location.hostname.includes('amunpos.com');
-        const redirectUrl = isProduction ? 'https://app.amunpos.com' : 'http://localhost:5173';
+        const envAppUrl = process.env.NEXT_PUBLIC_APP_URL;
+
+        // Preferir URL desde .env; si no existe, usar como fallback el origin actual
+        const redirectUrl = envAppUrl || window.location.origin;
+
         window.location.href = redirectUrl;
       } else {
         setError("Error al actualizar los datos");

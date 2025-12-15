@@ -18,11 +18,17 @@ export const useUserRegister = () => {
         body: JSON.stringify(userData),
       });
       const data = await response.json();
-      if (!response.ok) {
-        throw new Error(data.message || 'Error al registrar usuario');
+
+      // La API de /auth/register responde con:
+      // { success: boolean, message?: string, data: { user, token } }
+      if (!response.ok || data?.success === false) {
+        throw new Error(data?.message || 'Error al registrar usuario');
       }
-      setSuccess(data.message || 'Usuario registrado correctamente');
-      return data;
+
+      const payload = data?.data || {};
+      setSuccess(data?.message || 'Usuario registrado correctamente');
+      // Devolvemos solo { user, token } para simplificar el consumo
+      return payload;
     } catch (err) {
       setError(err.message || 'Error desconocido al registrar usuario');
       return false;

@@ -46,15 +46,21 @@ const RegisterFlow: React.FC = () => {
     }
 
     const result = await registerUser({ name, email, password });
-    console.log(result)
+    console.log(result);
+
+    // registerUser devuelve { user, token } cuando todo sale bien
     if (result?.token) {
       setCookie('auth_token', result.token, 7);
       if (result.user) {
         setCookie('user_data', JSON.stringify(result.user), 7);
       }
       localStorage.removeItem('lastAction');
-      const isProduction = window.location.hostname.includes('amunpos.com');
-      const redirectUrl = isProduction ? 'https://app.amunpos.com/onboarding' : 'http://localhost:5173/onboarding';
+
+      // Después de registrar y guardar cookies, enviamos al onboarding
+      // del landing (amunpos-website). Usamos .env si está configurado.
+      const envWebsiteUrl = process.env.NEXT_PUBLIC_WEBSITE_URL;
+      const baseUrl = envWebsiteUrl || window.location.origin;
+      const redirectUrl = `${baseUrl}/onboarding`;
       window.location.href = redirectUrl;
     } else {
       alert('Error al registrar usuario. Por favor intenta de nuevo.');

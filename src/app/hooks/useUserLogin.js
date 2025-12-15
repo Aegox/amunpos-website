@@ -27,16 +27,26 @@ export const useUserLogin = () => {
         body: JSON.stringify({ email, password }),
       });
       const data = await response.json();
-      if (!response.ok) {
-        setError(data.message || 'Error al iniciar sesión');
+
+      // La API de /auth/login responde con:
+      // { success: boolean, message?: string, data: { user, token } }
+      if (!response.ok || data?.success === false) {
+        setError(data?.message || 'Error al iniciar sesión');
         return false;
       }
-      setCookie('auth_token', data.token, 7);
-      if (data.user) {
-        setCookie('user_data', JSON.stringify(data.user), 7);
+
+      const payload = data?.data || {};
+      const { user: apiUser, token } = payload;
+
+      if (!token || !apiUser) {
+        setError('Respuesta de autenticación inválida');
+        return false;
       }
-      setUser(data);
-      return data;
+
+      setCookie('auth_token', token, 7);
+      setCookie('user_data', JSON.stringify(apiUser), 7);
+      setUser(apiUser);
+      return payload;
     } catch (err) {
       setError(err.message || 'Error desconocido al iniciar sesión');
       return false;

@@ -17,7 +17,7 @@ const NavBar: React.FC = () => {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
 
   useEffect(() => {
-    const token = getCookie('token');
+    const token = getCookie('auth_token');
     setIsAuthenticated(!!token);
   }, []);
 
@@ -56,9 +56,11 @@ const NavBar: React.FC = () => {
   }, []);
 
   const handleClick = (type: string) => {
-    const token = getCookie('token');
+    const token = getCookie('auth_token');
     if (token) {
-      window.location.href = 'https://amun-pos.vercel.app/';
+      const envAppUrl = process.env.NEXT_PUBLIC_APP_URL;
+      const redirectUrl = envAppUrl || window.location.origin;
+      window.location.href = redirectUrl;
       return;
     }
     window.localStorage.setItem('lastAction', type);

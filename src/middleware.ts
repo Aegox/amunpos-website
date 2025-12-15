@@ -7,14 +7,13 @@ const protectedRoutes = ['/dashboard', '/onboarding']
 const authRoutes = ['/login', '/register']
 
 export function middleware(request: NextRequest) {
-  const token = request.cookies.get('token')?.value // <-- Asegurarse de extraer el valor
+  // Ahora usamos la cookie 'auth_token' que se establece en el landing
+  const token = request.cookies.get('auth_token')?.value
   const { pathname } = request.nextUrl
 
   // Si el usuario intenta acceder a una ruta protegida sin token
   if (!token && protectedRoutes.some(route => pathname.startsWith(route))) {
-    const response = NextResponse.redirect(new URL('/login', request.url))
-    response.cookies.delete('token') // Borrar cualquier cookie vieja
-    return response
+    return NextResponse.redirect(new URL('/login', request.url))
   }
 
   // Si el usuario ya tiene token y quiere ir a login/register
