@@ -52,8 +52,10 @@ const RegisterFlow: React.FC = () => {
       }
       localStorage.removeItem('lastAction');
       const isProduction = window.location.hostname.includes('amunpos.com');
-      const redirectUrl = isProduction ? 'https://app.amunpos.com/onboarding' : `${window.location.origin}/onboarding`;
+      const redirectUrl = isProduction ? 'https://app.amunpos.com/onboarding' : 'http://localhost:5173/onboarding';
       window.location.href = redirectUrl;
+    } else {
+      alert('Error al registrar usuario. Por favor intenta de nuevo.');
     }
   };
 

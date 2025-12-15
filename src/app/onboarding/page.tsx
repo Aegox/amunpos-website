@@ -12,7 +12,7 @@ const OnboardingPage = () => {
   const [token, setToken] = useState<string | null>(null);
 
   useEffect(() => {
-    const storedToken = typeof window !== 'undefined' ? getCookie('token') : null;
+    const storedToken = typeof window !== 'undefined' ? getCookie('auth_token') : null;
     setToken(storedToken || null);
   }, []);
 

@@ -30,7 +30,7 @@ const BusinessFormModal = () => {
 
   const onSubmit = async (data: BusinessFormData) => {
     try {
-      const token = typeof window !== 'undefined' ? getCookie('token') : null;
+      const token = typeof window !== 'undefined' ? getCookie('auth_token') : null;
       if (!token) {
         setError("No hay token válido");
         return;
@@ -39,7 +39,9 @@ const BusinessFormModal = () => {
       const clientUpdated = await editUser(token, data);
       
       if (clientUpdated) {
-        window.location.href = 'https://amun-pos.vercel.app/';
+        const isProduction = window.location.hostname.includes('amunpos.com');
+        const redirectUrl = isProduction ? 'https://app.amunpos.com' : 'http://localhost:5173';
+        window.location.href = redirectUrl;
       } else {
         setError("Error al actualizar los datos");
       }
