@@ -26,7 +26,9 @@ const Login: React.FC = () => {
     } else if (response) {
       if (typeof window !== "undefined") {
         window.localStorage.removeItem("lastAction");
-        window.location.href = "https://amun-pos.vercel.app/";
+        const isProduction = window.location.hostname.includes('amunpos.com');
+        const redirectUrl = isProduction ? 'https://app.amunpos.com' : 'http://localhost:3000';
+        window.location.href = redirectUrl;
       }
     }
 

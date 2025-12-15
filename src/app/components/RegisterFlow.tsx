@@ -27,6 +27,15 @@ const RegisterFlow: React.FC = () => {
     }
   };
 
+  const setCookie = (name: string, value: string, days: number) => {
+    const expires = new Date(Date.now() + days * 864e5).toUTCString();
+    const isProduction = window.location.hostname.includes('amunpos.com');
+    const domain = isProduction ? '.amunpos.com' : '';
+    const domainAttr = domain ? `domain=${domain}; ` : '';
+    const secureAttr = isProduction ? 'Secure; ' : '';
+    document.cookie = `${name}=${encodeURIComponent(value)}; expires=${expires}; path=/; ${domainAttr}${secureAttr}SameSite=Lax`;
+  };
+
   const handleVerify = async (code: string) => {
     const isValid = await verifyCode(email, code ); // ✅ usamos verifyCode
     if (!isValid) {
@@ -37,9 +46,14 @@ const RegisterFlow: React.FC = () => {
     const result = await registerUser({ email, password });
     console.log(result)
     if (result?.token) {
-      document.cookie = `token=${result.token}; path=/; Secure; SameSite=Strict`;
+      setCookie('auth_token', result.token, 7);
+      if (result.user) {
+        setCookie('user_data', JSON.stringify(result.user), 7);
+      }
       localStorage.removeItem('lastAction');
-      window.location.href = `${window.location.origin}/onboarding`;
+      const isProduction = window.location.hostname.includes('amunpos.com');
+      const redirectUrl = isProduction ? 'https://app.amunpos.com/onboarding' : `${window.location.origin}/onboarding`;
+      window.location.href = redirectUrl;
     }
   };
 

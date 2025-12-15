@@ -9,7 +9,11 @@ export const useUserLogin = () => {
 
   const setCookie = (name, value, days) => {
     const expires = new Date(Date.now() + days * 864e5).toUTCString();
-    document.cookie = `${name}=${encodeURIComponent(value)}; expires=${expires}; path=/; Secure; SameSite=Strict`;
+    const isProduction = window.location.hostname.includes('amunpos.com');
+    const domain = isProduction ? '.amunpos.com' : '';
+    const domainAttr = domain ? `domain=${domain}; ` : '';
+    const secureAttr = isProduction ? 'Secure; ' : '';
+    document.cookie = `${name}=${encodeURIComponent(value)}; expires=${expires}; path=/; ${domainAttr}${secureAttr}SameSite=Lax`;
   };
 
   const loginUser = async ({ email, password }) => {
@@ -27,7 +31,10 @@ export const useUserLogin = () => {
         setError(data.message || 'Error al iniciar sesión');
         return false;
       }
-      setCookie('token', data.token, 7);
+      setCookie('auth_token', data.token, 7);
+      if (data.user) {
+        setCookie('user_data', JSON.stringify(data.user), 7);
+      }
       setUser(data);
       return data;
     } catch (err) {
