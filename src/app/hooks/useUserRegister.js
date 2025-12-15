@@ -12,7 +12,7 @@ export const useUserRegister = () => {
     setError(null);
     setSuccess(null);
     try {
-      const response = await fetch(`${getApiUrl()}/user/register`, {
+      const response = await fetch(`${getApiUrl()}/auth/register`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(userData),

@@ -5,11 +5,15 @@ import Button from "./Button";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { MdOutlineEmail, MdLockOutline, MdVisibility, MdVisibilityOff } from "react-icons/md";
+import { MdOutlineEmail, MdLockOutline, MdVisibility, MdVisibilityOff, MdPerson } from "react-icons/md";
 
 // Validación con Zod
 const formSchema = z
   .object({
+    name: z
+      .string()
+      .min(1, "El nombre es requerido")
+      .min(2, "El nombre debe tener al menos 2 caracteres"),
     email: z
       .string()
       .min(1, "El correo electrónico es requerido")
@@ -36,9 +40,9 @@ const formSchema = z
 
 type RegisterFormData = z.infer<typeof formSchema>;
 
-// Props: recibe onRegister para enviar email+password al flujo padre
+// Props: recibe onRegister para enviar name+email+password al flujo padre
 interface RegisterProps {
-  onRegister: (email: string, password: string) => void;
+  onRegister: (name: string, email: string, password: string) => void;
   loading: boolean;
 }
 
@@ -55,13 +59,29 @@ const Register: React.FC<RegisterProps> = ({ onRegister, loading }) => {
   const [showPassword, setShowPassword] = useState(false);
 
   const onSubmit = (data: RegisterFormData) => {
-    const { email, password } = data;
-    onRegister(email, password);
+    const { name, email, password } = data;
+    onRegister(name, email, password);
     reset();
   };
 
   return (
     <form className="w-full" onSubmit={handleSubmit(onSubmit)}>
+      {/* Nombre */}
+      <div className="relative mb-6">
+        <MdPerson color="gray" size={24} className="absolute left-3 top-3" />
+        <input
+          type="text"
+          {...register("name")}
+          className={`bg-white block w-full py-[11px] pl-[45px] text-gray-700 placeholder-gray-600 border-[0.3px] rounded-md transition-colors duration-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500 ${
+            errors.name ? "border-red-500" : "border-gray-400"
+          }`}
+          placeholder="Nombre completo"
+        />
+        {errors.name && (
+          <p className="text-red-500 text-sm mt-1">{errors.name.message}</p>
+        )}
+      </div>
+
       {/* Correo Electrónico */}
       <div className="relative mb-6">
         <MdOutlineEmail color="gray" size={24} className="absolute left-3 top-3" />

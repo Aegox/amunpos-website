@@ -8,6 +8,7 @@ import { useVerifyCode } from "../hooks/useVerifyCode";
 
 const RegisterFlow: React.FC = () => {
   const [step, setStep] = useState<'register' | 'verify'>('register');
+  const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
@@ -15,7 +16,8 @@ const RegisterFlow: React.FC = () => {
   const { generateCode, loading: loadingGenerate, error: errorGenerate } = useGenerateCode();
   const { verifyCode, loading: loadingVerify, error: errorVerify } = useVerifyCode();
 
-  const handleRegister = async (emailInput: string, passwordInput: string) => {
+  const handleRegister = async (nameInput: string, emailInput: string, passwordInput: string) => {
+    setName(nameInput);
     setEmail(emailInput);
     setPassword(passwordInput);
 
@@ -43,7 +45,7 @@ const RegisterFlow: React.FC = () => {
       return;
     }
 
-    const result = await registerUser({ email, password });
+    const result = await registerUser({ name, email, password });
     console.log(result)
     if (result?.token) {
       setCookie('auth_token', result.token, 7);
