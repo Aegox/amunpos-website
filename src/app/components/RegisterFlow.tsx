@@ -1,5 +1,6 @@
 'use client';
 import React, { useState } from "react";
+import { useRouter } from "next/navigation";
 import Register from "./Register";
 import VerifyCode from "./VerifyCode";
 import { useUserRegister } from "../hooks/useUserRegister";
@@ -7,6 +8,7 @@ import { useGenerateCode } from "../hooks/useGenerateCode";
 import { useVerifyCode } from "../hooks/useVerifyCode";
 
 const RegisterFlow: React.FC = () => {
+  const router = useRouter();
   const [step, setStep] = useState<'register' | 'verify'>('register');
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
@@ -56,12 +58,9 @@ const RegisterFlow: React.FC = () => {
       }
       localStorage.removeItem('lastAction');
 
-      // Después de registrar y guardar cookies, enviamos al onboarding
-      // del landing (amunpos-website). Usamos .env si está configurado.
-      const envWebsiteUrl = process.env.NEXT_PUBLIC_WEBSITE_URL;
-      const baseUrl = envWebsiteUrl || window.location.origin;
-      const redirectUrl = `${baseUrl}/onboarding`;
-      window.location.href = redirectUrl;
+      // Después de registrar y guardar cookies, navegamos a la ruta interna
+      // de onboarding dentro del mismo dominio del landing.
+      router.push('/onboarding');
     } else {
       alert('Error al registrar usuario. Por favor intenta de nuevo.');
     }
