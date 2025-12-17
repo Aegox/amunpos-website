@@ -13,19 +13,28 @@ export const useGenerateCode = () => {
     setError(null);
     setSuccess(null);
     try {
+      const controller = new AbortController();
+      const timeoutMs = Number(process.env.NEXT_PUBLIC_API_TIMEOUT_MS || 15000);
+      const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
+
       const response = await fetch(`${getApiUrl()}/auth/generateCode`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email }),
+        signal: controller.signal,
       });
-      const data = await response.json();
+
+      clearTimeout(timeoutId);
+
+      const data = await response.json().catch(() => ({}));
       if (!response.ok) {
-        throw new Error(data.message || 'Error al generar el código');
+        throw new Error(data.message || data.error || 'Error al generar el código');
       }
       setSuccess(data.message || 'Código enviado correctamente');
       return true;
     } catch (err) {
-      setError(err.message || 'Error desconocido al generar el código');
+      const isAbort = err?.name === 'AbortError';
+      setError(isAbort ? 'Tiempo de espera agotado. Intenta de nuevo.' : (err.message || 'Error desconocido al generar el código'));
       return false;
     } finally {
       setLoading(false);
