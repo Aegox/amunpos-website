@@ -10,13 +10,18 @@ const inter = Inter({
 
 
 export const metadata: Metadata = {
-  title: "Amunpos",
+  title: "amunpos",
   description: "a landing page for amunpos",
   icons: {
     icon: [
       {
         url: "/logo-avion-amun_azul.png",
         type: "image/png",
+      },
+      {
+        url: "/favicon.ico",
+        sizes: "any",
+        type: "image/x-icon",
       },
     ],
   },
