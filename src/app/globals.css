@@ -55,6 +55,18 @@ body {
   }
 }
 
+@keyframes move-arrow {
+  0% {
+    transform: rotate(30deg);
+  }
+  50% {
+    transform: rotate(-15deg);
+  }
+  100% {
+    transform: rotate(30deg);
+  }
+}
+
 .scrollbar-hidden {
           -ms-overflow-style: none;  /* IE y Edge */
           scrollbar-width: none;  /* Firefox */
@@ -79,6 +91,13 @@ body {
   animation: move-image 20s ease-in-out infinite;
 }
 
+.animate-move-arrow {
+  animation: move-arrow 10s linear infinite;
+  transform-origin: bottom center;
+}
+
+
+
 .light-effect {
   position: absolute;
   top: 0;
@@ -87,6 +106,38 @@ body {
   height: 100%;
   background: linear-gradient(45deg, rgba(9,9,121,0) 10%, rgba(12,113,194,0.1339999992322) 100%);
 
+}
+
+
+.light-effect2 {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  transform: translateY(-50%);
+  width: 40vw;
+  height: 60vh;
+  background: linear-gradient(90deg, rgba(12,113,194,0.2) 0%, rgba(12,113,194,0.07) 70%, rgba(9,9,121,0) 100%);
+  filter: blur(100px);
+}
+
+.light-effect3 {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 60vw;
+  height: 50vh;
+  background: linear-gradient(0deg, rgba(12,113,194,0.4) 0%, rgba(12,113,194,0.15) 80%, rgba(9,9,121,0) 100%);
+  filter: blur(120px);
+}
+
+.light-effect4 {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 30vw;
+  height: 400px;
+  background: linear-gradient(225deg, rgba(12,113,194,0.16) 0%, rgba(12,113,194,0.08) 90%, rgba(9,9,121,0) 100%);
+  filter: blur(90px);
 }
 
 .acordion-container {

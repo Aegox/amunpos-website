@@ -43,7 +43,7 @@ const Questions: React.FC = () => {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, amount: 0.3 }}
             transition={{ duration: 0.7 }}
-            className="flex flex-col items-center py-28 px-5 lg:px-[10%] w-full h-full "
+            className="flex flex-col items-center md:py-28 py-16 px-5 lg:px-[10%] w-full h-full "
             id="Faq"
     >
     <motion.div

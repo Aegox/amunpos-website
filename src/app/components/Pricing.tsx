@@ -62,7 +62,7 @@ const pricingPlans: PricingPlan[] = [
 
 const Pricing: React.FC = () => {
   return (
-    <section id="Planes" className="relative flex flex-col justify-center items-center px-5 pb-22 pt-30 bg-[var(--body-color)] pricing-gradient">
+    <section id="Planes" className="relative flex flex-col justify-center items-center px-5md:pt-30 pt-20 md:pb-22 pb-14 bg-[var(--body-color)] pricing-gradient">
       {/* Imágenes en el fondo */}
       <img src="/Vector3.svg" alt="a vector shape" className="absolute top-45 right-0 z-[-1]" />
       <img src="/dot.svg" alt="a vector shape" className="absolute top-80 left-50 z-[-1]" />

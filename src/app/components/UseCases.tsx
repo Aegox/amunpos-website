@@ -8,7 +8,7 @@ import Image from 'next/image';
 
 const UseCases: React.FC = () => {
   return (
-    <section className="flex flex-col lg:flex-row-reverse justify-center items-center px-5 py-22">
+    <section className="flex flex-col lg:flex-row-reverse justify-center items-center px-5 md:pt-22 pt-18 md:pb-22 pb-14">
       <motion.div
         initial={{ opacity: 0, x: -50 }}
             whileInView={{ opacity: 1, x: 0 }}

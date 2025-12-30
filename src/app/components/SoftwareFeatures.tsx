@@ -34,7 +34,7 @@ const caracteristicas: Caracteristica[] = [
 
 const SoftwareFeatures: React.FC = () => {
   return (
-    <section className="flex flex-col xl:flex-row w-full xl:w-auto items-center justify-center pt-5 pb-20 gap-10">
+    <section className="flex flex-col xl:flex-row w-full xl:w-auto items-center justify-center pt-5 lg:pb-20 pb-2 gap-10">
       <motion.div
         initial={{ opacity: 0, x: -50 }}
             whileInView={{ opacity: 1, x: 0 }}

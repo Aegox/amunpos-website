@@ -4,7 +4,7 @@ import Image from 'next/image';
 
 const CallAction: React.FC = () => {
   return (
-    <section className="relative flex justify-center py-10 w-full px-3 lg:px-0 lg:h-[550px]">
+    <section className="relative flex justify-center md:py-10 py-4 w-full px-3 lg:px-0 lg:h-[550px]">
       <div className="z-50 relative flex flex-col items-center justify-center bg-[var(--heading-color)] rounded-3xl 2xl:w-[78%] lg:w-[85%] h-full px-5 py-24 lg:pt-[90px] lg:pb-[100px] lg:px-[40px]">
         <Image src="/Ellipse_small.svg" width={200} height={200} objectFit="contain" className="absolute top-0 right-0" alt="a shape of call action component" />
         <Image src="/stroke.svg" width={200} height={200} objectFit="contain" className="absolute bottom-0 left-0" alt="a shape of call action component" />

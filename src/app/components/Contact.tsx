@@ -47,7 +47,7 @@ const Contacto: React.FC = () => {
       transition={{ duration: 0.6 }}
     >
       <div id="Contacto" className="relative">
-        <div className="h-[50px] lg:h-[40px]"></div>
+        <div className="md:h-[40px] h-[0px]"></div>
         <div className="container mx-auto">
           <div className="flex flex-col xl:flex-row-reverse items-center justify-center">
             <motion.div
@@ -55,7 +55,7 @@ const Contacto: React.FC = () => {
               whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true, amount: 0.3 }}
               transition={{ duration: 0.6 }}
-              className="flex justify-center w-full h-full min-w-[45%] md:w-[45%] 2xl:w-1/2 mb-6 xl:mb-0 xl:order-last"
+              className="flex justify-center w-full h-full min-w-[45%] md:w-[45%] 2xl:w-1/2 md:mb-6 mb-0 xl:mb-0 xl:order-last"
             >
               <div className="text-center">
                 <Image
@@ -156,7 +156,7 @@ const Contacto: React.FC = () => {
             </div>
           </div>
         </div>
-        <div className="h-[150px] lg:h-[80px]"></div>
+        <div className="h-[80px] md:h-[120px]"></div>
       </div>
     </motion.div>
   );
