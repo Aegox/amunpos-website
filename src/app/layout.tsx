@@ -17,12 +17,7 @@ export const metadata: Metadata = {
       {
         url: "/logo-avion-amun_azul.png",
         type: "image/png",
-      },
-      {
-        url: "/favicon.ico",
-        sizes: "any",
-        type: "image/x-icon",
-      },
+      }
     ],
   },
 };
