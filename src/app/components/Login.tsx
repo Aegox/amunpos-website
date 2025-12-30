@@ -26,7 +26,13 @@ const Login: React.FC = () => {
     } else if (response) {
       if (typeof window !== "undefined") {
         window.localStorage.removeItem("lastAction");
-        window.location.href = "https://amun-pos.vercel.app/";
+
+        const envAppUrl = process.env.NEXT_PUBLIC_APP_URL;
+
+        // Preferir URL desde .env; si no existe, usar como fallback el origin actual
+        const redirectUrl = envAppUrl || window.location.origin;
+
+        window.location.href = redirectUrl;
       }
     }
 

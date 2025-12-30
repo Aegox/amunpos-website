@@ -12,7 +12,7 @@ export const useUserEdit = () => {
     setError(null);
     setSuccess(null);
     try {
-      const response = await fetch(`${getApiUrl()}/user/edit`, {
+      const response = await fetch(`${getApiUrl()}/auth/edit`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',

@@ -12,6 +12,14 @@ const inter = Inter({
 export const metadata: Metadata = {
   title: "Amunpos",
   description: "a landing page for amunpos",
+  icons: {
+    icon: [
+      {
+        url: "/logo-avion-amun_azul.png",
+        type: "image/png",
+      },
+    ],
+  },
 };
 
 export default function RootLayout({

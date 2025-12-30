@@ -1,5 +1,6 @@
 'use client';
 import React, { useState } from "react";
+import { useRouter } from "next/navigation";
 import Register from "./Register";
 import VerifyCode from "./VerifyCode";
 import { useUserRegister } from "../hooks/useUserRegister";
@@ -7,7 +8,9 @@ import { useGenerateCode } from "../hooks/useGenerateCode";
 import { useVerifyCode } from "../hooks/useVerifyCode";
 
 const RegisterFlow: React.FC = () => {
+  const router = useRouter();
   const [step, setStep] = useState<'register' | 'verify'>('register');
+  const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
@@ -15,7 +18,8 @@ const RegisterFlow: React.FC = () => {
   const { generateCode, loading: loadingGenerate, error: errorGenerate } = useGenerateCode();
   const { verifyCode, loading: loadingVerify, error: errorVerify } = useVerifyCode();
 
-  const handleRegister = async (emailInput: string, passwordInput: string) => {
+  const handleRegister = async (nameInput: string, emailInput: string, passwordInput: string) => {
+    setName(nameInput);
     setEmail(emailInput);
     setPassword(passwordInput);
 
@@ -27,6 +31,15 @@ const RegisterFlow: React.FC = () => {
     }
   };
 
+  const setCookie = (name: string, value: string, days: number) => {
+    const expires = new Date(Date.now() + days * 864e5).toUTCString();
+    const isProduction = window.location.hostname.includes('amunpos.com');
+    const domain = isProduction ? '.amunpos.com' : '';
+    const domainAttr = domain ? `domain=${domain}; ` : '';
+    const secureAttr = isProduction ? 'Secure; ' : '';
+    document.cookie = `${name}=${encodeURIComponent(value)}; expires=${expires}; path=/; ${domainAttr}${secureAttr}SameSite=Lax`;
+  };
+
   const handleVerify = async (code: string) => {
     const isValid = await verifyCode(email, code ); // ✅ usamos verifyCode
     if (!isValid) {
@@ -34,12 +47,22 @@ const RegisterFlow: React.FC = () => {
       return;
     }
 
-    const result = await registerUser({ email, password });
-    console.log(result)
+    const result = await registerUser({ name, email, password });
+    console.log(result);
+
+    // registerUser devuelve { user, token } cuando todo sale bien
     if (result?.token) {
-      document.cookie = `token=${result.token}; path=/; Secure; SameSite=Strict`;
+      setCookie('auth_token', result.token, 7);
+      if (result.user) {
+        setCookie('user_data', JSON.stringify(result.user), 7);
+      }
       localStorage.removeItem('lastAction');
-      window.location.href = `${window.location.origin}/onboarding`;
+
+      // Después de registrar y guardar cookies, navegamos a la ruta interna
+      // de onboarding dentro del mismo dominio del landing.
+      router.push('/onboarding');
+    } else {
+      alert('Error al registrar usuario. Por favor intenta de nuevo.');
     }
   };
 

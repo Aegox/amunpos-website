@@ -12,17 +12,23 @@ export const useUserRegister = () => {
     setError(null);
     setSuccess(null);
     try {
-      const response = await fetch(`${getApiUrl()}/user/register`, {
+      const response = await fetch(`${getApiUrl()}/auth/register`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(userData),
       });
       const data = await response.json();
-      if (!response.ok) {
-        throw new Error(data.message || 'Error al registrar usuario');
+
+      // La API de /auth/register responde con:
+      // { success: boolean, message?: string, data: { user, token } }
+      if (!response.ok || data?.success === false) {
+        throw new Error(data?.message || 'Error al registrar usuario');
       }
-      setSuccess(data.message || 'Usuario registrado correctamente');
-      return data;
+
+      const payload = data?.data || {};
+      setSuccess(data?.message || 'Usuario registrado correctamente');
+      // Devolvemos solo { user, token } para simplificar el consumo
+      return payload;
     } catch (err) {
       setError(err.message || 'Error desconocido al registrar usuario');
       return false;
