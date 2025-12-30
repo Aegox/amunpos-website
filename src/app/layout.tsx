@@ -13,12 +13,9 @@ export const metadata: Metadata = {
   title: "amunpos",
   description: "a landing page for amunpos",
   icons: {
-    icon: [
-      {
-        url: "/logo-avion-amun_azul.png",
-        type: "image/png",
-      }
-    ],
+    icon: "/favicon.ico",
+    shortcut: "/favicon.ico",
+    apple: "/favicon.ico",
   },
 };
 
