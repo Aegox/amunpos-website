@@ -39,7 +39,7 @@ const Hero: React.FC = () => {
       </section>
       <div className="overflow-visible w-[90%] lg:w-[40%] relative z-10">
         <div className="overflow-visible lg:ml-[6%] w-[180%] h-[100%] border-[5px] border-black rounded-[20px]">
-          <Image src="/capture-of-pos.png" alt="a capture of pos" width={1679} height={918} className="object-cover w-full 2xl:h-[550px] xl:h-[400px] lg:h-[380px] object-top"/>
+          <Image src="/capture-of-pos.png" alt="a capture of pos" width={1679} height={918} className="object-cover w-full 2xl:h-[550px] xl:h-[400px] lg:h-[380px] object-top rounded-[13px]"/>
         </div>
       </div>
       
