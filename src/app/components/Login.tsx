@@ -79,7 +79,6 @@ const Login: React.FC = () => {
           shape="rectangular"
           logo_alignment="left"
           width="100%"
-          disabled={emailLoading}
         />
 
         {/* DIVIDER */}

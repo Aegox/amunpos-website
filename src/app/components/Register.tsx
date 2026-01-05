@@ -120,7 +120,6 @@ const Register: React.FC<RegisterProps> = ({ onRegister, loading: emailLoading }
           shape="rectangular"
           logo_alignment="left"
           width="100%"
-          disabled={emailLoading}
         />
 
         {/* DIVIDER */}
