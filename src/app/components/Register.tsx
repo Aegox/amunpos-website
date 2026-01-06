@@ -50,7 +50,7 @@ const Register: React.FC<RegisterProps> = ({ onRegister, loading: emailLoading }
   };
 
   return (
-    <GoogleOAuthProvider clientId={process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID!}>
+    <GoogleOAuthProvider clientId={process.env.GOOGLE_CLIENT_ID!}>
       <form className="w-full space-y-6" onSubmit={handleSubmit(onSubmit)}>
         {/* FORMULARIO REGISTER */}
         <div className="relative mb-6">
@@ -111,32 +111,36 @@ const Register: React.FC<RegisterProps> = ({ onRegister, loading: emailLoading }
         {errors.termsAccepted && <p className="text-red-500 text-sm mb-4">{errors.termsAccepted.message}</p>}
 
         {/* GOOGLE LOGIN */}
+
+        {/* EMAIL BUTTON */}
+        <Button
+          text="Registrarse"
+          styles={`w-full mb-4 py-3 px-8 ${emailLoading ? "opacity-70 cursor-not-allowed" : ""}`}
+          loading={emailLoading}
+          theme="black"
+          variant="inverted"
+        />
+        {/* DIVIDER */}
+        <div className="relative flex items-center mb-4">
+          <div className="flex-grow border-t border-gray-300"></div>
+          <span className="flex-shrink-0 px-4 text-xs text-gray-500 font-medium">o</span>
+          <div className="flex-grow border-t border-gray-300"></div>
+        </div>
+
+        {/* GOOGLE LOGIN */}
+        <div className="w-full flex items-center justify-center">
         <GoogleLogin
           onSuccess={handleGoogleSuccess}
           onError={handleGoogleError}
           theme="filled_blue"
           size="large"
           text="signup_with"
-          shape="rectangular"
-          logo_alignment="left"
+          shape="circle"
+          logo_alignment="center"
           width="100%"
+          type="icon"
         />
-
-        {/* DIVIDER */}
-        <div className="relative flex items-center py-4">
-          <div className="flex-grow border-t border-gray-300"></div>
-          <span className="flex-shrink-0 px-4 text-xs text-gray-500 font-medium">o</span>
-          <div className="flex-grow border-t border-gray-300"></div>
         </div>
-
-        {/* EMAIL BUTTON */}
-        <Button
-          text="Registrarse"
-          styles={`w-full py-3 px-8 ${emailLoading ? "opacity-70 cursor-not-allowed" : ""}`}
-          loading={emailLoading}
-          theme="black"
-          variant="inverted"
-        />
       </form>
     </GoogleOAuthProvider>
   );

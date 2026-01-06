@@ -31,17 +31,7 @@ const SessionComponent: React.FC<SessionComponentProps> = ({ Component, title, d
       <h1 className="text-center pb-2 text-[var(--heading-color)]  text-[22px] leading-[1.4em] font-bold">{title}</h1>
       <p className="w-full text-center text-[var(--body-color)] pb-8">{description}</p>
       <Component />
-      <span className="cursor-pointer text-[var(--body-color)]">{ title == "Registra tu cuenta" ? "O Registrate con" : "O incia sesión con"}</span>
-      <a
-        href="https://www.google.com/"
-        aria-label="Google"
-        target="_blank"
-        className={`group border-1 rounded-full my-4 mb-6 p-2 transition duration-300 
-        border-black hover:border-[var(--primary-color)] hover:translate-y-[-2px] hover:shadow-md`}
-      >
-        <FcGoogle size={18} className="transition duration-300" />
-      </a>
-      {question ? <p className="text-[var(--body-color)]">No tienes una cuenta? <button onClick={()=> { handleTo("register")}} ><strong className="ml-2 cursor-pointer text-[var(--primary-color)]">Registrate Ahora</strong></button></p> : <p className="text-[var(--body-color)]">Ya tienes una cuenta? <button onClick={()=>{handleTo("login")}} ><strong className="ml-2 cursor-pointer text-[var(--primary-color)]">Inicia sesión</strong></button></p> }
+      {question ? <p className="text-[var(--body-color)] mt-6">No tienes una cuenta? <button onClick={()=> { handleTo("register")}} ><strong className="ml-2 cursor-pointer text-[var(--primary-color)] mt-6">Registrate Ahora</strong></button></p> : <p className="text-[var(--body-color)] mt-6">Ya tienes una cuenta? <button onClick={()=>{handleTo("login")}} ><strong className="ml-2 cursor-pointer text-[var(--primary-color)]">Inicia sesión</strong></button></p> }
     </div>
   );
 };
