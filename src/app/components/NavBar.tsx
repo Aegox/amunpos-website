@@ -6,6 +6,7 @@ import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
 import Button from './Button';
 import { getCookie } from '../utils/cookie';
+import { scrollToSection as scrollWithOffset } from '../utils/scroll';
 
 const NavBar: React.FC = () => {
   const pathname = usePathname();
@@ -15,6 +16,15 @@ const NavBar: React.FC = () => {
   const [isScrollingDown, setIsScrollingDown] = useState<boolean>(false);
   const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
+
+  const sections = [
+    { label: 'Inicio', id: 'Inicio' },
+    { label: 'Caracteristicas', id: 'Caracteristicas' },
+    { label: 'Planes', id: 'Planes' },
+    { label: 'Testimonios', id: 'Testimonios' },
+    { label: 'Faq', id: 'Faq' },
+    { label: 'Contacto', id: 'Contacto' },
+  ];
 
   useEffect(() => {
     const token = getCookie('auth_token');
@@ -55,15 +65,33 @@ const NavBar: React.FC = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
+  const getAppUrl = () => process.env.NEXT_PUBLIC_APP_URL || 'https://app.amunpos.com';
+
   const handleClick = (type: string) => {
     const token = getCookie('auth_token');
     if (token) {
-      const envAppUrl = process.env.NEXT_PUBLIC_APP_URL;
-      const redirectUrl = envAppUrl || window.location.origin;
-      window.location.href = redirectUrl;
+      window.location.href = getAppUrl();
       return;
     }
     window.localStorage.setItem('lastAction', type);
+  };
+
+  const scrollToSection = (sectionId: string) => {
+    if (typeof window === 'undefined') return;
+
+    if (pathname !== '/') {
+      window.location.href = `/#${sectionId}`;
+      return;
+    }
+
+    const didScroll = scrollWithOffset(sectionId);
+
+    if (!didScroll) {
+      window.location.hash = sectionId;
+    } else if (window.history?.pushState) {
+      const url = sectionId ? `#${sectionId}` : window.location.pathname;
+      window.history.pushState(null, '', url);
+    }
   };
 
   const handleLogout = () => {
@@ -99,14 +127,14 @@ const NavBar: React.FC = () => {
 
         {/* Menú para pantallas grandes */}
         <ul className="hidden xl:flex gap-10">
-          {['Inicio', 'Caracteristicas', 'Planes', 'Testimonios', 'Faq', 'Contacto'].map(section => (
-            <Link
-              key={section}
-              href={`#${section}`}
-              className="cursor-pointer transition-colors duration-300 ease-in-out hover:text-[var(--primary-color)]"
+          {sections.map(({ label, id }) => (
+            <button
+              key={id}
+              className="cursor-pointer transition-colors duration-300 ease-in-out hover:text-[var(--primary-color)] text-left"
+              onClick={() => scrollToSection(id)}
             >
-              {section}
-            </Link>
+              {label}
+            </button>
           ))}
         </ul>
 
@@ -183,13 +211,16 @@ const NavBar: React.FC = () => {
               {/* El botón de cierre se ha eliminado ya que usamos el botón de hamburguesa animado */}
             </div>
           <ul className="flex flex-col gap-5 text-[1.15em]">
-            {['Inicio', 'Caracteristicas', 'Planes', 'Testimonios', 'Contacto'].map(item => (
+            {sections.map(({ label, id }) => (
               <li
-                key={item}
+                key={id}
                 className="cursor-pointer transition-colors duration-300 ease-in-out hover:text-[var(--primary-color)]"
-                onClick={() => setIsMenuOpen(false)}
+                onClick={() => {
+                  setIsMenuOpen(false);
+                  scrollToSection(id);
+                }}
               >
-                {item}
+                {label}
               </li>
             ))}
           </ul>
@@ -221,7 +252,7 @@ const NavBar: React.FC = () => {
                   className="cursor-pointer transition-colors duration-300 ease-in-out hover:text-[var(--primary-color)] text-[var(--heading-color)]"
                   onClick={() => {
                     setIsMenuOpen(false);
-                    router.push('/dashboard');
+                    window.location.href = getAppUrl();
                   }}
                 >
                   Dashboard

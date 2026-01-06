@@ -10,22 +10,24 @@ import Questions from "./components/Questions";
 import Contact from "./components/Contact";
 import Footer from "./components/Footer";
 import AuthModal from "./components/AuthModal";
+import SmoothScrollManager from "./components/SmoothScrollManager";
 
 export default function Render() {
   return (
-      <div>
-        <Hero/>
-        <Features/>
-        <SoftwareFeatures/>
-        <UseCases/>
-        <Pricing/>
-        <Testimonials/>
-        <Partners/>
-        <CallAction/>
-        <Questions/>
-        <Contact/>
-        <Footer/>
-        <AuthModal/>
-      </div>
+    <div>
+      <SmoothScrollManager />
+      <Hero />
+      <Features />
+      <SoftwareFeatures />
+      <UseCases />
+      <Pricing />
+      <Testimonials />
+      <Partners />
+      <CallAction />
+      <Questions />
+      <Contact />
+      <Footer />
+      <AuthModal />
+    </div>
   );
-};
+}
