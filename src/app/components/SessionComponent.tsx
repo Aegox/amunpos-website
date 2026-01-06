@@ -1,6 +1,5 @@
 import React from "react";
 import { MdClose } from 'react-icons/md';
-import { FcGoogle } from "react-icons/fc";
 import Image from 'next/image';
 
 interface SessionComponentProps {
