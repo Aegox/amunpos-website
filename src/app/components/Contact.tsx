@@ -16,22 +16,13 @@ type FormValues = {
 
 const Contacto: React.FC = () => {
   const { register, handleSubmit, formState: { errors }, reset } = useForm<FormValues>();
-  const { sendEmail, loading, error, success } = useSendEmail();
+  const { sendContactMessage, loading, error, success } = useSendEmail();
 
   const onSubmit = async (data: FormValues) => {
     try {
-      await sendEmail({
-        to: data.email, // Aquí debes poner el correo de destino real
-        subject: data.subject,
-        text: `
-          Nombre: ${data.name}
-          Correo: ${data.email}
-          Teléfono: ${data.phone}
-          Mensaje: ${data.message}
-        `,
-      });
+      const sent = await sendContactMessage(data);
 
-      if (success) {
+      if (sent) {
         reset();
       }
     } catch (err) {
