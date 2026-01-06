@@ -50,7 +50,7 @@ const Register: React.FC<RegisterProps> = ({ onRegister, loading: emailLoading }
   };
 
   return (
-    <GoogleOAuthProvider clientId={process.env.GOOGLE_CLIENT_ID!}>
+    <GoogleOAuthProvider clientId={process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID!}>
       <form className="w-full space-y-6" onSubmit={handleSubmit(onSubmit)}>
         {/* FORMULARIO REGISTER */}
         <div className="relative mb-6">
