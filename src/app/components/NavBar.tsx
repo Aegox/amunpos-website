@@ -27,8 +27,8 @@ const NavBar: React.FC = () => {
   ];
 
   useEffect(() => {
-    const token = getCookie('auth_token');
-    setIsAuthenticated(!!token);
+    const cookieToken = getCookie('auth_token') || getCookie('auth_token_client');
+    setIsAuthenticated(!!cookieToken);
   }, []);
 
   // Efecto para manejar el scroll cuando el menú está abierto
@@ -139,7 +139,16 @@ const NavBar: React.FC = () => {
         </ul>
 
         {/* Botones para pantallas grandes */}
-        <section className="hidden xl:flex gap-10">
+        <section className="hidden xl:flex gap-6 items-center">
+          {isAuthenticated ? (
+            <Button
+              variant="inverted"
+              theme="black"
+              text="Dashboard"
+              onClick={() => (window.location.href = getAppUrl())}
+            />
+          ) : (
+            <>
               <button
                 className="cursor-pointer transition-colors duration-300 ease-in-out hover:text-[var(--primary-color)] text-[var(--heading-color)]"
                 onClick={() => handleClick('login')}
@@ -152,6 +161,8 @@ const NavBar: React.FC = () => {
                 text="Registrarse"
                 onClick={() => handleClick('register')}
               />
+            </>
+          )}
         </section>
 
         {/* Botón de hamburguesa animado */}
