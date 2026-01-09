@@ -1,6 +1,6 @@
 'use client';
 import { useState } from 'react';
-import { getApiUrl } from '../utils/api';
+import { fetchWithRetry, getApiUrl } from '../utils/api';
 
 interface ContactEmailPayload {
   name: string;
@@ -46,7 +46,7 @@ const useSendEmail = () => {
     `;
 
     try {
-      const response = await fetch(`${getApiUrl()}/mails/send`, {
+      const response = await fetchWithRetry(`${getApiUrl()}/mails/send`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

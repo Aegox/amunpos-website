@@ -1,6 +1,6 @@
 'use client';
 import { useState } from 'react';
-import { getApiUrl } from '../utils/api';
+import { fetchWithRetry, getApiUrl } from '../utils/api';
 
 export const useUserEdit = () => {
   const [loading, setLoading] = useState(false);
@@ -12,7 +12,7 @@ export const useUserEdit = () => {
     setError(null);
     setSuccess(null);
     try {
-      const response = await fetch(`${getApiUrl()}/auth/edit`, {
+      const response = await fetchWithRetry(`${getApiUrl()}/auth/edit`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',

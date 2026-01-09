@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { getApiUrl } from '../utils/api';
+import { fetchWithRetry, getApiUrl } from '../utils/api';
 
 export const useGenerateCode = () => {
   const [loading, setLoading] = useState(false);
@@ -13,18 +13,11 @@ export const useGenerateCode = () => {
     setError(null);
     setSuccess(null);
     try {
-      const controller = new AbortController();
-      const timeoutMs = Number(process.env.NEXT_PUBLIC_API_TIMEOUT_MS || 15000);
-      const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
-
-      const response = await fetch(`${getApiUrl()}/auth/generateCode`, {
+      const response = await fetchWithRetry(`${getApiUrl()}/auth/generateCode`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email }),
-        signal: controller.signal,
       });
-
-      clearTimeout(timeoutId);
 
       const data = await response.json().catch(() => ({}));
       if (!response.ok) {

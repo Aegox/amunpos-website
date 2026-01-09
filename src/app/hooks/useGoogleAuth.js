@@ -2,13 +2,14 @@
 'use client';
 
 import { useCallback } from 'react';
+import { fetchWithRetry } from '../utils/api';
 
 export const useGoogleAuth = () => {
   const handleGoogleSuccess = useCallback(async (credentialResponse) => {
     console.log('🚀 Google Success - Iniciando auth...');
     
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/google`, {
+      const response = await fetchWithRetry(`${process.env.NEXT_PUBLIC_API_URL}/auth/google`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         credentials: 'include',

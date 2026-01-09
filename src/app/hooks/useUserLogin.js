@@ -1,6 +1,6 @@
 'use client';
 import { useState } from 'react';
-import { getApiUrl } from '../utils/api';
+import { fetchWithRetry, getApiUrl } from '../utils/api';
 
 export const useUserLogin = () => {
   const [loading, setLoading] = useState(false);
@@ -21,7 +21,7 @@ export const useUserLogin = () => {
     setError(null);
     setUser(null);
     try {
-      const response = await fetch(`${getApiUrl()}/auth/login`, {
+      const response = await fetchWithRetry(`${getApiUrl()}/auth/login`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, password }),

@@ -1,6 +1,6 @@
 'use client';
 import { useState } from 'react';
-import { getApiUrl } from '../utils/api';
+import { fetchWithRetry, getApiUrl } from '../utils/api';
 
 export const useUserProfile = () => {
   const [loading, setLoading] = useState(false);
@@ -12,7 +12,7 @@ export const useUserProfile = () => {
     setError(null);
     setProfile(null);
     try {
-      const response = await fetch(`${getApiUrl()}/user/edit`, {
+      const response = await fetchWithRetry(`${getApiUrl()}/user/edit`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',

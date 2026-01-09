@@ -1,6 +1,6 @@
 "use client";
 import { useState, useCallback } from "react";
-import { getApiUrl } from "../utils/api.js";
+import { fetchWithRetry, getApiUrl } from "../utils/api.js";
 
 export const useVerifyToken = () => {
   const [loading, setLoading] = useState(false);
@@ -16,7 +16,7 @@ export const useVerifyToken = () => {
       return false;
     }
     try {
-      const response = await fetch(`${getApiUrl()}/auth/verifyToken`, {
+      const response = await fetchWithRetry(`${getApiUrl()}/auth/verifyToken`, {
         method: "POST",
         headers: {
           Authorization: `Bearer ${token}`,
