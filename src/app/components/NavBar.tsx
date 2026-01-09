@@ -65,12 +65,17 @@ const NavBar: React.FC = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  const getAppUrl = () => process.env.NEXT_PUBLIC_APP_URL || 'https://app.amunpos.com';
+  const getAppUrl = () => process.env.NEXT_PUBLIC_APP_URL;
 
   const handleClick = (type: string) => {
     const token = getCookie('auth_token');
     if (token) {
-      window.location.href = getAppUrl();
+      const appUrl = getAppUrl();
+      if (!appUrl) {
+        console.warn('NEXT_PUBLIC_APP_URL is not set; skipping redirect');
+        return;
+      }
+      window.location.href = appUrl;
       return;
     }
     window.localStorage.setItem('lastAction', type);
@@ -145,7 +150,14 @@ const NavBar: React.FC = () => {
               variant="inverted"
               theme="black"
               text="Dashboard"
-              onClick={() => (window.location.href = getAppUrl())}
+              onClick={() => {
+                const appUrl = getAppUrl();
+                if (!appUrl) {
+                  console.warn('NEXT_PUBLIC_APP_URL is not set; skipping redirect');
+                  return;
+                }
+                window.location.href = appUrl;
+              }}
             />
           ) : (
             <>
@@ -263,7 +275,12 @@ const NavBar: React.FC = () => {
                   className="cursor-pointer transition-colors duration-300 ease-in-out hover:text-[var(--primary-color)] text-[var(--heading-color)]"
                   onClick={() => {
                     setIsMenuOpen(false);
-                    window.location.href = getAppUrl();
+                    const appUrl = getAppUrl();
+                    if (!appUrl) {
+                      console.warn('NEXT_PUBLIC_APP_URL is not set; skipping redirect');
+                      return;
+                    }
+                    window.location.href = appUrl;
                   }}
                 >
                   Dashboard

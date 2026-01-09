@@ -43,7 +43,12 @@ export const useGoogleAuth = () => {
         }
         
         // 4. Redirect POS
-        const posUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:5173';
+        const posUrl = process.env.NEXT_PUBLIC_APP_URL;
+        if (!posUrl) {
+          console.error('NEXT_PUBLIC_APP_URL is not set; cannot redirect to POS');
+          alert('Configuración incompleta: falta NEXT_PUBLIC_APP_URL');
+          return;
+        }
         console.log('➡️ Redirect POS:', posUrl);
         window.location.href = posUrl;
       } else {
