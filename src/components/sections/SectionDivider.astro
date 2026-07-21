@@ -1,0 +1,20 @@
+---
+import { RiSparklingLine } from "@remixicon/react";
+---
+
+<!-- Separador decorativo entre secciones: línea + puntos de esquina + ícono
+     central, el mismo recurso que usa alignui.com para "respirar" entre
+     bloques largos de contenido -->
+<div class="mx-auto flex h-8 w-full max-w-[596px] items-center gap-6 px-5 my-2">
+  <div class="relative h-px w-full flex-1 bg-gray-200">
+    <span class="absolute left-0 top-1/2 size-[5px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-gray-300"></span>
+    <span class="absolute right-0 top-1/2 size-[5px] -translate-y-1/2 translate-x-1/2 rounded-full bg-gray-300"></span>
+  </div>
+  <span class="flex size-7 shrink-0 items-center justify-center rounded-full bg-gray-50 text-gray-400">
+    <RiSparklingLine className="size-4" />
+  </span>
+  <div class="relative h-px w-full flex-1 bg-gray-200">
+    <span class="absolute left-0 top-1/2 size-[5px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-gray-300"></span>
+    <span class="absolute right-0 top-1/2 size-[5px] -translate-y-1/2 translate-x-1/2 rounded-full bg-gray-300"></span>
+  </div>
+</div>

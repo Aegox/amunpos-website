@@ -2,10 +2,13 @@
 import Layout from "../layouts/Layout.astro";
 import NavBar from "../components/sections/NavBar";
 import Hero from "../components/sections/Hero.astro";
+import Highlights from "../components/sections/Highlights.astro";
 import Capabilities from "../components/sections/Capabilities.astro";
 import WhatsInside from "../components/sections/WhatsInside.astro";
+import SectionDivider from "../components/sections/SectionDivider.astro";
 import Pricing from "../components/sections/Pricing.astro";
 import Testimonials from "../components/sections/Testimonials.astro";
+import Support from "../components/sections/Support.astro";
 import Faq from "../components/sections/Faq.astro";
 import Footer from "../components/sections/Footer.astro";
 ---
@@ -13,10 +16,13 @@ import Footer from "../components/sections/Footer.astro";
 <Layout>
   <NavBar client:load />
   <Hero />
+  <Highlights />
   <Capabilities />
   <WhatsInside />
+  <SectionDivider />
   <Pricing />
   <Testimonials />
+  <Support />
   <Faq />
   <Footer />
 </Layout>

@@ -183,3 +183,22 @@ body {
   border-top: 1px solid var(--gray-200);
   border-bottom: 1px solid var(--gray-200);
 }
+
+/* Animación de entrada escalonada, igual a la que usa alignui.com en su
+   tira de beneficios bajo el hero (xl:animate-rapid-b-item) */
+@keyframes fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+    filter: blur(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+    filter: blur(0);
+  }
+}
+
+.animate-fade-up {
+  animation: fade-up 0.7s ease-out both;
+}
