@@ -1,36 +1,54 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# amunpos-website — rediseño Astro + AlignUI
 
-## Getting Started
+Landing page de AmunPOS reconstruida desde cero en **Astro + React** (islas),
+siguiendo el sistema de diseño real de [AlignUI](https://alignui.com) — ver
+`design-system/alignui/` para la referencia completa (componentes reales,
+tokens de color/tipografía, iconos) — y con la información de arquitectura de
+página inspirada en las plantillas de landing de
+[Untitled UI](https://www.untitledui.com/react/marketing/landing-pages)
+(patrón de secciones alternadas, tarjeta de plan "popular" elevada, franja de
+logos tras el hero).
 
-First, run the development server:
+## Stack
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+- **Astro 4** (compatible con Node 18.20+, sin exigir Node 22 como Astro 5)
+- **React 18** vía `@astrojs/react`, solo para las piezas interactivas
+  (nav móvil, carrusel de testimonios, acordeón de FAQ) — el resto de
+  secciones son componentes `.astro` estáticos, sin JS de cliente.
+- **Tailwind CSS v4** vía `@tailwindcss/vite` (CSS-first, `@theme` en
+  `src/styles/globals.css`)
+- **Radix UI** primitives (`@radix-ui/react-accordion`, etc.) + **Remix Icon**
+  (`@remixicon/react`) — el set de iconos real de AlignUI.
+
+## Estructura
+
+```
+src/
+├── components/
+│   ├── sections/     # secciones de la landing (.astro estáticas + .tsx islas)
+│   └── ui/            # primitivos reales de AlignUI (button, input, modal...)
+├── layouts/
+│   └── Layout.astro   # shell HTML, fuente Inter, CSS global
+├── lib/
+│   └── utils.ts       # cn() — clsx + tailwind-merge con los tokens custom registrados
+├── pages/
+│   └── index.astro    # composición de la landing
+└── styles/
+    └── globals.css     # tokens AlignUI (color, radios, sombras, escala tipográfica)
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Comandos
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+| Comando           | Acción                                    |
+| ----------------- | ----------------------------------------- |
+| `npm install`      | Instala dependencias                      |
+| `npm run dev`      | Servidor de desarrollo                    |
+| `npm run build`    | Build de producción a `./dist/`           |
+| `npm run preview`  | Sirve el build de producción localmente   |
+| `npm run astro check` | Typecheck de archivos `.astro`/`.tsx`  |
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Alcance de esta rama
 
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Esta rama (`astro-alignui-rebuild`) cubre **solo la landing page**. El flujo
+de auth/onboarding (login, registro, dashboard) sigue viviendo en la versión
+Next.js (`rediseno-alignui`) — no se portó aquí todavía.

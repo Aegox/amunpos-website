@@ -1,0 +1,45 @@
+---
+import { RiStore2Line, RiShoppingCart2Line, RiCupLine, RiShoppingBagLine, RiGlobalLine, RiHotelLine, RiSparkling2Line, RiMoreLine } from "@remixicon/react";
+
+const useCases = [
+  { label: "Tiendas minoristas", icon: RiStore2Line },
+  { label: "Supermercados", icon: RiShoppingCart2Line },
+  { label: "Restaurantes y cafeterías", icon: RiCupLine },
+  { label: "Tiendas de conveniencia", icon: RiShoppingBagLine },
+  { label: "Negocios en línea", icon: RiGlobalLine },
+  { label: "Hostelería y hoteles", icon: RiHotelLine },
+  { label: "Salones y spas", icon: RiSparkling2Line },
+  { label: "Y muchos más", icon: RiMoreLine },
+];
+---
+
+<section class="mx-auto flex w-full max-w-[1240px] flex-col-reverse items-center gap-14 px-5 py-16 lg:flex-row lg:gap-16 lg:py-24">
+  <div class="w-[80%] max-w-md lg:w-[42%]">
+    <div class="overflow-hidden rounded-2xl border border-stroke-soft-200 bg-weak-50 p-8">
+      <img src="/illustration1.svg" alt="Persona pagando con tarjeta" class="w-full" />
+    </div>
+  </div>
+  <div class="flex w-full flex-col lg:w-[54%]">
+    <span class="inline-flex w-fit items-center gap-1.5 rounded-full border border-brand-200 bg-brand-50 px-3 py-1.5 text-label-sm text-primary-dark">
+      <RiStore2Line className="size-3.5" />
+      Un mismo sistema, cualquier rubro
+    </span>
+    <h2 class="mt-5 text-title-h3 text-strong-950 lg:text-title-h2">
+      Tu negocio crece distinto al de al lado — AmunPOS se adapta al tuyo
+    </h2>
+    <p class="mt-4 text-paragraph-md text-sub-600">
+      No importa si vendes por mostrador, por mesa o por ruta de entrega: la configuración
+      se ajusta a cómo trabajas de verdad, no al revés.
+    </p>
+    <ul class="mt-10 grid grid-cols-1 gap-3 sm:grid-cols-2">
+      {useCases.map(({ label, icon: Icon }) => (
+        <li class="flex items-center gap-3 rounded-xl border border-stroke-soft-200 bg-white-0 px-4 py-3">
+          <span class="flex size-8 shrink-0 items-center justify-center rounded-lg bg-brand-50 text-primary-base">
+            <Icon className="size-4" />
+          </span>
+          <span class="text-label-sm text-strong-950">{label}</span>
+        </li>
+      ))}
+    </ul>
+  </div>
+</section>
