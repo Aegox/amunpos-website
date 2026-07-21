@@ -104,9 +104,10 @@ const NavBar: React.FC = () => {
           <Image
             src="/logo.svg"
             alt="AmunPOS"
-            width={150}
-            height={24}
-            className="h-6 w-auto cursor-pointer"
+            width={165}
+            height={101}
+            priority
+            className="h-9 w-auto cursor-pointer lg:h-10"
           />
         </Link>
 
