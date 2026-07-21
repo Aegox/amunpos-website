@@ -1,13 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { RiMenuLine, RiCloseLine } from "@remixicon/react";
-import { ButtonRoot } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
-const sections = [
+const links = [
   { label: "Características", id: "Caracteristicas" },
   { label: "IA", id: "IA" },
   { label: "Precios", id: "Planes" },
-  { label: "Testimonios", id: "Testimonios" },
   { label: "FAQ", id: "Faq" },
 ];
 
@@ -30,39 +28,43 @@ export default function NavBar() {
   }, [menuOpen]);
 
   return (
-    <nav
+    <header
       className={cn(
-        "fixed top-0 z-50 flex w-full justify-center bg-white-0 transition-shadow duration-300",
-        scrolled ? "border-b border-stroke-soft-200" : "border-b border-transparent",
+        "fixed top-0 z-50 flex w-full justify-center bg-gray-0/90 backdrop-blur-md transition-shadow duration-300",
+        scrolled ? "border-b border-gray-200" : "border-b border-transparent",
       )}
     >
-      <div className="flex h-[72px] w-full max-w-[1240px] items-center justify-between px-5 lg:px-8">
+      <div className="flex h-16 w-full max-w-[1240px] items-center justify-between px-5 lg:px-8">
         <a className="flex items-center gap-2" href="#Inicio">
-          <img src="/logo.svg" alt="AmunPOS" className="h-9 w-auto lg:h-10" />
+          <img src="/logo.svg" alt="AmunPOS" className="h-8 w-auto" />
         </a>
 
-        <ul className="hidden items-center gap-8 xl:flex">
-          {sections.map(({ label, id }) => (
-            <li key={id}>
-              <a href={`#${id}`} className="text-label-sm text-sub-600 transition-colors duration-200 hover:text-strong-950">
-                {label}
-              </a>
-            </li>
+        <nav className="hidden items-center gap-7 xl:flex">
+          {links.map(({ label, id }) => (
+            <a key={id} href={`#${id}`} className="text-label-sm text-gray-600 transition-colors duration-200 hover:text-gray-900">
+              {label}
+            </a>
           ))}
-        </ul>
+        </nav>
 
-        <div className="hidden items-center gap-3 xl:flex">
-          <ButtonRoot variant="neutral" mode="stroke" size="small" asChild>
-            <a href="#">Iniciar sesión</a>
-          </ButtonRoot>
-          <ButtonRoot size="small" asChild>
-            <a href="#Planes">Regístrate gratis</a>
-          </ButtonRoot>
+        <div className="hidden items-center gap-2.5 xl:flex">
+          <a
+            href="#"
+            className="flex h-9 items-center rounded-9 px-3.5 text-label-sm text-gray-700 transition duration-200 hover:bg-gray-50"
+          >
+            Iniciar sesión
+          </a>
+          <a
+            href="#Planes"
+            className="flex h-9 items-center gap-2 rounded-9 bg-primary-base px-3.5 text-label-sm text-gray-0 shadow-button-gray transition duration-200 hover:bg-primary-dark"
+          >
+            Empieza gratis
+          </a>
         </div>
 
         <button
           onClick={() => setMenuOpen((v) => !v)}
-          className="flex size-10 items-center justify-center rounded-lg border border-stroke-soft-200 xl:hidden"
+          className="flex size-9 items-center justify-center rounded-9 border border-gray-200 xl:hidden"
           aria-label={menuOpen ? "Cerrar menú" : "Abrir menú"}
         >
           {menuOpen ? <RiCloseLine className="size-5" /> : <RiMenuLine className="size-5" />}
@@ -70,29 +72,31 @@ export default function NavBar() {
       </div>
 
       {menuOpen && (
-        <div className="fixed left-0 top-[72px] z-30 flex h-[calc(100vh-72px)] w-full flex-col gap-1 bg-white-0 px-6 pt-6 xl:hidden">
-          {sections.map(({ label, id }) => (
+        <div className="fixed left-0 top-16 z-30 flex h-[calc(100vh-64px)] w-full flex-col gap-1 bg-gray-0 px-6 pt-6 xl:hidden">
+          {links.map(({ label, id }) => (
             <a
               key={id}
               href={`#${id}`}
               onClick={() => setMenuOpen(false)}
-              className="rounded-lg px-3 py-3 text-label-md text-strong-950 transition-colors duration-200 hover:bg-weak-50"
+              className="rounded-9 px-3 py-3 text-label-md text-gray-900 transition-colors duration-200 hover:bg-gray-50"
             >
               {label}
             </a>
           ))}
-          <div className="mt-4 flex flex-col gap-3 border-t border-stroke-soft-200 pt-6">
-            <ButtonRoot variant="neutral" mode="stroke" asChild>
-              <a href="#">Iniciar sesión</a>
-            </ButtonRoot>
-            <ButtonRoot asChild>
-              <a href="#Planes" onClick={() => setMenuOpen(false)}>
-                Regístrate gratis
-              </a>
-            </ButtonRoot>
+          <div className="mt-4 flex flex-col gap-3 border-t border-gray-200 pt-6">
+            <a href="#" className="rounded-9 px-3 py-3 text-center text-label-md text-gray-900 hover:bg-gray-50">
+              Iniciar sesión
+            </a>
+            <a
+              href="#Planes"
+              onClick={() => setMenuOpen(false)}
+              className="flex h-11 items-center justify-center rounded-9 bg-primary-base text-label-md text-gray-0 shadow-button-gray"
+            >
+              Empieza gratis
+            </a>
           </div>
         </div>
       )}
-    </nav>
+    </header>
   );
 }

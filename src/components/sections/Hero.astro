@@ -1,62 +1,90 @@
 ---
-import { RiArrowRightLine } from "@remixicon/react";
+import TypewriterWord from "./TypewriterWord";
+import { RiSparklingLine, RiArrowRightSLine } from "@remixicon/react";
 ---
 
-<section id="Inicio" class="relative w-full scroll-mt-[72px] overflow-hidden pt-[136px] pb-16 lg:pb-24">
-  <div class="dot-grid-bg pointer-events-none absolute inset-x-0 top-0 h-[520px]"></div>
+<section id="Inicio" class="relative w-full scroll-mt-16 overflow-hidden pt-20 pb-8">
+  <!-- Banner: adaptación del banner de sync-con-Figma real, ahora sobre IA -->
+  <a
+    href="#IA"
+    class="relative z-10 mx-auto flex h-11 w-fit items-center gap-2 rounded-b-18 border-x border-b border-gray-200 bg-gray-50 px-4 shadow-badge-gray"
+  >
+    <RiSparklingLine className="size-5 text-ai-base" />
+    <span class="text-label-sm text-gray-600">La IA de AmunPOS ya está activa en el producto</span>
+    <RiArrowRightSLine className="size-5 text-gray-400" />
+  </a>
 
-  <div class="relative z-10 mx-auto flex w-full max-w-[1240px] flex-col items-center px-5 text-center lg:px-8">
-    <a
-      href="#IA"
-      class="inline-flex items-center gap-3 rounded-full border border-stroke-soft-200 bg-white-0 py-1 pl-1 pr-4 shadow-regular-xs transition-colors duration-200 hover:border-stroke-sub-300"
-    >
-      <span class="rounded-full bg-feature-lighter px-2.5 py-1 text-label-xs text-feature-dark">Nuevo</span>
-      <span class="flex items-center gap-1 text-label-sm text-sub-600">
-        Descubre la IA de AmunPOS
-        <RiArrowRightLine className="size-3.5" />
-      </span>
-    </a>
+  <div class="container mx-auto max-w-[1240px] px-5">
+    <div class="flex flex-col items-center pt-11 xl:pt-16">
+      <!-- Trust bar con avatares -->
+      <div class="flex flex-col gap-3 rounded-full md:flex-row md:items-center md:gap-0 md:bg-gray-25 md:px-2 md:py-1.5 md:ring-1 md:ring-gray-200">
+        <div class="flex shrink-0 -space-x-1">
+          {["/user1.png", "/user2.png", "/user3.png", "/user4.png"].map((src) => (
+            <img src={src} width="24" height="24" alt="" class="size-6 rounded-full ring-2 ring-gray-25" />
+          ))}
+        </div>
+        <div class="hidden h-4 w-px bg-gray-200 md:mx-3 md:block"></div>
+        <p class="text-paragraph-sm text-gray-600">
+          Ya usado por <span class="text-label-sm text-gray-900">cientos de negocios</span> en la región
+        </p>
+      </div>
 
-    <h1 class="mt-6 max-w-3xl text-title-h3 text-strong-950 sm:text-title-h2 lg:text-title-h1">
-      El punto de venta que hace el trabajo pesado por ti
-    </h1>
+      <h1 class="mt-5 text-center text-[34px]/[40px] font-medium -tracking-[0.022em] text-gray-900 md:text-title-h3 xl:text-title-h1">
+        Hecho para <TypewriterWord client:load />
+      </h1>
 
-    <p class="mt-6 max-w-2xl text-paragraph-lg text-sub-600">
-      AmunPOS une ventas, inventario, facturación y nómina en un solo panel — y le suma
-      inteligencia artificial que migra tus datos, lee tus facturas y arma los horarios de
-      tu equipo. Menos operación manual, más tiempo para hacer crecer tu negocio.
-    </p>
+      <p class="mt-4 max-w-2xl text-pretty text-center text-paragraph-md text-gray-700 xl:text-paragraph-lg">
+        AmunPOS une ventas, inventario, facturación y nómina en un solo panel — con inteligencia
+        artificial que migra tus datos, lee tus facturas y arma los horarios de tu equipo.
+      </p>
 
-    <div class="mt-8 flex flex-col items-center gap-3 sm:flex-row">
-      <a
-        href="#IA"
-        class="inline-flex h-11 items-center justify-center gap-2 rounded-10 bg-white-0 px-5 text-label-md text-strong-950 shadow-regular-xs ring-1 ring-inset ring-stroke-soft-200 transition duration-200 hover:bg-weak-50"
-      >
-        Ver demo
-      </a>
-      <a
-        href="#Planes"
-        class="inline-flex h-11 items-center justify-center gap-2 rounded-10 bg-primary-base px-5 text-label-md text-static-white transition duration-200 hover:bg-primary-darker focus-visible:shadow-button-primary-focus focus-visible:outline-none"
-      >
-        Regístrate gratis
-      </a>
+      <div class="mt-4 flex items-center justify-center gap-2.5 xl:mt-7">
+        <span class="text-paragraph-sm text-gray-600 xl:text-paragraph-md">
+          Hecho para <span class="font-medium text-gray-800">retail</span>
+        </span>
+        <span class="size-1 rounded-full bg-gray-300"></span>
+        <span class="text-paragraph-sm text-gray-600 xl:text-paragraph-md">
+          Y <span class="font-medium text-gray-800">restaurantes</span>
+        </span>
+      </div>
+
+      <div class="mt-8 flex justify-center">
+        <a
+          href="#Planes"
+          class="group inline-flex h-11 items-center gap-3.5 rounded-13 bg-gray-900 px-[18px] text-label-sm text-gray-0 shadow-button-gray transition duration-200 ease-out hover:bg-gray-800"
+        >
+          <span class="flex items-center gap-1">
+            <span>Empieza gratis</span>
+            <span class="text-paragraph-sm text-gray-500">— sin tarjeta</span>
+          </span>
+          <RiArrowRightSLine className="-mx-1.5 size-5 shrink-0 text-gray-500" />
+        </a>
+      </div>
     </div>
 
-    <div class="relative mt-16 w-full max-w-[1080px]">
-      <div class="pointer-events-none absolute -inset-x-8 -bottom-10 h-24 bg-gradient-to-t from-white-0 via-white-0/60 to-transparent"></div>
-      <div class="overflow-hidden rounded-2xl border border-stroke-soft-200 bg-white-0 shadow-regular-md">
-        <div class="flex items-center gap-1.5 border-b border-stroke-soft-200 bg-weak-50 px-4 py-3">
-          <span class="size-2.5 rounded-full bg-stroke-sub-300"></span>
-          <span class="size-2.5 rounded-full bg-stroke-sub-300"></span>
-          <span class="size-2.5 rounded-full bg-stroke-sub-300"></span>
-        </div>
-        <img
-          src="/capture-of-pos.png"
-          alt="Vista del panel de AmunPOS"
-          width="1679"
-          height="918"
-          class="h-auto w-full object-cover object-top"
-        />
+    <div class="mt-11 xl:mt-20">
+      <div class="ruler-frame -mx-5 flex items-stretch gap-2 overflow-x-auto px-5 py-4 md:mx-0 md:justify-center md:gap-8 md:px-[26px]">
+        {[
+          { label: "Panel en tiempo real", desc: "Ventas, caja e inventario al instante", tag: null },
+          { label: "IA integrada", desc: "Automatiza tareas repetitivas", tag: "IA" },
+          { label: "Multi-sucursal", desc: "Todo tu negocio, un solo panel", tag: null },
+          { label: "Soporte 24/7", desc: "Siempre hay alguien para ayudarte", tag: null },
+        ].map(({ label, desc, tag }) => (
+          <div class="flex w-[220px] shrink-0 items-center gap-3 text-left md:w-auto md:flex-1 md:flex-col md:gap-0 md:text-center">
+            <div class="flex size-9 shrink-0 items-center justify-center rounded-9 bg-gray-100 md:size-8">
+              <span class="size-2 rounded-full bg-primary-base"></span>
+            </div>
+            <div class="min-w-0 md:mt-4">
+              <div class="flex items-center gap-1.5 text-label-sm text-gray-900 md:justify-center">
+                {label}
+                {tag && (
+                  <span class="rounded-[5px] bg-ai-light px-[5px] py-[3px] text-subheading-xs text-ai-dark">{tag}</span>
+                )}
+              </div>
+              <div class="mt-1 text-pretty text-paragraph-xs text-gray-600 md:max-w-[200px]">{desc}</div>
+            </div>
+          </div>
+        ))}
       </div>
     </div>
   </div>

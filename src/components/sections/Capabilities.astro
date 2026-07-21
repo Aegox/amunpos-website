@@ -1,0 +1,21 @@
+---
+import CapabilityTabs from "./CapabilityTabs";
+import { RiSparklingLine } from "@remixicon/react";
+---
+
+<section id="IA" class="relative w-full scroll-mt-16 px-5 py-20 xl:py-28">
+  <div class="mx-auto flex w-full max-w-[1240px] flex-col items-center">
+    <div class="flex h-8 items-center gap-1.5 rounded-9 bg-gray-0 pl-2 pr-3 text-label-sm text-gray-700 shadow-badge-gray">
+      <RiSparklingLine className="size-4 text-ai-base" />
+      Impulsado por IA
+    </div>
+    <h2 class="mt-4 max-w-xl text-pretty text-center text-title-h4 text-gray-900 xl:text-title-h3">
+      Todo lo que tu negocio necesita, en un solo lugar
+    </h2>
+    <p class="mt-3 max-w-lg text-center text-paragraph-md text-gray-600">
+      Elige una capacidad para ver cómo funciona — la IA está activa en todas ellas.
+    </p>
+
+    <CapabilityTabs client:load />
+  </div>
+</section>

@@ -1,15 +1,11 @@
 ---
-import { RiFacebookFill, RiTwitterXFill, RiLinkedinFill, RiInstagramLine } from "@remixicon/react";
+import { RiFacebookFill, RiTwitterXFill, RiLinkedinFill, RiInstagramLine, RiSendPlaneFill } from "@remixicon/react";
 
 const productLinks = [
   { label: "Características", id: "Caracteristicas" },
   { label: "Inteligencia artificial", id: "IA" },
   { label: "Precios", id: "Planes" },
-];
-const resourceLinks = [
   { label: "Testimonios", id: "Testimonios" },
-  { label: "Preguntas frecuentes", id: "Faq" },
-  { label: "Contacto", id: "Contacto" },
 ];
 const socials = [
   { href: "https://www.facebook.com/", label: "Facebook", Icon: RiFacebookFill },
@@ -19,59 +15,59 @@ const socials = [
 ];
 ---
 
-<footer class="w-full border-t border-stroke-soft-200 bg-weak-50 px-5 pt-16">
-  <div class="mx-auto grid w-full max-w-[1240px] grid-cols-1 gap-12 pb-12 sm:grid-cols-2 lg:grid-cols-[1.6fr_1fr_1fr_1.2fr]">
-    <div>
-      <img src="/logo.svg" alt="AmunPOS" class="mb-5 h-8 w-auto" />
-      <p class="max-w-xs text-paragraph-sm text-sub-600">
-        AmunPOS une ventas, inventario y equipo en un solo panel, con inteligencia artificial
-        que se encarga del trabajo repetitivo para que tu negocio crezca más rápido.
-      </p>
+<section id="Contacto" class="w-full scroll-mt-16 border-t border-gray-200 px-5 py-20">
+  <div class="mx-auto flex w-full max-w-[720px] flex-col items-center text-center">
+    <h2 class="text-title-h4 text-gray-900">Suscríbete para novedades de IA</h2>
+    <p class="mt-3 max-w-md text-paragraph-md text-gray-600">
+      Te avisamos cuando lancemos nuevas funciones de inteligencia artificial. Sin spam.
+    </p>
+    <form class="mt-6 flex w-full max-w-sm gap-2">
+      <input
+        type="email"
+        placeholder="Tu correo electrónico"
+        class="h-11 w-full rounded-13 border border-gray-200 bg-gray-0 px-4 text-paragraph-sm text-gray-900 placeholder-gray-450 focus:border-primary-base focus:outline-none"
+      />
+      <button
+        type="submit"
+        aria-label="Suscribirse"
+        class="flex h-11 shrink-0 items-center justify-center rounded-13 bg-gray-900 px-4 text-gray-0 shadow-button-gray transition duration-200 hover:bg-gray-800"
+      >
+        <RiSendPlaneFill className="size-4" />
+      </button>
+    </form>
+    <p class="mt-2 text-paragraph-xs text-gray-500">Respetamos tu privacidad.</p>
+  </div>
+</section>
+
+<footer class="w-full bg-gray-0 px-5 pt-14">
+  <div class="mx-auto flex w-full max-w-[1240px] flex-col items-center gap-8 border-t border-gray-200 pb-10 pt-10 md:flex-row md:justify-between">
+    <div class="flex flex-col items-center gap-3 md:items-start">
+      <img src="/logo.svg" alt="AmunPOS" class="h-7 w-auto" />
+      <p class="max-w-xs text-center text-paragraph-sm text-gray-500 md:text-left">perfectamente alineado con tu negocio.</p>
     </div>
 
-    <nav>
-      <h3 class="mb-4 text-label-sm text-strong-950">Producto</h3>
-      <ul class="flex flex-col gap-3">
-        {productLinks.map(({ label, id }) => (
-          <li>
-            <a href={`#${id}`} class="text-paragraph-sm text-sub-600 transition-colors duration-200 hover:text-primary-base">{label}</a>
-          </li>
-        ))}
-      </ul>
+    <nav class="flex flex-wrap items-center justify-center gap-x-6 gap-y-2">
+      {productLinks.map(({ label, id }) => (
+        <a href={`#${id}`} class="text-paragraph-sm text-gray-600 transition-colors duration-200 hover:text-primary-base">{label}</a>
+      ))}
     </nav>
 
-    <nav>
-      <h3 class="mb-4 text-label-sm text-strong-950">Recursos</h3>
-      <ul class="flex flex-col gap-3">
-        {resourceLinks.map(({ label, id }) => (
-          <li>
-            <a href={`#${id}`} class="text-paragraph-sm text-sub-600 transition-colors duration-200 hover:text-primary-base">{label}</a>
-          </li>
-        ))}
-      </ul>
-    </nav>
-
-    <div>
-      <h3 class="mb-4 text-label-sm text-strong-950">Síguenos</h3>
-      <div class="flex gap-3">
-        {socials.map(({ href, label, Icon }) => (
-          <a
-            href={href}
-            aria-label={label}
-            target="_blank"
-            rel="noreferrer"
-            class="flex size-9 items-center justify-center rounded-full border border-stroke-soft-200 text-sub-600 transition-all duration-200 hover:-translate-y-0.5 hover:border-primary-base hover:text-primary-base"
-          >
-            <Icon size={15} />
-          </a>
-        ))}
-      </div>
+    <div class="flex gap-3">
+      {socials.map(({ href, label, Icon }) => (
+        <a
+          href={href}
+          aria-label={label}
+          target="_blank"
+          rel="noreferrer"
+          class="flex size-8 items-center justify-center rounded-9 bg-gray-0 text-gray-400 shadow-button-white transition duration-200 hover:bg-gray-25 hover:text-gray-600"
+        >
+          <Icon size={15} />
+        </a>
+      ))}
     </div>
   </div>
 
-  <div class="border-t border-stroke-soft-200 py-6">
-    <p class="text-center text-paragraph-sm text-soft-400">
-      © {new Date().getFullYear()} AmunPOS. Todos los derechos reservados.
-    </p>
+  <div class="border-t border-gray-100 py-6">
+    <p class="text-center text-paragraph-xs text-gray-450">© {new Date().getFullYear()} AmunPOS. Todos los derechos reservados.</p>
   </div>
 </footer>

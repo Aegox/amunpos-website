@@ -1,0 +1,42 @@
+---
+import { RiAddLine } from "@remixicon/react";
+
+const faqData = [
+  {
+    question: "¿Cómo beneficia un sistema POS a mi negocio?",
+    answer: "Mejora la eficiencia en las transacciones, te da información detallada de ventas y facilita la gestión de inventario.",
+  },
+  {
+    question: "¿Puedo integrar AmunPOS con mi tienda en línea?",
+    answer: "Sí. AmunPOS sincroniza inventario y pedidos tanto en canales digitales como en tus sucursales físicas.",
+  },
+  {
+    question: "¿Necesito capacitación especial para usarlo?",
+    answer: "No. Está diseñado para ser intuitivo desde el primer uso. Ofrecemos soporte y capacitación gratuitos igual.",
+  },
+  {
+    question: "¿Qué tan real es la parte de inteligencia artificial?",
+    answer: "Es funcionalidad activa hoy, no una promesa: el asistente de negocio, la migración de datos y la lectura de facturas ya funcionan dentro de AmunPOS.",
+  },
+  {
+    question: "¿Cómo elijo el plan adecuado para mi negocio?",
+    answer: "Considera el tamaño de tu operación y las funciones que más necesitas. Nuestro equipo puede ayudarte sin compromiso.",
+  },
+];
+---
+
+<section id="Faq" class="flex w-full scroll-mt-16 flex-col items-center px-5 py-20 xl:py-28">
+  <h2 class="max-w-xl text-pretty text-center text-title-h4 text-gray-900 xl:text-title-h3">Aquí hay algunas respuestas</h2>
+
+  <div class="mt-12 flex w-full max-w-[720px] flex-col gap-3">
+    {faqData.map((item) => (
+      <details class="group rounded-18 border border-gray-200 bg-gray-0 px-6 py-1 open:pb-5">
+        <summary class="flex cursor-pointer list-none items-center justify-between gap-4 py-4 text-label-md text-gray-900 [&::-webkit-details-marker]:hidden">
+          {item.question}
+          <RiAddLine className="size-5 shrink-0 text-gray-400 transition-transform duration-200 group-open:rotate-45" />
+        </summary>
+        <p class="text-paragraph-sm text-gray-600">{item.answer}</p>
+      </details>
+    ))}
+  </div>
+</section>
