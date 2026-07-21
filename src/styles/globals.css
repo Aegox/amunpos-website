@@ -1,0 +1,239 @@
+@import "tailwindcss";
+
+/*
+ * Sistema de tokens real de AlignUI (alignui.com), documentado a fondo en
+ * design-system/alignui/. Escala neutra strong/sub/soft/disabled + escala de
+ * marca "primary" derivada del azul histórico de AmunPOS
+ * (#0c71c2 = hsl(204 88% 40%)), no del azul por defecto de AlignUI.
+ */
+:root {
+  --text-strong-950: #0d0c17;
+  --text-sub-600: #565e6c;
+  --text-soft-400: #8f97a3;
+  --text-disabled-300: #c1c7cf;
+  --text-white-0: #ffffff;
+
+  --bg-white-0: #ffffff;
+  --bg-weak-50: #fafbfc;
+  --bg-soft-200: #f1f4f8;
+  --bg-strong-950: #0d0c17;
+  --bg-surface-800: #26252e;
+  --bg-sub-300: #d8dee5;
+
+  --stroke-soft-200: #e7ebf0;
+  --stroke-sub-300: #d8dee5;
+  --stroke-strong-950: #0d0c17;
+  --stroke-white-0: #ffffff;
+
+  --static-black: #000000;
+  --static-white: #ffffff;
+
+  --primary-50: hsl(204 90% 96%);
+  --primary-100: hsl(204 85% 91%);
+  --primary-200: hsl(204 82% 83%);
+  --primary-300: hsl(204 80% 71%);
+  --primary-400: hsl(204 83% 55%);
+  --primary-500: hsl(204 88% 40%);
+  --primary-600: hsl(204 88% 34%);
+  --primary-700: hsl(204 88% 28%);
+  --primary-800: hsl(204 84% 22%);
+  --primary-900: hsl(204 78% 17%);
+  --primary-950: hsl(204 72% 11%);
+
+  --primary-base: var(--primary-500);
+  --primary-darker: hsl(204 88% 32%);
+  --primary-dark: hsl(204 88% 36%);
+  --primary-alpha-10: hsl(204 88% 40% / 10%);
+
+  --error-base: hsl(0 72% 51%);
+  --error-dark: hsl(0 74% 42%);
+  --error-alpha-10: hsl(0 72% 51% / 10%);
+
+  /* "feature" (púrpura) — convención real de AlignUI para resaltar
+     capacidades avanzadas. Se usa exclusivamente para IA. */
+  --feature-base: hsl(262 83% 58%);
+  --feature-dark: hsl(262 83% 48%);
+  --feature-light: hsl(262 85% 92%);
+  --feature-lighter: hsl(262 90% 97%);
+}
+
+@theme {
+  --color-strong-950: var(--text-strong-950);
+  --color-sub-600: var(--text-sub-600);
+  --color-soft-400: var(--text-soft-400);
+  --color-disabled-300: var(--text-disabled-300);
+  --color-white-0: var(--bg-white-0);
+  --color-weak-50: var(--bg-weak-50);
+  --color-soft-200: var(--bg-soft-200);
+  --color-surface-800: var(--bg-surface-800);
+  --color-sub-300: var(--bg-sub-300);
+
+  --color-stroke-soft-200: var(--stroke-soft-200);
+  --color-stroke-sub-300: var(--stroke-sub-300);
+  --color-stroke-strong-950: var(--stroke-strong-950);
+  --color-stroke-white-0: var(--stroke-white-0);
+
+  --color-static-black: var(--static-black);
+  --color-static-white: var(--static-white);
+
+  --color-brand-50: var(--primary-50);
+  --color-brand-100: var(--primary-100);
+  --color-brand-200: var(--primary-200);
+  --color-brand-300: var(--primary-300);
+  --color-brand-400: var(--primary-400);
+  --color-brand-500: var(--primary-500);
+  --color-brand-600: var(--primary-600);
+  --color-brand-700: var(--primary-700);
+  --color-brand-800: var(--primary-800);
+  --color-brand-900: var(--primary-900);
+  --color-brand-950: var(--primary-950);
+
+  --color-primary-base: var(--primary-base);
+  --color-primary-darker: var(--primary-darker);
+  --color-primary-dark: var(--primary-dark);
+  --color-primary-alpha-10: var(--primary-alpha-10);
+
+  --color-error-base: var(--error-base);
+  --color-error-dark: var(--error-dark);
+  --color-error-alpha-10: var(--error-alpha-10);
+
+  --color-feature-base: var(--feature-base);
+  --color-feature-dark: var(--feature-dark);
+  --color-feature-light: var(--feature-light);
+  --color-feature-lighter: var(--feature-lighter);
+
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+
+  --radius-10: 0.625rem;
+  --radius-20: 1.25rem;
+
+  --shadow-regular-xs: 0 1px 2px 0 rgba(13, 12, 23, 0.04);
+  --shadow-regular-md: 0 12px 32px -8px rgba(13, 12, 23, 0.16), 0 4px 8px -4px rgba(13, 12, 23, 0.08);
+  --shadow-button-primary-focus: 0 0 0 2px var(--bg-white-0), 0 0 0 4px hsl(204 88% 40% / 24%);
+  --shadow-button-error-focus: 0 0 0 2px var(--bg-white-0), 0 0 0 4px hsl(0 84% 60% / 24%);
+  --shadow-button-important-focus: 0 0 0 2px var(--bg-white-0), 0 0 0 4px hsl(220 9% 20% / 16%);
+  --shadow-switch-thumb: 0 1px 2px 0 rgba(13, 12, 23, 0.12), 0 1px 1px 0 rgba(13, 12, 23, 0.06);
+  --shadow-tooltip: 0 12px 24px -4px rgba(13, 12, 23, 0.24), 0 4px 8px -4px rgba(13, 12, 23, 0.12);
+
+  /* Título (Medium/500) */
+  --text-title-h1: 3.5rem;
+  --text-title-h1--line-height: 4rem;
+  --text-title-h1--letter-spacing: -0.01em;
+  --text-title-h1--font-weight: 500;
+  --text-title-h2: 3rem;
+  --text-title-h2--line-height: 3.5rem;
+  --text-title-h2--letter-spacing: -0.01em;
+  --text-title-h2--font-weight: 500;
+  --text-title-h3: 2.5rem;
+  --text-title-h3--line-height: 3rem;
+  --text-title-h3--letter-spacing: -0.01em;
+  --text-title-h3--font-weight: 500;
+  --text-title-h4: 2rem;
+  --text-title-h4--line-height: 2.5rem;
+  --text-title-h4--letter-spacing: -0.005em;
+  --text-title-h4--font-weight: 500;
+  --text-title-h5: 1.5rem;
+  --text-title-h5--line-height: 2rem;
+  --text-title-h5--letter-spacing: 0em;
+  --text-title-h5--font-weight: 500;
+  --text-title-h6: 1.25rem;
+  --text-title-h6--line-height: 1.75rem;
+  --text-title-h6--letter-spacing: 0em;
+  --text-title-h6--font-weight: 500;
+
+  /* Label (Medium/500) */
+  --text-label-xl: 1.5rem;
+  --text-label-xl--line-height: 2rem;
+  --text-label-xl--letter-spacing: -0.015em;
+  --text-label-xl--font-weight: 500;
+  --text-label-lg: 1.125rem;
+  --text-label-lg--line-height: 1.5rem;
+  --text-label-lg--letter-spacing: -0.015em;
+  --text-label-lg--font-weight: 500;
+  --text-label-md: 1rem;
+  --text-label-md--line-height: 1.5rem;
+  --text-label-md--letter-spacing: -0.011em;
+  --text-label-md--font-weight: 500;
+  --text-label-sm: 0.875rem;
+  --text-label-sm--line-height: 1.25rem;
+  --text-label-sm--letter-spacing: -0.006em;
+  --text-label-sm--font-weight: 500;
+  --text-label-xs: 0.75rem;
+  --text-label-xs--line-height: 1rem;
+  --text-label-xs--letter-spacing: 0em;
+  --text-label-xs--font-weight: 500;
+
+  /* Paragraph (Regular/400) */
+  --text-paragraph-xl: 1.5rem;
+  --text-paragraph-xl--line-height: 2rem;
+  --text-paragraph-xl--letter-spacing: -0.015em;
+  --text-paragraph-xl--font-weight: 400;
+  --text-paragraph-lg: 1.125rem;
+  --text-paragraph-lg--line-height: 1.5rem;
+  --text-paragraph-lg--letter-spacing: -0.015em;
+  --text-paragraph-lg--font-weight: 400;
+  --text-paragraph-md: 1rem;
+  --text-paragraph-md--line-height: 1.5rem;
+  --text-paragraph-md--letter-spacing: -0.011em;
+  --text-paragraph-md--font-weight: 400;
+  --text-paragraph-sm: 0.875rem;
+  --text-paragraph-sm--line-height: 1.25rem;
+  --text-paragraph-sm--letter-spacing: -0.006em;
+  --text-paragraph-sm--font-weight: 400;
+  --text-paragraph-xs: 0.75rem;
+  --text-paragraph-xs--line-height: 1rem;
+  --text-paragraph-xs--letter-spacing: 0em;
+  --text-paragraph-xs--font-weight: 400;
+
+  /* Subheading (Medium/500, uso típico: uppercase) */
+  --text-subheading-md: 1rem;
+  --text-subheading-md--line-height: 1.5rem;
+  --text-subheading-md--letter-spacing: 0.06em;
+  --text-subheading-md--font-weight: 500;
+  --text-subheading-sm: 0.875rem;
+  --text-subheading-sm--line-height: 1.25rem;
+  --text-subheading-sm--letter-spacing: 0.06em;
+  --text-subheading-sm--font-weight: 500;
+  --text-subheading-xs: 0.75rem;
+  --text-subheading-xs--line-height: 1rem;
+  --text-subheading-xs--letter-spacing: 0.04em;
+  --text-subheading-xs--font-weight: 500;
+  --text-subheading-2xs: 0.6875rem;
+  --text-subheading-2xs--line-height: 0.75rem;
+  --text-subheading-2xs--letter-spacing: 0.02em;
+  --text-subheading-2xs--font-weight: 500;
+
+  --animate-accordion-down: accordion-down 0.2s ease-out;
+  --animate-accordion-up: accordion-up 0.2s ease-out;
+
+  @keyframes accordion-down {
+    from { height: 0; }
+    to { height: var(--radix-accordion-content-height); }
+  }
+  @keyframes accordion-up {
+    from { height: var(--radix-accordion-content-height); }
+    to { height: 0; }
+  }
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--bg-white-0);
+  color: var(--text-strong-950);
+  font-family: var(--font-sans);
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 1.6em;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Fondo de puntos sutil, marca registrada de las secciones AlignUI */
+.dot-grid-bg {
+  background-image: radial-gradient(var(--stroke-sub-300) 1px, transparent 1px);
+  background-size: 24px 24px;
+  -webkit-mask-image: radial-gradient(ellipse 70% 60% at 50% 0%, black 40%, transparent 100%);
+  mask-image: radial-gradient(ellipse 70% 60% at 50% 0%, black 40%, transparent 100%);
+}

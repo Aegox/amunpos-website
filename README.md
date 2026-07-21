@@ -1,36 +1,47 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# amunpos-website — Astro + AlignUI, estructura inspirada en Untitled UI
 
-## Getting Started
+Landing page de AmunPOS reconstruida desde cero en **Astro + React** (islas),
+con el sistema de diseño real de [AlignUI](https://alignui.com) (ver
+`design-system/alignui/`) y la **arquitectura de página** tomada de las
+plantillas reales de [Untitled UI](https://www.untitledui.com/react/marketing/landing-pages)
+(estudiadas con capturas reales, no solo la documentación): pill de anuncio
+de dos segmentos en el hero, nav plano (no flotante), iconos de feature sin
+relleno de color (solo borde), tarjeta de plan "popular" con etiqueta sutil
+en vez de elevación dramática, y tarjeta "¿Sigues con dudas?" con avatares
+superpuestos tras el FAQ.
 
-First, run the development server:
+## Stack
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+- **Astro 4** (compatible con Node 18.20+)
+- **React 18** vía `@astrojs/react`, solo para las piezas interactivas
+  (nav móvil, carrusel de testimonios, acordeón de FAQ)
+- **Tailwind CSS v4** vía `@tailwindcss/vite`
+- **Radix UI** + **Remix Icon** (`@remixicon/react`, el set de iconos real de AlignUI)
+
+## Estructura
+
+```
+src/
+├── components/
+│   ├── sections/     # secciones de la landing
+│   └── ui/            # primitivos reales de AlignUI (button, input, modal...)
+├── layouts/Layout.astro
+├── lib/utils.ts       # cn() con los tokens custom registrados en tailwind-merge
+├── pages/index.astro
+└── styles/globals.css # tokens AlignUI
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Comandos
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+| Comando               | Acción                                  |
+| ---------------------- | ---------------------------------------- |
+| `npm install`          | Instala dependencias                      |
+| `npm run dev`          | Servidor de desarrollo                    |
+| `npm run build`        | Build de producción a `./dist/`           |
+| `npm run preview`      | Sirve el build de producción localmente   |
+| `npx astro check`      | Typecheck de archivos `.astro`/`.tsx`     |
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Alcance de esta rama
 
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Solo la landing page. El flujo de auth/onboarding sigue viviendo en la
+versión Next.js (`rediseno-alignui`).

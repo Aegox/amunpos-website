@@ -1,0 +1,61 @@
+---
+import { RiWallet3Line, RiStackLine, RiGitBranchLine, RiTeamLine, RiTruckLine, RiLineChartLine } from "@remixicon/react";
+
+const features = [
+  {
+    title: "Cobra sin fricción",
+    text: "Ventas rápidas, múltiples métodos de pago y tickets claros — tu equipo cobra en segundos, no en minutos.",
+    icon: RiWallet3Line,
+  },
+  {
+    title: "Inventario que no se descuadra",
+    text: "Stock en tiempo real por sucursal, con alertas antes de que un producto se agote de verdad.",
+    icon: RiStackLine,
+  },
+  {
+    title: "Todas tus sucursales, un panel",
+    text: "Compara ventas, stock y equipo entre locales sin abrir una hoja de cálculo.",
+    icon: RiGitBranchLine,
+  },
+  {
+    title: "Equipo y nómina bajo control",
+    text: "Fichaje, horarios y pagos por país, sin depender de planillas sueltas.",
+    icon: RiTeamLine,
+  },
+  {
+    title: "Delivery con su propia app",
+    text: "Repartidores con su propia app, estados de pedido en vivo y cobro al cerrar la ruta.",
+    icon: RiTruckLine,
+  },
+  {
+    title: "Reportes que sí usas",
+    text: "Cifras del negocio explicadas en lenguaje simple, listas para decidir sin depender de un contador.",
+    icon: RiLineChartLine,
+  },
+];
+---
+
+<section id="Caracteristicas" class="relative w-full scroll-mt-[72px] px-5 py-20 lg:py-28">
+  <div class="mx-auto flex w-full max-w-[1240px] flex-col items-center">
+    <span class="text-label-sm font-medium text-primary-base">Características</span>
+    <h2 class="mt-3 max-w-2xl text-center text-title-h3 text-strong-950 lg:text-title-h2">
+      Menos herramientas sueltas, más control real
+    </h2>
+    <p class="mt-4 max-w-xl text-center text-paragraph-md text-sub-600">
+      Reemplaza la caja registradora, la hoja de cálculo de inventario y el grupo de
+      WhatsApp de nómina por un solo sistema que habla entre sí.
+    </p>
+
+    <div class="mt-16 grid w-full grid-cols-1 gap-x-8 gap-y-12 sm:grid-cols-2 lg:grid-cols-3">
+      {features.map(({ title, text, icon: Icon }) => (
+        <article class="flex flex-col items-start gap-4">
+          <div class="flex size-11 items-center justify-center rounded-xl border border-stroke-soft-200 text-strong-950">
+            <Icon className="size-5" />
+          </div>
+          <h3 class="text-title-h6 text-strong-950">{title}</h3>
+          <p class="text-paragraph-sm text-sub-600">{text}</p>
+        </article>
+      ))}
+    </div>
+  </div>
+</section>
