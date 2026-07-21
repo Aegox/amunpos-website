@@ -94,7 +94,7 @@ export default function NavBar() {
       <header className="flex h-16 w-full items-center justify-between gap-4 rounded-2xl bg-gray-25 px-4 shadow-button-white lg:h-auto lg:w-auto lg:justify-start lg:rounded-3xl lg:bg-gray-0 lg:p-[18px]">
         <div className="flex items-center gap-2.5 pr-3">
           <a className="focus:outline-none" href="#Inicio">
-            <img src="/logo.svg" alt="AmunPOS" className="h-7 w-auto" />
+            <img src="/amun-favicon.png" alt="AmunPOS" className="size-8 rounded-lg" />
           </a>
           <span className="flex items-center gap-1 rounded-[7px] bg-ai-light px-2 py-1 text-label-xs font-medium text-ai-dark shadow-badge-gray">
             <RiSparklingLine className="size-3.5" />
