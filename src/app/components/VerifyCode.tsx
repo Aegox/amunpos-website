@@ -2,13 +2,16 @@
 
 import React, { useState } from "react";
 import Button from "./Button";
+import { RiShieldKeyholeLine } from "@remixicon/react";
+import { InputRoot, InputField, InputIcon } from "@/components/ui/input";
+import { LabelRoot } from "@/components/ui/label";
 
 interface VerifyCodeComponentProps {
   onVerify: (code: string) => void
   loading: boolean
 }
 
-const VerifyCodeComponent: React.FC<VerifyCodeComponentProps> = ({ onVerify , loading }) => {
+const VerifyCodeComponent: React.FC<VerifyCodeComponentProps> = ({ onVerify, loading }) => {
   const [code, setCode] = useState('');
   const [error, setError] = useState('');
 
@@ -19,25 +22,28 @@ const VerifyCodeComponent: React.FC<VerifyCodeComponentProps> = ({ onVerify , lo
       return;
     }
     setError('');
-    onVerify(code); // Llamamos la función que maneja la verificación
+    onVerify(code);
   };
 
   return (
-    <form onSubmit={handleSubmit} className="w-full flex flex-col items-center">
-      <input
-        type="text"
-        placeholder="Ingresa el código"
-        value={code}
-        onChange={(e) => setCode(e.target.value)}
-        className="bg-white block w-full py-[11px] pl-[45px] pr-10 text-gray-700 placeholder-gray-600 border-[0.3px] rounded-md transition-colors duration-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500 mb-6"
-      />
-      {error && <p className="text-red-500 text-sm mb-2">{error}</p>}
-      <Button
-        text="Verificar Código"
-        styles={`w-full py-3 px-8 mb-6 ${loading ? "opacity-70 cursor-not-allowed" : ""}`}
-        loading={loading}
-        variant="primary"
-      />
+    <form onSubmit={handleSubmit} className="flex w-full flex-col gap-5">
+      <div className="flex flex-col gap-1.5">
+        <LabelRoot htmlFor="verify-code">Código de verificación</LabelRoot>
+        <InputRoot hasError={!!error}>
+          <InputIcon>
+            <RiShieldKeyholeLine className="size-5" />
+          </InputIcon>
+          <InputField
+            id="verify-code"
+            type="text"
+            placeholder="Ingresa el código"
+            value={code}
+            onChange={(e) => setCode(e.target.value)}
+          />
+        </InputRoot>
+        {error && <p className="text-paragraph-xs text-error-base">{error}</p>}
+      </div>
+      <Button text="Verificar código" type="submit" styles="w-full" loading={loading} variant="primary" />
     </form>
   );
 };

@@ -2,17 +2,23 @@
 
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
-import { useUserEdit } from "../hooks/useUserEdit"; 
+import { useUserEdit } from "../hooks/useUserEdit";
 import { motion } from "framer-motion";
 import Button from "./Button";
 import { getCookie } from "../utils/cookie";
 import Image from 'next/image';
+import { InputRoot, InputField } from "@/components/ui/input";
+import { LabelRoot } from "@/components/ui/label";
+import { cn } from "@/lib/utils";
 
 interface BusinessFormData {
   companyName: string;
   companyType: string;
   employeeRange: string;
 }
+
+const selectClass =
+  "h-10 w-full rounded-10 bg-white-0 px-3 text-paragraph-sm text-strong-950 shadow-regular-xs outline-none ring-1 ring-inset ring-stroke-soft-200 transition duration-200 ease-out focus:shadow-button-important-focus focus:ring-stroke-strong-950";
 
 const BusinessFormModal = () => {
   const [, setError] = useState<string | null>(null);
@@ -23,10 +29,7 @@ const BusinessFormModal = () => {
     formState: { errors },
   } = useForm<BusinessFormData>();
 
-  const {
-    editUser,
-    loading,
-  } = useUserEdit();
+  const { editUser, loading } = useUserEdit();
 
   const onSubmit = async (data: BusinessFormData) => {
     try {
@@ -37,13 +40,10 @@ const BusinessFormModal = () => {
       }
 
       const clientUpdated = await editUser(token, data);
-      
+
       if (clientUpdated) {
         const envAppUrl = process.env.NEXT_PUBLIC_APP_URL;
-
-        // Preferir URL desde .env; si no existe, usar como fallback el origin actual
         const redirectUrl = envAppUrl || window.location.origin;
-
         window.location.href = redirectUrl;
       } else {
         setError("Error al actualizar los datos");
@@ -59,48 +59,32 @@ const BusinessFormModal = () => {
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, amount: 0.3 }}
       transition={{ duration: 0.5 }}
-      className="fixed inset-0 bg-gray-50 flex items-center justify-center"
+      className="relative flex min-h-screen w-full items-center justify-center bg-weak-50 px-4 py-10"
     >
-      <div className="absolute z-30 -top-20 -right-20 w-[400px] h-[400px] bg-[var(--primary-color)] rounded-full filter blur-3xl opacity-15"></div>
-      <Image 
-        src="/hero_bg2.png" 
-        layout="fill"
-        objectFit="cover"
-        className="absolute top-0 left-0 w-full h-full object-cover animate-move-image z-10" 
-        alt="a hero sprite"
-      />
-      <div className="light-effect"></div>
-      <div className="bg-white z-50 p-10 rounded-2xl shadow-lg w-full max-w-md">
-        <h4 className="text-center text-[var(--primary-color)] text-[22px] pb-8 font-semibold">
-          Información de tu negocio
-        </h4>
-        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+      <div className="dot-grid-bg pointer-events-none absolute inset-x-0 top-0 h-[420px]" />
+      <div className="pointer-events-none absolute -top-20 -right-20 size-96 rounded-full bg-brand-400/15 blur-[110px]" />
 
-          {/* Nombre del negocio */}
-          <div>
-            <label htmlFor="companyName" className="block text-sm font-medium text-gray-700">
-              Nombre de tu negocio
-            </label>
-            <input
-              id="companyName"
-              type="text"
-              {...register("companyName", { required: "El nombre del negocio es obligatorio" })}
-              className={`bg-white block w-full py-[10px] px-3 text-gray-700 placeholder-gray-600 border-[0.3px] rounded-md transition-colors duration-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500 ${errors.companyName ? "border-red-500" : ""}`}
-            />
-            {errors.companyName && (
-              <p className="text-red-500 text-sm mt-1">{errors.companyName.message}</p>
-            )}
+      <div className="relative w-full max-w-md rounded-2xl border border-stroke-soft-200 bg-white-0 p-8 shadow-regular-md">
+        <div className="mb-6 flex flex-col items-center gap-4 text-center">
+          <Image src="/logo.png" alt="AmunPOS" width={150} height={25} className="h-6 w-auto" />
+          <h4 className="text-title-h6 text-strong-950">Información de tu negocio</h4>
+        </div>
+
+        <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4">
+          <div className="flex flex-col gap-1.5">
+            <LabelRoot htmlFor="companyName">Nombre de tu negocio</LabelRoot>
+            <InputRoot hasError={!!errors.companyName}>
+              <InputField id="companyName" type="text" {...register("companyName", { required: "El nombre del negocio es obligatorio" })} />
+            </InputRoot>
+            {errors.companyName && <p className="text-paragraph-xs text-error-base">{errors.companyName.message}</p>}
           </div>
 
-          {/* Tipo de negocio */}
-          <div>
-            <label htmlFor="companyType" className="block text-sm font-medium text-gray-700">
-              Tipo de negocio
-            </label>
+          <div className="flex flex-col gap-1.5">
+            <LabelRoot htmlFor="companyType">Tipo de negocio</LabelRoot>
             <select
               id="companyType"
               {...register("companyType", { required: "Selecciona el tipo de negocio" })}
-              className={`bg-white block w-full py-[11px] px-3 pr-5 text-gray-700 border-[0.3px] rounded-md transition-colors duration-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500 ${errors.companyType ? "border-red-500" : ""}`}
+              className={cn(selectClass, errors.companyType && "ring-error-base")}
             >
               <option value="">Seleccione una opción</option>
               <option value="restaurante">Restaurante</option>
@@ -112,20 +96,15 @@ const BusinessFormModal = () => {
               <option value="tecnologia">Tecnología</option>
               <option value="servicios">Servicios</option>
             </select>
-            {errors.companyType && (
-              <p className="text-red-500 text-sm mt-1">{errors.companyType.message}</p>
-            )}
+            {errors.companyType && <p className="text-paragraph-xs text-error-base">{errors.companyType.message}</p>}
           </div>
 
-          {/* Número de empleados */}
-          <div>
-            <label htmlFor="employeeRange" className="block text-sm font-medium text-gray-700">
-              Número de empleados
-            </label>
+          <div className="flex flex-col gap-1.5">
+            <LabelRoot htmlFor="employeeRange">Número de empleados</LabelRoot>
             <select
               id="employeeRange"
               {...register("employeeRange", { required: "Selecciona un rango de empleados" })}
-              className={`bg-white block w-full py-[11px] px-3 text-gray-700 border-[0.3px] rounded-md transition-colors duration-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500 mb-8 ${errors.employeeRange ? "border-red-500" : ""}`}
+              className={cn(selectClass, errors.employeeRange && "ring-error-base")}
             >
               <option value="">Seleccione un rango</option>
               <option value="0-50">0 - 50</option>
@@ -134,20 +113,10 @@ const BusinessFormModal = () => {
               <option value="201-500">201 - 500</option>
               <option value="500+">500+</option>
             </select>
-            {errors.employeeRange && (
-              <p className="text-red-500 text-sm mt-1">{errors.employeeRange.message}</p>
-            )}
+            {errors.employeeRange && <p className="text-paragraph-xs text-error-base">{errors.employeeRange.message}</p>}
           </div>
 
-          {/* Botón de continuar */}
-          <div>
-            <Button 
-              text="Continuar" 
-              styles="w-full" 
-              loading={loading} 
-              variant="primary"
-            />
-          </div>
+          <Button text="Continuar" styles="w-full mt-2" loading={loading} variant="primary" />
         </form>
       </div>
     </motion.div>

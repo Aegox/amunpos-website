@@ -35,9 +35,16 @@
   --bg-soft-200: #f1f4f8;
   --bg-strong-950: #0d0c17;
 
+  --bg-surface-800: #26252e;
+  --bg-sub-300: #d8dee5;
+
   --stroke-soft-200: #e7ebf0;
   --stroke-sub-300: #d8dee5;
   --stroke-strong-950: #0d0c17;
+  --stroke-white-0: #ffffff;
+
+  --static-black: #000000;
+  --static-white: #ffffff;
 
   --primary-50: hsl(204 90% 96%);
   --primary-100: hsl(204 85% 91%);
@@ -50,8 +57,26 @@
   --primary-800: hsl(204 84% 22%);
   --primary-900: hsl(204 78% 17%);
   --primary-950: hsl(204 72% 11%);
+
+  /* Alias con la nomenclatura real de AlignUI (primary-base/darker/dark/alpha-10) */
+  --primary-base: var(--primary-500);
+  --primary-darker: hsl(204 88% 32%);
+  --primary-dark: hsl(204 88% 36%);
+  --primary-alpha-10: hsl(204 88% 40% / 10%);
+
+  /* Semántico error, alias sobre el rojo estándar de Tailwind */
+  --error-base: hsl(0 72% 51%);
+  --error-dark: hsl(0 74% 42%);
+  --error-alpha-10: hsl(0 72% 51% / 10%);
 }
 
+/*
+ * Escala tipográfica real de AlignUI (alignui.com/docs/v1.2/foundation/typography):
+ * title h1-h6, label xl-xs, paragraph xl-xs, subheading md-2xs. Tamaño,
+ * line-height y letter-spacing exactos de la documentación; el peso
+ * (medium=500 para title/label/subheading, regular=400 para paragraph)
+ * también va en el token vía `--text-*--font-weight` de Tailwind v4.
+ */
 @theme {
   --color-strong-950: var(--text-strong-950);
   --color-sub-600: var(--text-sub-600);
@@ -60,9 +85,16 @@
   --color-white-0: var(--bg-white-0);
   --color-weak-50: var(--bg-weak-50);
   --color-soft-200: var(--bg-soft-200);
+  --color-surface-800: var(--bg-surface-800);
+  --color-sub-300: var(--bg-sub-300);
 
   --color-stroke-soft-200: var(--stroke-soft-200);
   --color-stroke-sub-300: var(--stroke-sub-300);
+  --color-stroke-strong-950: var(--stroke-strong-950);
+  --color-stroke-white-0: var(--stroke-white-0);
+
+  --color-static-black: var(--static-black);
+  --color-static-white: var(--static-white);
 
   --color-brand-50: var(--primary-50);
   --color-brand-100: var(--primary-100);
@@ -76,7 +108,118 @@
   --color-brand-900: var(--primary-900);
   --color-brand-950: var(--primary-950);
 
+  --color-primary-base: var(--primary-base);
+  --color-primary-darker: var(--primary-darker);
+  --color-primary-dark: var(--primary-dark);
+  --color-primary-alpha-10: var(--primary-alpha-10);
+
+  --color-error-base: var(--error-base);
+  --color-error-dark: var(--error-dark);
+  --color-error-alpha-10: var(--error-alpha-10);
+
   --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+
+  /* Radios custom de AlignUI (además de los de Tailwind por defecto) */
+  --radius-10: 0.625rem;
+  --radius-20: 1.25rem;
+
+  /* Sombras custom de AlignUI (aproximación fiel; sus valores exactos
+     dependen de su CLI, que no publica un archivo estático) */
+  --shadow-regular-xs: 0 1px 2px 0 rgba(13, 12, 23, 0.04);
+  --shadow-regular-md: 0 12px 32px -8px rgba(13, 12, 23, 0.16), 0 4px 8px -4px rgba(13, 12, 23, 0.08);
+  --shadow-button-primary-focus: 0 0 0 2px var(--bg-white-0), 0 0 0 4px hsl(204 88% 40% / 24%);
+  --shadow-button-error-focus: 0 0 0 2px var(--bg-white-0), 0 0 0 4px hsl(0 84% 60% / 24%);
+  --shadow-button-important-focus: 0 0 0 2px var(--bg-white-0), 0 0 0 4px hsl(220 9% 20% / 16%);
+  --shadow-switch-thumb: 0 1px 2px 0 rgba(13, 12, 23, 0.12), 0 1px 1px 0 rgba(13, 12, 23, 0.06);
+  --shadow-tooltip: 0 12px 24px -4px rgba(13, 12, 23, 0.24), 0 4px 8px -4px rgba(13, 12, 23, 0.12);
+
+  /* Título (Medium/500) */
+  --text-title-h1: 3.5rem;
+  --text-title-h1--line-height: 4rem;
+  --text-title-h1--letter-spacing: -0.01em;
+  --text-title-h1--font-weight: 500;
+  --text-title-h2: 3rem;
+  --text-title-h2--line-height: 3.5rem;
+  --text-title-h2--letter-spacing: -0.01em;
+  --text-title-h2--font-weight: 500;
+  --text-title-h3: 2.5rem;
+  --text-title-h3--line-height: 3rem;
+  --text-title-h3--letter-spacing: -0.01em;
+  --text-title-h3--font-weight: 500;
+  --text-title-h4: 2rem;
+  --text-title-h4--line-height: 2.5rem;
+  --text-title-h4--letter-spacing: -0.005em;
+  --text-title-h4--font-weight: 500;
+  --text-title-h5: 1.5rem;
+  --text-title-h5--line-height: 2rem;
+  --text-title-h5--letter-spacing: 0em;
+  --text-title-h5--font-weight: 500;
+  --text-title-h6: 1.25rem;
+  --text-title-h6--line-height: 1.75rem;
+  --text-title-h6--letter-spacing: 0em;
+  --text-title-h6--font-weight: 500;
+
+  /* Label (Medium/500) */
+  --text-label-xl: 1.5rem;
+  --text-label-xl--line-height: 2rem;
+  --text-label-xl--letter-spacing: -0.015em;
+  --text-label-xl--font-weight: 500;
+  --text-label-lg: 1.125rem;
+  --text-label-lg--line-height: 1.5rem;
+  --text-label-lg--letter-spacing: -0.015em;
+  --text-label-lg--font-weight: 500;
+  --text-label-md: 1rem;
+  --text-label-md--line-height: 1.5rem;
+  --text-label-md--letter-spacing: -0.011em;
+  --text-label-md--font-weight: 500;
+  --text-label-sm: 0.875rem;
+  --text-label-sm--line-height: 1.25rem;
+  --text-label-sm--letter-spacing: -0.006em;
+  --text-label-sm--font-weight: 500;
+  --text-label-xs: 0.75rem;
+  --text-label-xs--line-height: 1rem;
+  --text-label-xs--letter-spacing: 0em;
+  --text-label-xs--font-weight: 500;
+
+  /* Paragraph (Regular/400) */
+  --text-paragraph-xl: 1.5rem;
+  --text-paragraph-xl--line-height: 2rem;
+  --text-paragraph-xl--letter-spacing: -0.015em;
+  --text-paragraph-xl--font-weight: 400;
+  --text-paragraph-lg: 1.125rem;
+  --text-paragraph-lg--line-height: 1.5rem;
+  --text-paragraph-lg--letter-spacing: -0.015em;
+  --text-paragraph-lg--font-weight: 400;
+  --text-paragraph-md: 1rem;
+  --text-paragraph-md--line-height: 1.5rem;
+  --text-paragraph-md--letter-spacing: -0.011em;
+  --text-paragraph-md--font-weight: 400;
+  --text-paragraph-sm: 0.875rem;
+  --text-paragraph-sm--line-height: 1.25rem;
+  --text-paragraph-sm--letter-spacing: -0.006em;
+  --text-paragraph-sm--font-weight: 400;
+  --text-paragraph-xs: 0.75rem;
+  --text-paragraph-xs--line-height: 1rem;
+  --text-paragraph-xs--letter-spacing: 0em;
+  --text-paragraph-xs--font-weight: 400;
+
+  /* Subheading (Medium/500, uso típico: uppercase) */
+  --text-subheading-md: 1rem;
+  --text-subheading-md--line-height: 1.5rem;
+  --text-subheading-md--letter-spacing: 0.06em;
+  --text-subheading-md--font-weight: 500;
+  --text-subheading-sm: 0.875rem;
+  --text-subheading-sm--line-height: 1.25rem;
+  --text-subheading-sm--letter-spacing: 0.06em;
+  --text-subheading-sm--font-weight: 500;
+  --text-subheading-xs: 0.75rem;
+  --text-subheading-xs--line-height: 1rem;
+  --text-subheading-xs--letter-spacing: 0.04em;
+  --text-subheading-xs--font-weight: 500;
+  --text-subheading-2xs: 0.6875rem;
+  --text-subheading-2xs--line-height: 0.75rem;
+  --text-subheading-2xs--letter-spacing: 0.02em;
+  --text-subheading-2xs--font-weight: 500;
 }
 
 .pricing-gradient {

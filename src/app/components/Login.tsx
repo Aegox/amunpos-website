@@ -2,10 +2,13 @@
 import React, { useState } from "react";
 import Button from "./Button";
 import { useForm } from "react-hook-form";
-import { MdOutlineEmail, MdLockOutline, MdVisibility, MdVisibilityOff } from "react-icons/md";
+import { RiMailLine, RiLockLine, RiEyeLine, RiEyeOffLine } from "@remixicon/react";
 import { GoogleOAuthProvider, GoogleLogin } from '@react-oauth/google';
 import { useUserLogin } from "../hooks/useUserLogin";
 import { useGoogleAuth } from "../hooks/useGoogleAuth";
+import { InputRoot, InputField, InputIcon } from "@/components/ui/input";
+import { LabelRoot } from "@/components/ui/label";
+import { Divider } from "@/components/ui/divider";
 
 interface LoginFormData {
   email: string;
@@ -16,7 +19,7 @@ const Login: React.FC = () => {
   const { register, handleSubmit, formState: { errors }, reset } = useForm<LoginFormData>();
   const { loginUser, loading: emailLoading } = useUserLogin();
   const { handleGoogleSuccess, handleGoogleError } = useGoogleAuth();
-  
+
   const [showPassword, setShowPassword] = useState(false);
   const [errorState, setErrorState] = useState("");
 
@@ -38,65 +41,61 @@ const Login: React.FC = () => {
 
   return (
     <GoogleOAuthProvider clientId={process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID!}>
-      <form className="w-full space-y-6" onSubmit={handleSubmit(onSubmit)}>
-        {/* FORMULARIO EMAIL */}
-        <div className="relative mb-6">
-          <MdOutlineEmail color="gray" size={24} className="absolute left-3 top-3" />
-          <input
-            type="email"
-            {...register("email")}
-            className={`bg-white block w-full py-[11px] pl-[45px] text-gray-700 placeholder-gray-600 border-[0.3px] rounded-md transition-colors duration-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500 ${errors.email ? "border-red-500" : "border-gray-400"}`}
-            placeholder="Correo electrónico"
-            disabled={emailLoading}
+      <form className="flex w-full flex-col gap-5" onSubmit={handleSubmit(onSubmit)}>
+        <div className="flex flex-col gap-1.5">
+          <LabelRoot htmlFor="login-email">Correo electrónico</LabelRoot>
+          <InputRoot hasError={!!errors.email}>
+            <InputIcon>
+              <RiMailLine className="size-5" />
+            </InputIcon>
+            <InputField id="login-email" type="email" placeholder="tucorreo@ejemplo.com" disabled={emailLoading} {...register("email")} />
+          </InputRoot>
+          {errors.email && <p className="text-paragraph-xs text-error-base">{String(errors.email.message)}</p>}
+        </div>
+
+        <div className="flex flex-col gap-1.5">
+          <LabelRoot htmlFor="login-password">Contraseña</LabelRoot>
+          <InputRoot hasError={!!errors.password}>
+            <InputIcon>
+              <RiLockLine className="size-5" />
+            </InputIcon>
+            <InputField
+              id="login-password"
+              type={showPassword ? "text" : "password"}
+              placeholder="••••••••"
+              disabled={emailLoading}
+              {...register("password")}
+            />
+            <button
+              type="button"
+              aria-label={showPassword ? "Ocultar contraseña" : "Mostrar contraseña"}
+              className="flex size-5 shrink-0 items-center justify-center text-soft-400 transition-colors duration-200 hover:text-sub-600"
+              onClick={() => setShowPassword((v) => !v)}
+            >
+              {showPassword ? <RiEyeOffLine className="size-5" /> : <RiEyeLine className="size-5" />}
+            </button>
+          </InputRoot>
+          {errors.password && <p className="text-paragraph-xs text-error-base">{String(errors.password.message)}</p>}
+        </div>
+
+        {errorState && <p className="text-center text-paragraph-sm text-error-base">{errorState}</p>}
+
+        <Button text="Iniciar sesión" type="submit" styles="w-full" loading={emailLoading} variant="primary" />
+
+        <Divider variant="line-text">o</Divider>
+
+        <div className="flex w-full items-center justify-center">
+          <GoogleLogin
+            onSuccess={handleGoogleSuccess}
+            onError={handleGoogleError}
+            theme="filled_blue"
+            size="large"
+            text="signin_with"
+            shape="circle"
+            logo_alignment="center"
+            width="100%"
+            type="icon"
           />
-          {errors.email && <p className="text-red-500 text-sm mt-1">{String(errors.email.message)}</p>}
-        </div>
-
-        <div className="relative mb-6">
-          <MdLockOutline color="gray" size={24} className="absolute left-3 top-3" />
-          <input
-            type={showPassword ? "text" : "password"}
-            {...register("password")}
-            className={`bg-white block w-full py-[11px] pl-[45px] pr-10 text-gray-700 placeholder-gray-600 border-[0.3px] rounded-md transition-colors duration-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500 ${errors.password ? "border-red-500" : "border-gray-400"}`}
-            placeholder="Contraseña"
-            disabled={emailLoading}
-          />
-          <div className="absolute right-3 top-3 cursor-pointer" onClick={() => setShowPassword(!showPassword)}>
-            {showPassword ? <MdVisibilityOff color="gray" size={20} /> : <MdVisibility color="gray" size={20} />}
-          </div>
-          {errors.password && <p className="text-red-500 text-sm mt-1">{String(errors.password.message)}</p>}
-        </div>
-
-        {errorState && <p className="text-red-500 text-sm text-center mb-4">{errorState}</p>}
-        {/* EMAIL BUTTON */}
-        <Button
-          text="Iniciar sesión"
-          styles={`w-full mb-4 py-3 px-8 ${emailLoading ? "opacity-70 cursor-not-allowed" : ""}`}
-          loading={emailLoading}
-          variant="primary"
-        />
-
-
-        {/* DIVIDER */}
-        <div className="relative flex items-center mt-0 mb-4">
-          <div className="flex-grow border-t border-gray-300"></div>
-          <span className="flex-shrink-0 px-4 text-xs text-gray-500 font-medium">o</span>
-          <div className="flex-grow border-t border-gray-300"></div>
-        </div>
-
-        {/* GOOGLE LOGIN */}
-        <div className="w-full flex items-center justify-center">
-        <GoogleLogin
-          onSuccess={handleGoogleSuccess}
-          onError={handleGoogleError}
-          theme="filled_blue"
-          size="large"
-          text="signin_with"
-          shape="circle"
-          logo_alignment="center"
-          width="100%"
-          type="icon"
-        />
         </div>
       </form>
     </GoogleOAuthProvider>

@@ -1,5 +1,6 @@
 'use client';
 import React, { useState, useEffect } from 'react';
+import * as Modal from '@/components/ui/modal';
 import SessionComponent from './SessionComponent';
 import Login from './Login';
 import RegisterFlow from './RegisterFlow';
@@ -10,8 +11,7 @@ const AuthModal = () => {
   // Cargar el valor inicial solo cuando estemos en el cliente
   useEffect(() => {
     if (typeof window !== "undefined") {
-      const storedAction = window.localStorage.getItem("lastAction");
-      setLastAction(storedAction);
+      setLastAction(window.localStorage.getItem("lastAction"));
     }
   }, []);
 
@@ -20,54 +20,43 @@ const AuthModal = () => {
     if (typeof window === "undefined") return;
 
     const intervalId = setInterval(() => {
-      const currentLastAction = window.localStorage.getItem("lastAction");
-      setLastAction(currentLastAction);
+      setLastAction(window.localStorage.getItem("lastAction"));
     }, 100);
 
     return () => clearInterval(intervalId);
   }, []);
 
-  // Renderiza el modal dinámicamente
-  const renderModal = (
-    Component: React.ComponentType,
-    title: string,
-    description: string,
-    buttonText: string,
-    question: boolean
-  ) => (
-    <div className="fixed inset-0 z-[100] w-full overflow-y-auto bg-[rgba(0,0,0,0.5)] scrollbar-hidden backdrop-blur-sm">
-      <div className="w-full flex min-h-screen md:h-[140vh] items-center justify-center">
-        <SessionComponent
-          Component={Component}
-          title={title}
-          description={description}
-          buttonText={buttonText}
-          question={question}
-        />
-      </div>
-    </div>
+  const isOpen = lastAction === "login" || lastAction === "register";
+
+  const handleOpenChange = (open: boolean) => {
+    if (!open) {
+      window.localStorage.removeItem("lastAction");
+      setLastAction(null);
+    }
+  };
+
+  return (
+    <Modal.Root open={isOpen} onOpenChange={handleOpenChange}>
+      <Modal.Content>
+        {lastAction === "login" && (
+          <SessionComponent
+            Component={Login}
+            title="Inicia sesión en tu cuenta"
+            description="Usa tus credenciales para iniciar sesión"
+            question
+          />
+        )}
+        {lastAction === "register" && (
+          <SessionComponent
+            Component={RegisterFlow}
+            title="Registra tu cuenta"
+            description="Crea una cuenta nueva"
+            question={false}
+          />
+        )}
+      </Modal.Content>
+    </Modal.Root>
   );
-
-  if (lastAction === "login") {
-    return renderModal(
-      Login,
-      "Inicia sesión en tu cuenta",
-      "Usa tus credenciales para iniciar sesión",
-      "Iniciar sesión",
-      true
-    );
-  } else if (lastAction === "register") {
-    return renderModal(
-      RegisterFlow,
-      "Registra tu cuenta",
-      "Crea una cuenta nueva",
-      "Registrar",
-      false
-    );
-  }
-
-  return null;
 };
 
 export default AuthModal;
-
