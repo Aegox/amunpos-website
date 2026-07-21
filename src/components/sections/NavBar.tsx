@@ -1,24 +1,86 @@
 import React, { useState, useEffect } from "react";
-import { RiMenuLine, RiCloseLine } from "@remixicon/react";
+import {
+  RiMenuLine,
+  RiCloseLine,
+  RiArrowDownSLine,
+  RiArrowRightSLine,
+  RiSparklingLine,
+  RiShoppingCart2Line,
+  RiStackLine,
+  RiTeamLine,
+  RiCompass3Line,
+  RiChatQuoteLine,
+  RiMailLine,
+} from "@remixicon/react";
 import { cn } from "@/lib/utils";
 
-const links = [
-  { label: "Características", id: "Caracteristicas" },
-  { label: "IA", id: "IA" },
-  { label: "Precios", id: "Planes" },
-  { label: "FAQ", id: "Faq" },
+type MenuItem = {
+  icon: React.ComponentType<{ className?: string }>;
+  title: string;
+  desc: string;
+  href: string;
+  ai?: boolean;
+};
+
+const productItems: MenuItem[] = [
+  { icon: RiSparklingLine, title: "Asistente de IA", desc: "Pregunta, migra y automatiza con IA", href: "#IA", ai: true },
+  { icon: RiShoppingCart2Line, title: "Ventas y caja", desc: "Cobra en segundos con cualquier método", href: "#IA" },
+  { icon: RiStackLine, title: "Inventario en tiempo real", desc: "Stock sincronizado entre sucursales", href: "#IA" },
+  { icon: RiTeamLine, title: "Nómina y equipo", desc: "Horarios con IA, fichaje y pagos", href: "#IA" },
 ];
 
-export default function NavBar() {
-  const [scrolled, setScrolled] = useState(false);
-  const [menuOpen, setMenuOpen] = useState(false);
+const companyItems: MenuItem[] = [
+  { icon: RiCompass3Line, title: "Nosotros", desc: "Quiénes somos y por qué existe AmunPOS", href: "#Inicio" },
+  { icon: RiChatQuoteLine, title: "Testimonios", desc: "Negocios que ya confían en AmunPOS", href: "#Testimonios" },
+  { icon: RiMailLine, title: "Contacto", desc: "Habla con nuestro equipo", href: "#Contacto" },
+];
 
-  useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 8);
-    onScroll();
-    window.addEventListener("scroll", onScroll);
-    return () => window.removeEventListener("scroll", onScroll);
-  }, []);
+function MenuItemRow({ icon: Icon, title, desc, href, ai }: MenuItem) {
+  return (
+    <a
+      href={href}
+      className="group/link flex items-center gap-3.5 rounded-xl px-3 py-2.5 transition duration-200 ease-linear hover:bg-gray-25"
+    >
+      <div className="flex size-9 shrink-0 items-center justify-center rounded-[11px] bg-gray-0 ring-1 ring-inset ring-gray-100 transition duration-200 ease-linear group-hover/link:shadow-button-white group-hover/link:ring-transparent">
+        <Icon
+          className={cn(
+            "size-5 transition duration-200 ease-linear",
+            ai ? "text-ai-base" : "text-gray-500 group-hover/link:text-primary-base",
+          )}
+        />
+      </div>
+      <div className="flex-1">
+        <div className="text-label-sm text-gray-900">{title}</div>
+        <div className="mt-1 text-paragraph-xs text-gray-600">{desc}</div>
+      </div>
+      <RiArrowRightSLine className="size-5 text-gray-400" />
+    </a>
+  );
+}
+
+function NavDropdown({ label, items }: { label: string; items: MenuItem[] }) {
+  return (
+    <div className="group relative z-50">
+      <button
+        type="button"
+        className="flex items-center gap-0.5 text-label-sm text-gray-600 transition duration-200 ease-linear group-hover:text-gray-800"
+      >
+        {label}
+        <RiArrowDownSLine className="size-5 text-gray-500 transition duration-200 ease-out group-hover:-rotate-180 group-hover:text-primary-base" />
+      </button>
+      <div className="absolute left-0 top-full pointer-events-none -translate-y-3 pt-4 opacity-0 transition duration-300 ease-out group-hover:pointer-events-auto group-hover:translate-y-0 group-hover:opacity-100">
+        <div className="flex w-[340px] flex-col gap-1 rounded-[20px] bg-gray-0 p-2 shadow-button-white">
+          {items.map((item) => (
+            <MenuItemRow key={item.title} {...item} />
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+export default function NavBar() {
+  const [menuOpen, setMenuOpen] = useState(false);
 
   useEffect(() => {
     document.body.style.overflow = menuOpen ? "hidden" : "";
@@ -28,75 +90,95 @@ export default function NavBar() {
   }, [menuOpen]);
 
   return (
-    <header
-      className={cn(
-        "fixed top-0 z-50 flex w-full justify-center bg-gray-0/90 backdrop-blur-md transition-shadow duration-300",
-        scrolled ? "border-b border-gray-200" : "border-b border-transparent",
-      )}
-    >
-      <div className="flex h-16 w-full max-w-[1240px] items-center justify-between px-5 lg:px-8">
-        <a className="flex items-center gap-2" href="#Inicio">
-          <img src="/logo.svg" alt="AmunPOS" className="h-8 w-auto" />
-        </a>
+    <div className="fixed inset-x-0 top-3 z-50 flex justify-center px-3 lg:top-4">
+      <header className="flex h-16 w-full items-center justify-between gap-4 rounded-2xl bg-gray-25 px-4 shadow-button-white lg:h-auto lg:w-auto lg:justify-start lg:rounded-3xl lg:bg-gray-0 lg:p-[18px]">
+        <div className="flex items-center gap-2.5 pr-3">
+          <a className="focus:outline-none" href="#Inicio">
+            <img src="/logo.svg" alt="AmunPOS" className="h-7 w-auto" />
+          </a>
+          <span className="flex items-center gap-1 rounded-[7px] bg-ai-light px-2 py-1 text-label-xs font-medium text-ai-dark shadow-badge-gray">
+            <RiSparklingLine className="size-3.5" />
+            IA activa
+          </span>
+        </div>
 
-        <nav className="hidden items-center gap-7 xl:flex">
-          {links.map(({ label, id }) => (
-            <a key={id} href={`#${id}`} className="text-label-sm text-gray-600 transition-colors duration-200 hover:text-gray-900">
-              {label}
-            </a>
-          ))}
+        <nav className="hidden items-center gap-2.5 lg:flex">
+          <NavDropdown label="Producto" items={productItems} />
         </nav>
 
-        <div className="hidden items-center gap-2.5 xl:flex">
-          <a
-            href="#"
-            className="flex h-9 items-center rounded-9 px-3.5 text-label-sm text-gray-700 transition duration-200 hover:bg-gray-50"
-          >
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20" className="hidden size-5 shrink-0 text-gray-300 lg:block">
+          <path fill="currentColor" d="M10.003 11.108a1.183 1.183 0 0 1-1.176-1.176c0-.644.532-1.176 1.176-1.176s1.176.532 1.176 1.176-.532 1.176-1.176 1.176" />
+        </svg>
+
+        <div className="hidden items-center gap-5 lg:flex">
+          <a href="#Planes" className="text-label-sm text-gray-600 transition duration-200 ease-linear hover:text-gray-800">
+            Precios
+          </a>
+          <a href="#Faq" className="text-label-sm text-gray-600 transition duration-200 ease-linear hover:text-gray-800">
+            Preguntas frecuentes
+          </a>
+          <NavDropdown label="Empresa" items={companyItems} />
+        </div>
+
+        <div className="hidden items-center gap-2.5 lg:flex">
+          <a href="#" className="flex h-9 items-center rounded-9 px-3.5 text-label-sm text-gray-700 transition duration-200 ease-linear hover:bg-gray-50">
             Iniciar sesión
           </a>
           <a
             href="#Planes"
-            className="flex h-9 items-center gap-2 rounded-9 bg-primary-base px-3.5 text-label-sm text-gray-0 shadow-button-gray transition duration-200 hover:bg-primary-dark"
+            className="flex h-9 items-center gap-1.5 rounded-13 bg-gray-900 px-3.5 text-label-sm text-gray-0 shadow-button-gray transition duration-200 ease-linear hover:bg-gray-800"
           >
             Empieza gratis
+            <RiArrowRightSLine className="size-4 text-gray-500" />
           </a>
         </div>
 
         <button
           onClick={() => setMenuOpen((v) => !v)}
-          className="flex size-9 items-center justify-center rounded-9 border border-gray-200 xl:hidden"
+          className="flex size-9 items-center justify-center rounded-9 border border-gray-200 lg:hidden"
           aria-label={menuOpen ? "Cerrar menú" : "Abrir menú"}
         >
           {menuOpen ? <RiCloseLine className="size-5" /> : <RiMenuLine className="size-5" />}
         </button>
-      </div>
+      </header>
 
       {menuOpen && (
-        <div className="fixed left-0 top-16 z-30 flex h-[calc(100vh-64px)] w-full flex-col gap-1 bg-gray-0 px-6 pt-6 xl:hidden">
-          {links.map(({ label, id }) => (
-            <a
-              key={id}
-              href={`#${id}`}
-              onClick={() => setMenuOpen(false)}
-              className="rounded-9 px-3 py-3 text-label-md text-gray-900 transition-colors duration-200 hover:bg-gray-50"
-            >
-              {label}
-            </a>
-          ))}
-          <div className="mt-4 flex flex-col gap-3 border-t border-gray-200 pt-6">
-            <a href="#" className="rounded-9 px-3 py-3 text-center text-label-md text-gray-900 hover:bg-gray-50">
+        <div className="fixed inset-x-3 top-[76px] z-40 flex max-h-[calc(100vh-96px)] flex-col overflow-y-auto rounded-2xl bg-gray-0 p-3 shadow-button-white lg:hidden">
+          <div className="flex flex-col gap-1">
+            <div className="px-3 pb-1 pt-2 text-subheading-xs text-gray-450">Producto</div>
+            {productItems.map((item) => (
+              <MenuItemRow key={item.title} {...item} />
+            ))}
+          </div>
+          <div className="my-2 h-px bg-gray-100" />
+          <a href="#Planes" onClick={() => setMenuOpen(false)} className="rounded-xl px-3 py-2.5 text-label-sm text-gray-700 hover:bg-gray-25">
+            Precios
+          </a>
+          <a href="#Faq" onClick={() => setMenuOpen(false)} className="rounded-xl px-3 py-2.5 text-label-sm text-gray-700 hover:bg-gray-25">
+            Preguntas frecuentes
+          </a>
+          <div className="mt-2 flex flex-col gap-1">
+            <div className="px-3 pb-1 pt-2 text-subheading-xs text-gray-450">Empresa</div>
+            {companyItems.map((item) => (
+              <MenuItemRow key={item.title} {...item} />
+            ))}
+          </div>
+          <div className="my-2 h-px bg-gray-100" />
+          <div className="flex flex-col gap-2 p-1">
+            <a href="#" className="flex h-10 items-center justify-center rounded-9 border border-gray-200 text-label-sm text-gray-700">
               Iniciar sesión
             </a>
             <a
               href="#Planes"
               onClick={() => setMenuOpen(false)}
-              className="flex h-11 items-center justify-center rounded-9 bg-primary-base text-label-md text-gray-0 shadow-button-gray"
+              className="flex h-10 items-center justify-center gap-1.5 rounded-13 bg-gray-900 text-label-sm text-gray-0 shadow-button-gray"
             >
               Empieza gratis
+              <RiArrowRightSLine className="size-4 text-gray-500" />
             </a>
           </div>
         </div>
       )}
-    </header>
+    </div>
   );
 }
