@@ -20,6 +20,7 @@ const NavBar: React.FC = () => {
   const sections = [
     { label: 'Inicio', id: 'Inicio' },
     { label: 'Características', id: 'Caracteristicas' },
+    { label: 'IA', id: 'IA' },
     { label: 'Planes', id: 'Planes' },
     { label: 'Testimonios', id: 'Testimonios' },
     { label: 'FAQ', id: 'Faq' },

@@ -3,7 +3,7 @@ import React from "react";
 import Card from "./Card";
 import Eyebrow from "./Eyebrow";
 import { motion } from "framer-motion";
-import { Store, Wallet, Wrench, LayoutDashboard, Zap } from "lucide-react";
+import { Boxes, Wallet, GitBranch, Users, Truck, LineChart } from "lucide-react";
 
 interface CardDataProps {
   title: string;
@@ -13,24 +13,34 @@ interface CardDataProps {
 
 const cardData: CardDataProps[] = [
   {
-    title: "Adecuado para todo tipo de negocio",
-    text: "Retail, restaurantes, delivery o servicios: AmunPOS se adapta al flujo real de tu operación, no al revés.",
-    icon: <Store className="size-5" />,
-  },
-  {
-    title: "Rentable, con precio accesible",
-    text: "Una solución completa sin costos ocultos, pensada para que el software nunca sea el obstáculo.",
+    title: "Cobra sin fricción",
+    text: "Ventas rápidas, múltiples métodos de pago y tickets claros — tu equipo cobra en segundos, no en minutos.",
     icon: <Wallet className="size-5" />,
   },
   {
-    title: "Fácil de configurar, sin conocimientos técnicos",
-    text: "Instálalo y empieza a vender en minutos. Sin integraciones complejas ni curva de aprendizaje.",
-    icon: <Wrench className="size-5" />,
+    title: "Inventario que no se descuadra",
+    text: "Stock en tiempo real por sucursal, con alertas antes de que un producto se agote de verdad.",
+    icon: <Boxes className="size-5" />,
   },
   {
-    title: "Panel moderno y atractivo",
-    text: "Un dashboard claro y agradable de usar todos los días, diseñado para tu equipo, no solo para ti.",
-    icon: <LayoutDashboard className="size-5" />,
+    title: "Todas tus sucursales, un panel",
+    text: "Compara ventas, stock y equipo entre locales sin abrir una hoja de cálculo.",
+    icon: <GitBranch className="size-5" />,
+  },
+  {
+    title: "Equipo y nómina bajo control",
+    text: "Fichaje, horarios y pagos por país, sin depender de planillas sueltas.",
+    icon: <Users className="size-5" />,
+  },
+  {
+    title: "Delivery con su propia app",
+    text: "Repartidores con su propia app, estados de pedido en vivo y cobro al cerrar la ruta.",
+    icon: <Truck className="size-5" />,
+  },
+  {
+    title: "Reportes que sí usas",
+    text: "Cifras del negocio explicadas en lenguaje simple, listas para decidir sin depender de un contador.",
+    icon: <LineChart className="size-5" />,
   },
 ];
 
@@ -45,10 +55,14 @@ const Features: React.FC = () => {
           transition={{ duration: 0.5 }}
           className="flex flex-col items-center"
         >
-          <Eyebrow icon={<Zap className="size-3.5" />} text="Crece con AmunPOS" />
-          <h2 className="mt-5 max-w-2xl text-center text-3xl font-medium leading-tight tracking-[-0.01em] text-strong-950 lg:text-[2.75rem]">
-            Simple por fuera, sorprendentemente potente por dentro
+          <Eyebrow text="Todo lo que un negocio necesita" />
+          <h2 className="mt-5 max-w-2xl text-center text-title-h3 text-strong-950 lg:text-title-h2">
+            Menos herramientas sueltas, más control real
           </h2>
+          <p className="mt-4 max-w-xl text-center text-paragraph-md text-sub-600">
+            Reemplaza la caja registradora, la hoja de cálculo de inventario y el grupo de
+            WhatsApp de nómina por un solo sistema que habla entre sí.
+          </p>
         </motion.div>
 
         <motion.div
@@ -56,7 +70,7 @@ const Features: React.FC = () => {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, amount: 0.3 }}
           transition={{ duration: 0.6, delay: 0.1 }}
-          className="mt-14 flex w-full flex-wrap justify-center gap-5"
+          className="mt-14 grid w-full grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3"
         >
           {cardData.map((data, index) => (
             <Card key={index} title={data.title} icon={data.icon} text={data.text} />

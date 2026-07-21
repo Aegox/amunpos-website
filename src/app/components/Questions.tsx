@@ -35,6 +35,10 @@ const faqData: FaqItem[] = [
     question: "¿Cómo elijo el plan adecuado para mi negocio?",
     answer: "Considera el tamaño de tu operación, tu presupuesto y las funciones que más necesitas. Nuestro equipo puede ayudarte a encontrar el plan ideal sin compromiso.",
   },
+  {
+    question: "¿Qué tan real es la parte de inteligencia artificial?",
+    answer: "Es funcionalidad activa, no una promesa: el asistente de negocio, la migración de datos, la lectura de facturas y la generación de horarios ya funcionan dentro de AmunPOS hoy. Seguimos sumando más capacidades de IA cada trimestre.",
+  },
 ];
 
 const Questions: React.FC = () => {
@@ -48,7 +52,7 @@ const Questions: React.FC = () => {
       id="Faq"
     >
       <Eyebrow icon={<HelpCircle className="size-3.5" />} text="¿Tienes alguna pregunta?" />
-      <h2 className="mt-5 max-w-xl text-center text-3xl font-medium leading-tight tracking-[-0.01em] text-strong-950 lg:text-[2.75rem]">
+      <h2 className="mt-5 max-w-xl text-center text-title-h3 text-strong-950 lg:text-title-h2">
         Aquí hay algunas respuestas
       </h2>
 
@@ -59,10 +63,10 @@ const Questions: React.FC = () => {
             value={`item-${index}`}
             key={index}
           >
-            <AccordionTrigger className="py-5 text-left text-base font-medium text-strong-950 no-underline hover:no-underline lg:text-lg">
+            <AccordionTrigger className="py-5 text-left text-label-md text-strong-950 no-underline hover:no-underline">
               {item.question}
             </AccordionTrigger>
-            <AccordionContent className="text-sm leading-relaxed text-sub-600">
+            <AccordionContent className="text-paragraph-sm text-sub-600">
               {item.answer}
             </AccordionContent>
           </AccordionItem>

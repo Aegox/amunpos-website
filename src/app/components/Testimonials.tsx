@@ -38,21 +38,21 @@ const testimonialsData: testimonialsDataProps[] = [
   {
     client_name: "Wizard Bona",
     company: "Voila Caffe",
-    client_review: "La gestión de delivery integrada nos ahorra horas de trabajo manual cada semana. Recomendado sin dudarlo.",
+    client_review: "La IA nos leyó las facturas de tres proveedores en minutos. Lo que hacíamos a mano un día completo, ahora es de una sentada.",
     rating: 5,
     img: "/user4.png"
   },
   {
     client_name: "Ansari Patron",
     company: "Green Lodge",
-    client_review: "Migrar nuestras sucursales fue mucho más simple de lo que esperábamos, con datos siempre sincronizados.",
+    client_review: "Migramos todo nuestro inventario con la IA de AmunPOS sin tocar una hoja de cálculo. Datos siempre sincronizados entre sucursales.",
     rating: 4.5,
     img: "/user5.png"
   },
   {
     client_name: "Tonima Mozeja",
     company: "Almas Market",
-    client_review: "La interfaz es tan intuitiva que el personal nuevo aprende a usarla en minutos, sin fricción alguna.",
+    client_review: "El asistente de IA responde preguntas del negocio al instante — ya no espero al cierre de mes para saber qué se vendió mejor.",
     rating: 5,
     img: "/user3.png"
   }
@@ -92,8 +92,8 @@ const Testimonials = () => {
           className="flex flex-col items-center"
         >
           <Eyebrow icon={<MessageCircle className="size-3.5" />} text="Comentarios de clientes" />
-          <h2 className="mt-5 max-w-2xl text-center text-3xl font-medium leading-tight tracking-[-0.01em] text-strong-950 lg:text-[2.75rem]">
-            Voces de satisfacción que hablan de nuestra excelencia
+          <h2 className="mt-5 max-w-2xl text-center text-title-h3 text-strong-950 lg:text-title-h2">
+            Negocios que ya recuperaron su tiempo
           </h2>
         </motion.div>
 

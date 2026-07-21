@@ -46,13 +46,23 @@ un solo valor base.
 --color-stroke-white-0     /* borde blanco (sobre fondos oscuros) */
 ```
 
-Además (de los componentes reales que sí vimos en código):
+Además (confirmado en el código real de `Badge`, ver `components/badge.tsx`):
 `primary-darker`, `primary-dark` (variantes hover/focus más oscuras del
-primario), y colores semánticos completos por familia — `success` (verde),
-`error` (rojo), `warning` (naranja), `information` (azul), `away`
-(amarillo), `feature` (púrpura), `verified` (sky), `highlighted` (rosa),
-`stable` (teal) — cada uno con variantes `-base`, `-dark`, `-light`,
-`-lighter`, cf. investigación previa de este mismo proyecto.
+primario), y 10 familias semánticas completas — `success` (verde), `error`
+(rojo), `warning` (naranja), `information` (azul), `away` (amarillo),
+**`feature` (púrpura)**, `verified` (sky), `highlighted` (rosa), `stable`
+(teal), `faded` (gris) — cada una con variantes `-base`, `-dark`, `-light`,
+`-lighter`.
+
+**Dato clave para el rediseño con foco en IA:** el color que en la UI del
+Badge se elige como "purple" mapea internamente al token **`feature`** — es
+decir, AlignUI ya tiene una convención propia para "esto es una capacidad
+especial/avanzada, destácala": el púrpura. No es una elección arbitraria
+nuestra pintar de púrpura las funciones de IA de AmunPOS (asistente,
+migraciones, facturación, marketing) — es la extensión natural de una
+convención que el propio sistema ya define. Se agregó `--feature-base`
+(púrpura) a `globals.css` para usarlo exactamente así: como acento de "esto
+es IA", nunca como color de marca genérico.
 
 ## Mapeo aplicado a AmunPOS
 

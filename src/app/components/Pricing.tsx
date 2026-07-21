@@ -25,6 +25,7 @@ const pricingPlans: PricingPlan[] = [
       "Gestión de inventario",
       "Informes y análisis de ventas",
       "Escaneo de código de barras",
+      "Asistente IA incluido",
       "Soporte 24/7",
     ]
   },
@@ -37,8 +38,8 @@ const pricingPlans: PricingPlan[] = [
     features: [
       "Hasta 3 usuarios",
       "Gestión de inventario multi-sucursal",
+      "Migración y facturación con IA",
       "Informes y análisis de ventas",
-      "Funcionalidades avanzadas",
       "Escaneo de código de barras",
       "Soporte 24/7 prioritario",
     ]
@@ -51,8 +52,8 @@ const pricingPlans: PricingPlan[] = [
     features: [
       "Usuarios ilimitados",
       "Gestión de inventario multi-sucursal",
+      "Todas las funciones de IA",
       "Informes y análisis avanzados",
-      "Funcionalidades avanzadas + IA",
       "Escaneo de código de barras",
       "Soporte 24/7 dedicado",
     ]
@@ -71,9 +72,12 @@ const Pricing: React.FC = () => {
           className="flex flex-col items-center"
         >
           <Eyebrow icon={<Tag className="size-3.5" />} text="Nuestros precios" />
-          <h2 className="mt-5 max-w-xl text-center text-3xl font-medium leading-tight tracking-[-0.01em] text-strong-950 lg:text-[2.75rem]">
-            Planes transparentes, encuentra el ajuste perfecto
+          <h2 className="mt-5 max-w-xl text-center text-title-h3 text-strong-950 lg:text-title-h2">
+            Planes transparentes, la IA incluida en todos
           </h2>
+          <p className="mt-4 max-w-lg text-center text-paragraph-md text-sub-600">
+            Sin costos ocultos ni complementos sorpresa: elige según el tamaño de tu equipo.
+          </p>
         </motion.div>
 
         <motion.div

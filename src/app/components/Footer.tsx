@@ -12,9 +12,9 @@ const Footer: React.FC = () => {
       <div className="mx-auto grid w-full max-w-[1240px] grid-cols-1 gap-12 pb-16 lg:grid-cols-[1.4fr_1fr_1.2fr] lg:gap-8 lg:pb-24">
         <div>
           <Image src="/logo.png" alt="AmunPOS" width={150} height={25} className="mb-6 h-6 w-auto brightness-0 invert" />
-          <p className="max-w-sm text-sm leading-relaxed text-white/60">
-            AmunPOS transforma tus operaciones comerciales en una fuerza eficiente y fluida,
-            con la simplicidad y versatilidad que tu negocio necesita.
+          <p className="max-w-sm text-paragraph-sm text-white/60">
+            AmunPOS une ventas, inventario y equipo en un solo panel, con inteligencia artificial
+            que se encarga del trabajo repetitivo para que tu negocio crezca más rápido.
           </p>
           <Socials styles="mt-6" />
         </div>
