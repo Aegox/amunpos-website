@@ -64,6 +64,10 @@ import { RiSparklingLine, RiArrowRightSLine } from "@remixicon/react";
 
     <div class="mt-11 xl:mt-20">
       <div class="ruler-frame -mx-5 flex items-stretch gap-2 overflow-x-auto px-5 py-4 md:mx-0 md:justify-center md:gap-8 md:px-[26px]">
+        <span class="corner-dot hidden md:block" style="left: 0; top: 0; transform: translate(-50%, -50%);"></span>
+        <span class="corner-dot hidden md:block" style="right: 0; top: 0; transform: translate(50%, -50%);"></span>
+        <span class="corner-dot hidden md:block" style="left: 0; bottom: 0; transform: translate(-50%, 50%);"></span>
+        <span class="corner-dot hidden md:block" style="right: 0; bottom: 0; transform: translate(50%, 50%);"></span>
         {[
           { label: "Panel en tiempo real", desc: "Ventas, caja e inventario al instante", tag: null },
           { label: "IA integrada", desc: "Automatiza tareas repetitivas", tag: "IA" },

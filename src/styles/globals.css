@@ -202,3 +202,31 @@ body {
 .animate-fade-up {
   animation: fade-up 0.7s ease-out both;
 }
+
+/* "Spark" cayendo por una línea vertical — en alignui.com real es naranja
+   (#F05023) sobre la sección oscura "Core Features"; aquí la adaptamos en
+   azul de marca para la sección oscura de AmunPOS ("¿Qué hay dentro?") */
+@keyframes spark-fall {
+  0% {
+    top: -300px;
+    opacity: 0;
+  }
+  15%,
+  85% {
+    opacity: 1;
+  }
+  100% {
+    top: 100%;
+    opacity: 0;
+  }
+}
+
+.spark-line {
+  position: absolute;
+  top: -300px;
+  left: 0;
+  height: 300px;
+  width: 1px;
+  background: linear-gradient(180deg, rgba(12, 113, 194, 0), var(--primary-base));
+  animation: spark-fall 4s linear infinite;
+}
