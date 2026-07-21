@@ -1,66 +1,59 @@
 'use client';
 import React from "react";
-import { AiOutlineShop, AiOutlineShoppingCart, AiOutlineCoffee, AiOutlineShopping } from 'react-icons/ai';
-import { FaHotel, FaSpa } from 'react-icons/fa';
-import { IoIosCart } from 'react-icons/io';
+import { Store, ShoppingCart, Coffee, ShoppingBag, Globe, Building2, Sparkles, MoreHorizontal } from 'lucide-react';
 import { motion } from "framer-motion";
 import Image from 'next/image';
+import Eyebrow from "./Eyebrow";
+
+const useCases = [
+  { label: "Tiendas minoristas", icon: Store },
+  { label: "Supermercados", icon: ShoppingCart },
+  { label: "Restaurantes y cafeterías", icon: Coffee },
+  { label: "Tiendas de conveniencia", icon: ShoppingBag },
+  { label: "Negocios electrónicos", icon: Globe },
+  { label: "Hostelería y hoteles", icon: Building2 },
+  { label: "Salones y spas", icon: Sparkles },
+  { label: "Y muchos más...", icon: MoreHorizontal },
+];
 
 const UseCases: React.FC = () => {
   return (
-    <section className="flex flex-col lg:flex-row-reverse justify-center items-center px-5 md:pt-22 pt-18 md:pb-22 pb-14">
+    <section className="mx-auto flex w-full max-w-[1240px] flex-col-reverse items-center gap-14 px-5 py-16 lg:flex-row lg:gap-16 lg:py-24">
       <motion.div
-        initial={{ opacity: 0, x: -50 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true, amount: 0.3 }}
-            transition={{ duration: 0.4 }}
-            className="w-[90%] pb-10 2xl:w-[38%] xl:w-[40%] md:w-[50%]"
-       >
-      <Image src="/illustration1.svg" alt="a people paying with a card of money" width={500} height={500} /> 
-      </motion.div>
-      <motion.div 
-            initial={{ opacity: 0, x: 0 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true, amount: 0.3 }}
-            transition={{ duration: 0.9 }}
-            className="flex flex-col xl:w-[45%]"
+        initial={{ opacity: 0, x: -30 }}
+        whileInView={{ opacity: 1, x: 0 }}
+        viewport={{ once: true, amount: 0.3 }}
+        transition={{ duration: 0.5 }}
+        className="w-[80%] max-w-md lg:w-[42%]"
       >
-        <p className="w-full text-left text-[var(--primary-color)] text-[18px] font-semibold pb-2">Quién puede usar nuestro amunpos</p>
-        <h1 className="pb-10 2xl:w-[90%] xl:w-[100%] text-[var(--heading-color)]  text-[2rem] 2xl:text-[3em] lg:text-[2.5em] leading-[1.4em] font-bold">Nuestro software es capaz de cubrir una amplia gama de negocios e industrias</h1>
-        <ul className="flex flex-wrap w-full list-none text-[1.25rem] 2xl:text-[1.4rem] text-[var(--body-color)]">
-          <li className="flex items-center mb-4 xl:mb-6 w-full lg:w-[50%]">
-            <AiOutlineShop className="text-2xl text-blue-500 mr-2" />
-            <span>Tiendas minoristas</span>
-          </li>
-          <li className="flex items-center mb-4 xl:mb-6 w-full lg:w-[50%]">
-            <AiOutlineShoppingCart className="text-2xl text-blue-500 mr-2" />
-            <span>Supermercados</span>
-          </li>
-          <li className="flex items-center mb-4 xl:mb-6 w-full lg:w-[50%]">
-            <AiOutlineCoffee className="text-2xl text-blue-500 mr-2" />
-            <span>Restaurantes y cafeterías</span>
-          </li>
-          <li className="flex items-center mb-4 xl:mb-6 w-full lg:w-[50%]">
-            <AiOutlineShopping className="text-2xl text-blue-500 mr-2" />
-           <span>Tiendas de conveniencia</span>
-          </li>
-          <li className="flex items-center mb-4 xl:mb-6 w-full lg:w-[50%]">
-            <IoIosCart className="text-2xl text-blue-500 mr-2" />
-            <span>Negocios electrónicos</span>
-          </li>
-          <li className="flex items-center mb-4 xl:mb-6 w-full lg:w-[50%]">
-            <FaHotel className="text-2xl text-blue-500 mr-2" />
-            <span>Hostelería y hoteles</span>
-          </li>
-          <li className="flex items-center mb-4 xl:mb-6 w-full lg:w-[50%]">
-            <FaSpa className="text-2xl text-blue-500 mr-2" />
-            <span>Salones y spas</span>
-          </li>
-          <li className="flex items-center mb-4 xl:mb-6 w-full lg:w-[50%]">
-            <AiOutlineShop className="text-2xl text-blue-500 mr-2" />
-            <span>Y muchos más...</span>
-          </li>     
-        </ul>     
+        <div className="overflow-hidden rounded-2xl border border-stroke-soft-200 bg-weak-50 p-8">
+          <Image src="/illustration1.svg" alt="Persona pagando con tarjeta" width={500} height={500} className="w-full" />
+        </div>
+      </motion.div>
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, amount: 0.3 }}
+        transition={{ duration: 0.5, delay: 0.1 }}
+        className="flex w-full flex-col lg:w-[54%]"
+      >
+        <Eyebrow icon={<Store className="size-3.5" />} text="Quién puede usar AmunPOS" />
+        <h2 className="mt-5 text-3xl font-medium leading-tight tracking-[-0.01em] text-strong-950 lg:text-[2.5rem]">
+          Una solución para una amplia gama de negocios e industrias
+        </h2>
+        <ul className="mt-10 grid grid-cols-1 gap-3 sm:grid-cols-2">
+          {useCases.map(({ label, icon: Icon }) => (
+            <li
+              key={label}
+              className="flex items-center gap-3 rounded-xl border border-stroke-soft-200 bg-white-0 px-4 py-3"
+            >
+              <span className="flex size-8 shrink-0 items-center justify-center rounded-lg bg-brand-50 text-brand-600">
+                <Icon className="size-4" />
+              </span>
+              <span className="text-sm font-medium text-strong-950">{label}</span>
+            </li>
+          ))}
+        </ul>
       </motion.div>
     </section>
   );

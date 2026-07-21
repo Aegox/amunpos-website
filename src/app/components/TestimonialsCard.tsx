@@ -1,6 +1,7 @@
 import React from "react";
 import RatingStars from "./RatingStars";
 import Image from 'next/image';
+import { Quote } from "lucide-react";
 
 type TestimonialsCardProps = {
   client: string;
@@ -10,18 +11,21 @@ type TestimonialsCardProps = {
   img: string;
 }
 
-const TestimonialsCard: React.FC<TestimonialsCardProps> = ({ client , rating , review , img ,company }) => {
+const TestimonialsCard: React.FC<TestimonialsCardProps> = ({ client, rating, review, img, company }) => {
   return (
-    <article className="2xl:max-w-[340px] w-full flex flex-col bg-white rounded-xl shadow-features p-[50px]">
-      <header className="flex gap-3 pb-5 w-full">
-        <Image src={img} alt="a client photo of amunpos" width={60} height={60} className="w-[60px] h-[60px]"/>
+    <article className="flex h-full w-full flex-col rounded-2xl border border-stroke-soft-200 bg-white-0 p-8 shadow-[0_1px_2px_rgba(13,12,23,0.04)]">
+      <Quote className="size-7 text-brand-200" fill="var(--primary-100)" />
+      <p className="mt-4 flex-1 text-sm leading-relaxed text-sub-600">{review}</p>
+      <div className="mt-6 flex items-center gap-3 border-t border-stroke-soft-200 pt-5">
+        <Image src={img} alt={`Foto de ${client}`} width={44} height={44} className="size-11 shrink-0 rounded-full object-cover" />
         <div className="flex flex-col">
-          <h3 className="text-[var(--heading-color)] w-full text-[22px] leading-[1.4em] font-bold">{client}</h3>
-          <span className="text-[var(--body-color)] font-normal">{company}</span>
+          <h3 className="text-sm font-medium text-strong-950">{client}</h3>
+          <span className="text-xs text-soft-400">{company}</span>
         </div>
-      </header>
-        <p className="text-[var(--body-color)] font-normal mb-4">{review}</p>
-      <RatingStars rating={rating} />
+        <div className="ml-auto">
+          <RatingStars rating={rating} />
+        </div>
+      </div>
     </article>
   );
 };

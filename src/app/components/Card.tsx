@@ -1,24 +1,24 @@
 import React from "react";
-import Image from 'next/image';
+import { ArrowUpRight } from "lucide-react";
 
 interface CardProps {
   title: string;
-  icon: string;
-  text: string
+  icon: React.ReactNode;
+  text: string;
 }
 
 const Card: React.FC<CardProps> = ({ title, text, icon }) => {
   return (
-    <article className="flex flex-col justify-between gap-3 bg-white w-full sm:w-[45%] xl:w-[20%] px-[20px] pt-[45px] pb-[40px] rounded-xl transition-transform duration-400 hover:shadow-2xl hover:-translate-y-2 shadow-features z-30">
-      <Image src={icon} alt="a shop svg for section features" width={57} height={55} />
-      <h3 className="text-[var(--heading-color)] text-[1.4rem]">{title}</h3>
-      <p className="text-[var(--body-color)]">{text}</p>
-      <div className="flex items-center gap-1">
-        <a className="text-[var(--primary-color)] cursor-pointer">Aprende más</a>
-        <svg width="11" height="11" viewBox="0 0 11 11" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M10.147 1.75739C10.147 1.28795 9.76649 0.907395 9.29705 0.907394L1.64705 0.907394C1.17761 0.907395 0.797048 1.28795 0.797048 1.75739C0.797048 2.22684 1.17761 2.60739 1.64705 2.60739H8.44705V9.4074C8.44705 9.87684 8.82761 10.2574 9.29705 10.2574C9.76649 10.2574 10.147 9.87684 10.147 9.4074L10.147 1.75739ZM1.41281 10.8437L9.89809 2.35844L8.69601 1.15635L0.210727 9.64163L1.41281 10.8437Z" fill="var(--primary-color)"></path>
-        </svg>
+    <article className="group flex w-full flex-col gap-4 rounded-2xl border border-stroke-soft-200 bg-white-0 p-6 shadow-[0_1px_2px_rgba(13,12,23,0.04)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_16px_32px_-16px_rgba(13,12,23,0.16)] sm:w-[45%] xl:w-[22%]">
+      <div className="flex size-11 items-center justify-center rounded-xl border border-brand-100 bg-brand-50 text-brand-600">
+        {icon}
       </div>
+      <h3 className="text-lg font-medium text-strong-950">{title}</h3>
+      <p className="text-sm leading-relaxed text-sub-600">{text}</p>
+      <a className="mt-auto flex cursor-pointer items-center gap-1 text-sm font-medium text-brand-600">
+        Aprende más
+        <ArrowUpRight className="size-4 transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+      </a>
     </article>
   );
 };

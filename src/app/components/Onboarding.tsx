@@ -145,8 +145,7 @@ const BusinessFormModal = () => {
               text="Continuar" 
               styles="w-full" 
               loading={loading} 
-              theme="black"
-              variant="inverted"
+              variant="primary"
             />
           </div>
         </form>

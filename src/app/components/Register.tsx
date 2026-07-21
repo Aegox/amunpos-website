@@ -117,8 +117,7 @@ const Register: React.FC<RegisterProps> = ({ onRegister, loading: emailLoading }
           text="Registrarse"
           styles={`w-full mb-4 py-3 px-8 ${emailLoading ? "opacity-70 cursor-not-allowed" : ""}`}
           loading={emailLoading}
-          theme="black"
-          variant="inverted"
+          variant="primary"
         />
         {/* DIVIDER */}
         <div className="relative flex items-center mb-4">

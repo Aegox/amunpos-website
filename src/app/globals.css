@@ -4,21 +4,79 @@
 
 @custom-variant dark (&:is(.dark *));
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --heading-color: #0d0c17;
-    --primary-color: #0c71c2;
-    --white-color: #ffff;
-    --heading-color: #0d0c17;
-    --body-color: #6b6b6b;
-    --accent-color: #06b453;
-    --accent-color_2: #017534;
-    --gray-color: #a3a2a3;
-    --gray2-color: #f8f9fa;
-    --cyan-color: #e2f8f8;
-    --light-blue-color: #8cacff;
-    --red-color: rgba(229, 72, 0, 1);
-  }
+/*
+ * Sistema de tokens estilo AlignUI (alignui.com): escala neutra
+ * strong/sub/soft/disabled + escala de marca "primary" derivada del azul
+ * histórico de AmunPOS (#0c71c2 = hsl(204 88% 40%)), no del azul por
+ * defecto de AlignUI. Ver AlignUI /docs/v1.2/foundation/color y
+ * /docs/v1.2/foundation/typography para la referencia de nomenclatura.
+ */
+:root {
+  --heading-color: #0d0c17;
+  --primary-color: #0c71c2;
+  --white-color: #ffff;
+  --body-color: #565e6c;
+  --accent-color: #06b453;
+  --accent-color_2: #017534;
+  --gray-color: #a3a2a3;
+  --gray2-color: #f8f9fa;
+  --cyan-color: #e2f8f8;
+  --light-blue-color: #8cacff;
+  --red-color: rgba(229, 72, 0, 1);
+
+  --text-strong-950: #0d0c17;
+  --text-sub-600: #565e6c;
+  --text-soft-400: #8f97a3;
+  --text-disabled-300: #c1c7cf;
+  --text-white-0: #ffffff;
+
+  --bg-white-0: #ffffff;
+  --bg-weak-50: #fafbfc;
+  --bg-soft-200: #f1f4f8;
+  --bg-strong-950: #0d0c17;
+
+  --stroke-soft-200: #e7ebf0;
+  --stroke-sub-300: #d8dee5;
+  --stroke-strong-950: #0d0c17;
+
+  --primary-50: hsl(204 90% 96%);
+  --primary-100: hsl(204 85% 91%);
+  --primary-200: hsl(204 82% 83%);
+  --primary-300: hsl(204 80% 71%);
+  --primary-400: hsl(204 83% 55%);
+  --primary-500: hsl(204 88% 40%);
+  --primary-600: hsl(204 88% 34%);
+  --primary-700: hsl(204 88% 28%);
+  --primary-800: hsl(204 84% 22%);
+  --primary-900: hsl(204 78% 17%);
+  --primary-950: hsl(204 72% 11%);
+}
+
+@theme {
+  --color-strong-950: var(--text-strong-950);
+  --color-sub-600: var(--text-sub-600);
+  --color-soft-400: var(--text-soft-400);
+  --color-disabled-300: var(--text-disabled-300);
+  --color-white-0: var(--bg-white-0);
+  --color-weak-50: var(--bg-weak-50);
+  --color-soft-200: var(--bg-soft-200);
+
+  --color-stroke-soft-200: var(--stroke-soft-200);
+  --color-stroke-sub-300: var(--stroke-sub-300);
+
+  --color-brand-50: var(--primary-50);
+  --color-brand-100: var(--primary-100);
+  --color-brand-200: var(--primary-200);
+  --color-brand-300: var(--primary-300);
+  --color-brand-400: var(--primary-400);
+  --color-brand-500: var(--primary-500);
+  --color-brand-600: var(--primary-600);
+  --color-brand-700: var(--primary-700);
+  --color-brand-800: var(--primary-800);
+  --color-brand-900: var(--primary-900);
+  --color-brand-950: var(--primary-950);
+
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
 }
 
 .pricing-gradient {
@@ -30,17 +88,38 @@ html {
 }
 
 body {
-  background: var(--white-color);
-  color: var(--heading-color);
-  font-family: Inter, sans-serif;
+  background: var(--bg-white-0);
+  color: var(--text-strong-950);
+  font-family: var(--font-sans);
   font-size: 16px;
-  font-weight: 500;
+  font-weight: 400;
   line-height: 1.6em;
   -webkit-font-smoothing: antialiased;
 }
 
 .shadow-features {
   box-shadow: 0px 0px 20px 10px rgba(216, 216, 216, 0.25)
+}
+
+/* Fondo de puntos sutil, marca registrada de las secciones AlignUI */
+.dot-grid-bg {
+  background-image: radial-gradient(var(--stroke-sub-300) 1px, transparent 1px);
+  background-size: 24px 24px;
+  -webkit-mask-image: radial-gradient(ellipse 70% 60% at 50% 0%, black 40%, transparent 100%);
+  mask-image: radial-gradient(ellipse 70% 60% at 50% 0%, black 40%, transparent 100%);
+}
+
+.eyebrow-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  border-radius: 9999px;
+  border: 1px solid var(--primary-200);
+  background: var(--primary-50);
+  color: var(--primary-700);
+  font-size: 0.8125rem;
+  font-weight: 500;
+  padding: 0.3rem 0.75rem;
 }
 
 @keyframes move-image {

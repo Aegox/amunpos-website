@@ -4,6 +4,7 @@ import { usePathname, useRouter } from 'next/navigation';
 import Image from 'next/image';
 import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
+import { Menu, X, ArrowRight } from 'lucide-react';
 import Button from './Button';
 import { getCookie } from '../utils/cookie';
 import { scrollToSection as scrollWithOffset } from '../utils/scroll';
@@ -12,17 +13,16 @@ const NavBar: React.FC = () => {
   const pathname = usePathname();
   const router = useRouter();
 
-  const [scrollY, setScrollY] = useState<number>(0);
-  const [isScrollingDown, setIsScrollingDown] = useState<boolean>(false);
+  const [scrolled, setScrolled] = useState<boolean>(false);
   const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
 
   const sections = [
     { label: 'Inicio', id: 'Inicio' },
-    { label: 'Caracteristicas', id: 'Caracteristicas' },
+    { label: 'Características', id: 'Caracteristicas' },
     { label: 'Planes', id: 'Planes' },
     { label: 'Testimonios', id: 'Testimonios' },
-    { label: 'Faq', id: 'Faq' },
+    { label: 'FAQ', id: 'Faq' },
     { label: 'Contacto', id: 'Contacto' },
   ];
 
@@ -31,37 +31,21 @@ const NavBar: React.FC = () => {
     setIsAuthenticated(!!cookieToken);
   }, []);
 
-  // Efecto para manejar el scroll cuando el menú está abierto
   useEffect(() => {
     if (typeof document !== 'undefined') {
-      if (isMenuOpen) {
-        document.body.style.overflow = 'hidden';
-      } else {
-        document.body.style.overflow = 'auto';
-      }
-
-      // Limpieza al desmontar el componente
+      document.body.style.overflow = isMenuOpen ? 'hidden' : 'auto';
       return () => {
         document.body.style.overflow = 'auto';
       };
     }
   }, [isMenuOpen]);
 
-  // Efecto para manejar el scroll del navbar
   useEffect(() => {
     if (typeof window === 'undefined') return;
 
-    let lastScrollY = window.scrollY;
-
-    const handleScroll = () => {
-      const currentScrollY = window.scrollY;
-      setScrollY(currentScrollY);
-      setIsScrollingDown(currentScrollY > lastScrollY);
-      lastScrollY = currentScrollY;
-    };
-
+    const handleScroll = () => setScrolled(window.scrollY > 8);
+    handleScroll();
     window.addEventListener('scroll', handleScroll);
-
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
@@ -110,32 +94,26 @@ const NavBar: React.FC = () => {
 
   return (
     <nav
-      className={`fixed flex top-0 xl:h-[90px] h-[80px]  w-full xl:justify-center transition-all duration-300 navbar-slide z-50 ${
-        scrollY === 0
-          ? 'bg-transparent shadow-none'
-          : isScrollingDown
-          ? 'hide bg-transparent shadow-none'
-          : 'show bg-white shadow-md'
+      className={`fixed top-0 z-50 flex w-full justify-center transition-all duration-300 ${
+        scrolled ? 'border-b border-stroke-soft-200 bg-white-0/85 backdrop-blur-md' : 'border-b border-transparent bg-transparent'
       }`}
     >
-      <div className="lg:w-[1370px] w-screen pr-5 flex justify-between items-center xl:px-20 xl:gap-10 px-0 lg:h-[90px] h-[80px]">
-        <Link className="z-[100]" href="/">
+      <div className="flex h-[72px] w-full max-w-[1240px] items-center justify-between px-5 lg:px-8">
+        <Link className="z-[100] flex items-center gap-2" href="/">
           <Image
             src="/logo.svg"
-            alt="logo"
-            objectFit='contain'
-            width={200}
-            height={25}
-            className="pb-2 xl:w-[210px] lg:w-[230px] w-[200px] h-auto cursor-pointer"
+            alt="AmunPOS"
+            width={150}
+            height={24}
+            className="h-6 w-auto cursor-pointer"
           />
         </Link>
 
-        {/* Menú para pantallas grandes */}
-        <ul className="hidden xl:flex gap-10">
+        <ul className="hidden items-center gap-1 rounded-full border border-stroke-soft-200 bg-weak-50/60 p-1 xl:flex">
           {sections.map(({ label, id }) => (
             <button
               key={id}
-              className="cursor-pointer transition-colors duration-300 ease-in-out hover:text-[var(--primary-color)] text-left"
+              className="cursor-pointer rounded-full px-4 py-2 text-sm font-medium text-sub-600 transition-colors duration-200 hover:bg-white-0 hover:text-strong-950 hover:shadow-sm"
               onClick={() => scrollToSection(id)}
             >
               {label}
@@ -143,13 +121,13 @@ const NavBar: React.FC = () => {
           ))}
         </ul>
 
-        {/* Botones para pantallas grandes */}
-        <section className="hidden xl:flex gap-6 items-center">
+        <section className="hidden items-center gap-3 xl:flex">
           {isAuthenticated ? (
             <Button
-              variant="inverted"
-              theme="black"
-              text="Dashboard"
+              variant="primary"
+              size="sm"
+              text="Ir al dashboard"
+              trailingIcon={<ArrowRight className="size-4" />}
               onClick={() => {
                 const appUrl = getAppUrl();
                 if (!appUrl) {
@@ -162,146 +140,106 @@ const NavBar: React.FC = () => {
           ) : (
             <>
               <button
-                className="cursor-pointer transition-colors duration-300 ease-in-out hover:text-[var(--primary-color)] text-[var(--heading-color)]"
+                className="cursor-pointer text-sm font-medium text-strong-950 transition-colors duration-200 hover:text-brand-600"
                 onClick={() => handleClick('login')}
               >
                 Iniciar sesión
               </button>
               <Button
-                variant="inverted"
-                theme="black"
-                text="Registrarse"
+                variant="primary"
+                size="sm"
+                text="Regístrate gratis"
                 onClick={() => handleClick('register')}
               />
             </>
           )}
         </section>
 
-        {/* Botón de hamburguesa animado */}
-        <div className="xl:hidden pt-1 z-40">
-          <button 
-            onClick={() => setIsMenuOpen(!isMenuOpen)} 
-            className="w-12 h-12 flex flex-col justify-center items-center relative"
-            aria-label={isMenuOpen ? 'Cerrar menú' : 'Abrir menú'}
-          >
-            <motion.span 
-              className="w-8 h-0.5 bg-black absolute rounded-full"
-              animate={isMenuOpen ? 'open' : 'closed'}
-              variants={{
-                closed: { rotate: 0, y: -7 },
-                open: { rotate: 45, y: 0 }
-              }}
-              transition={{ duration: 0.2 }}
-            />
-            <motion.span 
-              className="w-8 h-0.5 bg-black absolute rounded-full"
-              animate={isMenuOpen ? 'open' : 'closed'}
-              variants={{
-                closed: { opacity: 1 },
-                open: { opacity: 0 }
-              }}
-              transition={{ duration: 0.1 }}
-            />
-            <motion.span 
-              className="w-8 h-0.5 bg-black absolute rounded-full"
-              animate={isMenuOpen ? 'open' : 'closed'}
-              variants={{
-                closed: { rotate: 0, y: 7 },
-                open: { rotate: -45, y: 0 }
-              }}
-              transition={{ duration: 0.2 }}
-            />
-          </button>
-        </div>
+        <button
+          onClick={() => setIsMenuOpen(!isMenuOpen)}
+          className="z-40 flex size-10 items-center justify-center rounded-lg border border-stroke-soft-200 xl:hidden"
+          aria-label={isMenuOpen ? 'Cerrar menú' : 'Abrir menú'}
+        >
+          {isMenuOpen ? <X className="size-5" /> : <Menu className="size-5" />}
+        </button>
       </div>
 
-      {/* Menú móvil */}
       <AnimatePresence>
         {isMenuOpen && (
-          <motion.div 
-            className="xl:hidden pl-10 fixed top-0 left-0 w-full h-screen pt-[90px] bg-white flex flex-col gap-6 z-30"
-            initial={{ x: '-100%' }}
+          <motion.div
+            className="fixed left-0 top-0 z-30 flex h-screen w-full flex-col gap-8 bg-white-0 px-6 pt-24 xl:hidden"
+            initial={{ x: '100%' }}
             animate={{ x: 0 }}
-            exit={{ x: '-100%' }}
-            transition={{
-              type: 'tween',
-              duration: 0.4,
-              ease: [0.4, 0, 0.2, 1],
-              times: [0, 0.6, 1]
-            }}
+            exit={{ x: '100%' }}
+            transition={{ type: 'tween', duration: 0.3, ease: [0.4, 0, 0.2, 1] }}
           >
-            <div className="absolute top-4 right-4 pt-4 pr-2">
-              {/* El botón de cierre se ha eliminado ya que usamos el botón de hamburguesa animado */}
+            <ul className="flex flex-col gap-1 text-lg">
+              {sections.map(({ label, id }) => (
+                <li key={id}>
+                  <button
+                    className="w-full cursor-pointer rounded-lg px-3 py-3 text-left font-medium text-strong-950 transition-colors duration-200 hover:bg-weak-50 hover:text-brand-600"
+                    onClick={() => {
+                      setIsMenuOpen(false);
+                      scrollToSection(id);
+                    }}
+                  >
+                    {label}
+                  </button>
+                </li>
+              ))}
+            </ul>
+            <div className="flex flex-col gap-3 border-t border-stroke-soft-200 pt-6">
+              {!isAuthenticated ? (
+                <>
+                  <button
+                    className="cursor-pointer rounded-lg px-3 py-3 text-left font-medium text-strong-950 transition-colors duration-200 hover:bg-weak-50"
+                    onClick={() => {
+                      setIsMenuOpen(false);
+                      handleClick('login');
+                    }}
+                  >
+                    Iniciar sesión
+                  </button>
+                  <Button
+                    variant="primary"
+                    text="Regístrate gratis"
+                    onClick={() => {
+                      setIsMenuOpen(false);
+                      handleClick('register');
+                    }}
+                  />
+                </>
+              ) : (
+                <>
+                  <button
+                    className="cursor-pointer rounded-lg px-3 py-3 text-left font-medium text-strong-950 transition-colors duration-200 hover:bg-weak-50"
+                    onClick={() => {
+                      setIsMenuOpen(false);
+                      const appUrl = getAppUrl();
+                      if (!appUrl) {
+                        console.warn('NEXT_PUBLIC_APP_URL is not set; skipping redirect');
+                        return;
+                      }
+                      window.location.href = appUrl;
+                    }}
+                  >
+                    Dashboard
+                  </button>
+                  <Button
+                    variant="stroked"
+                    text="Cerrar sesión"
+                    onClick={() => {
+                      setIsMenuOpen(false);
+                      handleLogout();
+                    }}
+                  />
+                </>
+              )}
             </div>
-          <ul className="flex flex-col gap-5 text-[1.15em]">
-            {sections.map(({ label, id }) => (
-              <li
-                key={id}
-                className="cursor-pointer transition-colors duration-300 ease-in-out hover:text-[var(--primary-color)]"
-                onClick={() => {
-                  setIsMenuOpen(false);
-                  scrollToSection(id);
-                }}
-              >
-                {label}
-              </li>
-            ))}
-          </ul>
-          <div className="flex flex-col items-start gap-6 text-[1.15em]">
-            {!isAuthenticated ? (
-              <>
-                <button
-                  className="w-[150px] text-[1em] text-left cursor-pointer transition-colors duration-300 ease-in-out hover:text-[var(--primary-color)] text-[var(--heading-color)]"
-                  onClick={() => {
-                    setIsMenuOpen(false);
-                    handleClick('login');
-                  }}
-                >
-                  Iniciar sesión
-                </button>
-                <Button
-                  variant="inverted"
-                  theme="black"
-                  text="Registrarse"
-                  onClick={() => {
-                    setIsMenuOpen(false);
-                    handleClick('register');
-                  }}
-                />
-              </>
-            ) : (
-              <>
-                <button
-                  className="cursor-pointer transition-colors duration-300 ease-in-out hover:text-[var(--primary-color)] text-[var(--heading-color)]"
-                  onClick={() => {
-                    setIsMenuOpen(false);
-                    const appUrl = getAppUrl();
-                    if (!appUrl) {
-                      console.warn('NEXT_PUBLIC_APP_URL is not set; skipping redirect');
-                      return;
-                    }
-                    window.location.href = appUrl;
-                  }}
-                >
-                  Dashboard
-                </button>
-                <Button
-                  variant="inverted"
-                  theme="black"
-                  text="Cerrar sesión"
-                  styles="w-[159px] text-[1em]"
-                  onClick={() => {
-                    setIsMenuOpen(false);
-                    handleLogout();
-                  }}
-                />
-              </>
-            )}
-          </div>
-        </motion.div>
-      )}
-    </AnimatePresence>
-  </nav>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </nav>
   );
 };
 

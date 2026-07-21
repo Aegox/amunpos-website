@@ -3,81 +3,35 @@ import { motion } from "framer-motion";
 import React from "react";
 import Image from 'next/image';
 
+const brands = ["/brand_1.svg", "/brand_2.svg", "/brand_3.svg", "/brand_4.svg", "/brand_5.svg", "/brand_6.svg"];
+
 const Partners: React.FC = () => {
   return (
     <motion.div
-           initial={{ opacity: 0, y: 0 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, amount: 0.3 }}
-            transition={{ duration: 0.7 }}
-            className="pb-20 h-full w-full px-5"
+      initial={{ opacity: 0, y: 16 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, amount: 0.3 }}
+      transition={{ duration: 0.5 }}
+      className="w-full border-y border-stroke-soft-200 bg-weak-50/60 px-5 py-12"
     >
-    <motion.div
-           initial={{ opacity: 0, y: -25 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, amount: 0.3 }}
-            transition={{ duration: 0.8 }}
-    >
-      <h1 className="w-full text-center pb-10 text-[var(--heading-color)] font-semibold text-[18px]">
-        Nuestros patrocinadores a nivel mundial
-      </h1>
-    </motion.div>
-      <ul className="flex w-full items-center justify-center flex-wrap gap-5 lg:gap-15">
-        <li>
-          <Image 
-            src="/brand_1.svg" 
-            alt="a partner of amunpos in the world"
-            width={150}
-            height={100}
-            className="filter grayscale transition duration-300 hover:grayscale-0" 
-          />
-        </li>       
-        <li>
-          <Image 
-            src="/brand_2.svg" 
-            alt="a partner of amunpos in the world"
-            width={150}
-            height={100}
-            className="filter grayscale transition duration-300 hover:grayscale-0" 
-          />
-        </li>
-        <li>
-          <Image 
-            src="/brand_3.svg" 
-            alt="a partner of amunpos in the world"
-            width={150}
-            height={100}
-            className="filter grayscale transition duration-300 hover:grayscale-0" 
-          />
-        </li>
-        <li>
-          <Image 
-            src="/brand_4.svg" 
-            alt="a partner of amunpos in the world"
-            width={150}
-            height={100}
-            className="filter grayscale transition duration-300 hover:grayscale-0" 
-          />
-        </li>
-        <li>
-          <Image 
-            src="/brand_5.svg" 
-            alt="a partner of amunpos in the world"
-            width={110}
-            height={50}
-            className="filter grayscale transition duration-300 hover:grayscale-0" 
-          />
-        </li>
-        <li>
-          <Image 
-            src="/brand_6.svg" 
-            alt="a partner of amunpos in the world"
-            width={150}
-            height={100}
-            className="filter grayscale transition duration-300 hover:grayscale-0" 
-          />
-        </li>
-      </ul>
+      <div className="mx-auto flex w-full max-w-[1240px] flex-col items-center">
+        <h2 className="text-sm font-medium uppercase tracking-[0.08em] text-soft-400">
+          Negocios que ya confían en AmunPOS
+        </h2>
+        <ul className="mt-8 flex w-full flex-wrap items-center justify-center gap-x-12 gap-y-6">
+          {brands.map((src) => (
+            <li key={src}>
+              <Image
+                src={src}
+                alt="Marca aliada de AmunPOS"
+                width={130}
+                height={40}
+                className="h-8 w-auto opacity-50 grayscale transition duration-300 hover:opacity-100 hover:grayscale-0"
+              />
+            </li>
+          ))}
+        </ul>
+      </div>
     </motion.div>
   );
 };

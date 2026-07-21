@@ -5,7 +5,8 @@ import "./globals.css";
 
 const inter = Inter({
   subsets: ["latin"],
-  weight: ["100", "200" ,"400", "500", "700", "800"]
+  weight: ["100", "200" ,"400", "500", "700", "800"],
+  variable: "--font-inter",
 });
 
 
@@ -27,7 +28,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${inter.className} antialiased`}
+        className={`${inter.variable} font-sans antialiased`}
       >
         {children}
         <NavBar />

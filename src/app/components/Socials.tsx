@@ -1,56 +1,34 @@
-import { FaFacebookF, FaTwitter, FaLinkedinIn, FaInstagram } from 'react-icons/fa';
+import { Facebook, Twitter, Linkedin, Instagram } from 'lucide-react';
 import React from "react";
 
 interface SocialsProps {
-  styles: string;
-};
+  styles?: string;
+}
+
+const links = [
+  { href: "https://www.facebook.com/", label: "Facebook", Icon: Facebook },
+  { href: "https://twitter.com/", label: "Twitter", Icon: Twitter },
+  { href: "https://www.linkedin.com/", label: "LinkedIn", Icon: Linkedin },
+  { href: "https://www.instagram.com/", label: "Instagram", Icon: Instagram },
+];
 
 const Socials: React.FC<SocialsProps> = ({ styles }) => {
   return (
-    <div className={`${styles ? styles : "text-white"} social-buttons flex gap-4 pt-6`}>
-      <a
-        href="https://www.facebook.com/"
-        aria-label="Facebook"
-        target="_blank"
-        className={`group border-1 rounded-full p-2 transition duration-300 
-          ${styles ? "border-black" : "border-white"} 
-          hover:border-[var(--primary-color)] hover:translate-y-[-2px] hover:shadow-md`}
-      >
-        <FaFacebookF size={16} className="group-hover:text-[var(--primary-color)] transition duration-300" />
-      </a>
-      <a
-        href="https://twitter.com/"
-        aria-label="Twitter"
-        target="_blank"
-        className={`group border-1 rounded-full p-2 transition duration-300 
-          ${styles ? "border-black" : "border-white"} 
-          hover:border-[var(--primary-color)] hover:translate-y-[-2px] hover:shadow-md`}
-      >
-        <FaTwitter size={16} className="group-hover:text-[var(--primary-color)] transition duration-300" />
-      </a>
-      <a
-        href="https://www.linkedin.com/"
-        aria-label="LinkedIn"
-        target="_blank"
-        className={`group border-1 rounded-full p-2 transition duration-300 
-          ${styles ? "border-black" : "border-white"} 
-          hover:border-[var(--primary-color)] hover:translate-y-[-2px] hover:shadow-md`}
-      >
-        <FaLinkedinIn size={16} className="group-hover:text-[var(--primary-color)] transition duration-300" />
-      </a>
-      <a
-        href="https://www.instagram.com/"
-        aria-label="Instagram"
-        target="_blank"
-        className={`group border-1 rounded-full p-2 transition duration-300 
-          ${styles ? "border-black" : "border-white"} 
-          hover:border-[var(--primary-color)] hover:translate-y-[-2px] hover:shadow-md`}
-      >
-        <FaInstagram size={16} className="group-hover:text-[var(--primary-color)] transition duration-300" />
-      </a>
+    <div className={`${styles ?? ""} flex gap-3`}>
+      {links.map(({ href, label, Icon }) => (
+        <a
+          key={label}
+          href={href}
+          aria-label={label}
+          target="_blank"
+          rel="noreferrer"
+          className="group flex size-9 items-center justify-center rounded-full border border-white/15 text-white/70 transition-all duration-200 hover:-translate-y-0.5 hover:border-brand-400 hover:text-white"
+        >
+          <Icon size={15} />
+        </a>
+      ))}
     </div>
   );
 };
 
 export default Socials;
-

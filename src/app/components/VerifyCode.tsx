@@ -36,8 +36,7 @@ const VerifyCodeComponent: React.FC<VerifyCodeComponentProps> = ({ onVerify , lo
         text="Verificar Código"
         styles={`w-full py-3 px-8 mb-6 ${loading ? "opacity-70 cursor-not-allowed" : ""}`}
         loading={loading}
-        theme="black"
-        variant="inverted"
+        variant="primary"
       />
     </form>
   );

@@ -73,8 +73,7 @@ const Login: React.FC = () => {
           text="Iniciar sesión"
           styles={`w-full mb-4 py-3 px-8 ${emailLoading ? "opacity-70 cursor-not-allowed" : ""}`}
           loading={emailLoading}
-          theme="black"
-          variant="inverted"
+          variant="primary"
         />
 
 

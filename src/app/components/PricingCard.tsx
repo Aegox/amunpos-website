@@ -1,63 +1,58 @@
 import React from "react";
-import { AiOutlineCheck, AiOutlineClose } from 'react-icons/ai';
-import Image from 'next/image';
-
+import { Check } from 'lucide-react';
+import Button from "./Button";
 
 type PricingCardProps = {
   id: number;
-  icon: string;
   title: string;
   target: string;
   price: string;
   features: string[];
+  popular?: boolean;
 };
 
-
-
-const PricingCard: React.FC<PricingCardProps> = ({ id, icon, title, target, price, features }) => {
-  const isDefault = id === 2;
-
+const PricingCard: React.FC<PricingCardProps> = ({ title, target, price, features, popular }) => {
   return (
-    <article className={`z-50 overflow-hidden relative text-white group transition-colors duration-400 ${isDefault ? 'bg-[var(--primary-color)]' : 'bg-white'} hover:bg-[var(--primary-color)] w-full md:w-[80%] px-8 py-10 rounded-[1rem] shadow-2xl`}>
-    {isDefault && (<div className="bg-[var(--red-color)] py-1 w-[220px] text-center rotate-40 text-white font-bold top-8 right-[-50px] absolute transform-[45]">Más popular</div>)}
-      <header className="flex w-full h-auto gap-4 pl-4">
-        <div className={`group-hover:border-white group-hover:bg-white ${isDefault ? 'border-white bg-white' : ''} w-[60px] h-[60px] xl:w-[80px] xl:h-[80px] flex justify-center items-center border-1 rounded-[100%]`}>
-          <Image src={icon} alt="a icon of price plan" width={40} height={40} />
-        </div>
-        <div className="flex flex-col w-auto">
-          <h1 className={`pb-1 2xl:w-[90%] xl:w-[100%] text-[${isDefault ? 'white' : 'var(--heading-color)'}] group-hover:text-white text-[1.875rem] leading-[1.4em] font-bold`}>{title}</h1>
-          <h3 className={`font-normal 2xl:text-[1.4rem] text-[${isDefault ? 'white' : 'var(--body-color)'}] group-hover:text-white`}>{target}</h3>
-        </div>
-      </header>
-      <div className={`mx-auto h-[0.2px] w-full mt-8 mb-8 ${isDefault ? 'bg-white' : 'bg-gray-300'} group-hover:bg-white`}></div>
-      <div className="pl-5 pb-4">
-        <h1 className={`2xl:w-[90%] xl:w-[100%] text-[${isDefault ? 'white' : 'var(--heading-color)'}] group-hover:text-white text-[2.4rem] leading-[1.4em] font-bold`}>{price}<span className={`pl-3 text-[1rem] font-normal  text-[${isDefault ? 'white' : 'var(--body-color)'}] group-hover:text-white`}>/ mes</span></h1>
+    <article
+      className={`relative flex w-full flex-col rounded-2xl border bg-white-0 p-8 transition-shadow duration-300 md:w-[80%] xl:w-1/3 ${
+        popular
+          ? "border-brand-500 shadow-[0_20px_48px_-24px_rgba(12,113,194,0.35)]"
+          : "border-stroke-soft-200 shadow-[0_1px_2px_rgba(13,12,23,0.04)]"
+      }`}
+    >
+      {popular && (
+        <span className="absolute -top-3 left-1/2 -translate-x-1/2 rounded-full bg-brand-500 px-3 py-1 text-xs font-medium text-white shadow-sm">
+          Más popular
+        </span>
+      )}
+      <h3 className="text-xl font-medium text-strong-950">{title}</h3>
+      <p className="mt-1 text-sm text-sub-600">{target}</p>
+
+      <div className="mt-6 flex items-baseline gap-1">
+        <span className="text-4xl font-medium tracking-[-0.02em] text-strong-950">{price}</span>
+        <span className="text-sm text-sub-600">/ mes</span>
       </div>
-    <ul className="flex flex-col gap-4 pb-10 pl-5">
-      {features.map((item, index) => (
-        <li key={item} className={`flex gap-2 text-[${isDefault ? 'white' : 'var(--body-color)'}] group-hover:text-white font-normal`}>
-      {id === 1 && (index >= 3) ? (
-        <div className={`flex justify-center items-center rounded-[100%] w-[22px] h-[22px] ${isDefault ? 'bg-white' : 'bg-[var(--primary-color)]'} group-hover:bg-white`}>
-          <AiOutlineClose className={`text-[10px] ${isDefault ? 'text-black' : 'text-white'} group-hover:text-black`} />
-        </div>
-      ) : id === 2 && (index >= features.length - 2) ? (
-        <div className={`flex justify-center items-center rounded-[100%] w-[22px] h-[22px] ${isDefault ? 'bg-white' : 'bg-[var(--primary-color)]'} group-hover:bg-white`}>
-          <AiOutlineClose className={`text-[10px] ${isDefault ? 'text-black' : 'text-white'} group-hover:text-black`} />
-        </div>
-      ) : (
-        <div className={`flex justify-center items-center rounded-[100%] w-[22px] h-[22px] ${isDefault ? 'bg-white' : 'bg-[var(--primary-color)]'} group-hover:bg-white`}>
-          <AiOutlineCheck className={`text-[10px] ${isDefault ? 'text-black' : 'text-white'} group-hover:text-black`} />
-        </div>
-        )}
-          {item}
-        </li>
+
+      <Button
+        variant={popular ? "primary" : "stroked"}
+        text="Escoger plan"
+        styles="mt-6 w-full"
+      />
+
+      <div className="my-7 h-px w-full bg-stroke-soft-200" />
+
+      <ul className="flex flex-col gap-3.5">
+        {features.map((item) => (
+          <li key={item} className="flex items-center gap-3 text-sm text-sub-600">
+            <span className="flex size-5 shrink-0 items-center justify-center rounded-full bg-brand-50 text-brand-600">
+              <Check className="size-3" strokeWidth={3} />
+            </span>
+            {item}
+          </li>
         ))}
       </ul>
-      
-      <button className={`cursor-pointer w-full rounded-xl py-[12px] px-[30px] ${isDefault ? 'bg-white text-black' : 'bg-[var(--primary-color)] text-white'} group-hover:bg-white group-hover:text-black transition-transform duration-400 hover:-translate-y-1 z-30`}>Escoger plan</button>
     </article>
   );
 };
 
 export default PricingCard;
-

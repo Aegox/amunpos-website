@@ -1,110 +1,103 @@
 'use client';
 import React from "react";
 import { motion } from "framer-motion";
-import Image from "next/image";
 import PricingCard from "./PricingCard";
+import Eyebrow from "./Eyebrow";
+import { Tag } from "lucide-react";
 
 interface PricingPlan {
   id: number;
-  icon: string;
   title: string;
   target: string;
   price: string;
   features: string[];
+  popular?: boolean;
 }
 
 const pricingPlans: PricingPlan[] = [
   {
     id: 1,
     title: "Básico",
-    icon: "/symbol.svg",
     target: "Para pequeños negocios",
     price: "$24",
     features: [
       "Hasta 1 usuario",
       "Gestión de inventario",
       "Informes y análisis de ventas",
-      "Funcionalidades avanzadas",
       "Escaneo de código de barras",
-      "Soporte 24/7 gratuito"
+      "Soporte 24/7",
     ]
   },
   {
     id: 2,
     title: "Estándar",
-    icon: "/symbol1.svg",
     target: "Para profesionales",
     price: "$50",
+    popular: true,
     features: [
-      "Hasta 1 usuario",
-      "Gestión de inventario",
+      "Hasta 3 usuarios",
+      "Gestión de inventario multi-sucursal",
       "Informes y análisis de ventas",
       "Funcionalidades avanzadas",
       "Escaneo de código de barras",
-      "Soporte 24/7 gratuito"
+      "Soporte 24/7 prioritario",
     ]
   },
   {
     id: 3,
     title: "Profesional",
-    icon: "/symbol2.svg",
     target: "Para grandes empresas",
     price: "$85",
     features: [
-      "Hasta 1 usuario",
-      "Gestión de inventario",
-      "Informes y análisis de ventas",
-      "Funcionalidades avanzadas",
+      "Usuarios ilimitados",
+      "Gestión de inventario multi-sucursal",
+      "Informes y análisis avanzados",
+      "Funcionalidades avanzadas + IA",
       "Escaneo de código de barras",
-      "Soporte 24/7 gratuito"
+      "Soporte 24/7 dedicado",
     ]
   }
 ];
 
 const Pricing: React.FC = () => {
   return (
-    <section id="Planes" className="relative flex flex-col justify-center items-center px-5md:pt-30 pt-20 md:pb-22 pb-14 bg-[var(--body-color)] pricing-gradient">
-      {/* Imágenes en el fondo */}
-      <Image src="/Vector3.svg" alt="a vector shape" className="absolute top-45 right-0 z-[-1]" width={100} height={100} />
-      <Image src="/dot.svg" alt="a vector shape" className="absolute top-80 left-50 z-[-1]" width={100} height={100} />
+    <section id="Planes" className="relative w-full bg-weak-50 px-5 py-20 lg:py-28">
+      <div className="mx-auto flex w-full max-w-[1240px] flex-col items-center">
+        <motion.div
+          initial={{ opacity: 0, y: 16 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.3 }}
+          transition={{ duration: 0.5 }}
+          className="flex flex-col items-center"
+        >
+          <Eyebrow icon={<Tag className="size-3.5" />} text="Nuestros precios" />
+          <h2 className="mt-5 max-w-xl text-center text-3xl font-medium leading-tight tracking-[-0.01em] text-strong-950 lg:text-[2.75rem]">
+            Planes transparentes, encuentra el ajuste perfecto
+          </h2>
+        </motion.div>
 
-      {/* Contenido principal */}
-      <div className="z-10 flex flex-col items-center w-full">
-      <motion.div
-        initial={{ opacity: 0, y: -20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, amount: 0.1 }}
-            transition={{ duration: 0.3 }}
-       >
-        <p className="w-full text-center text-[var(--primary-color)] text-[18px] font-semibold pb-2">Nuestros precios</p>
-      </motion.div>
-      <motion.div
-            initial={{ opacity: 0, y: 0 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, amount: 0.2 }}
-            transition={{ duration: 0.5 }}
-            className="z-10 flex flex-col items-center w-full"
-       >
-        <h1 className="text-center pb-10 xl:pb-25 xl:w-[65%] text-[var(--heading-color)]  text-[2rem] 2xl:text-[3em] lg:text-[2.5em] leading-[1.4em] font-bold">Planes transparentes, encuentra el ajuste perfecto que necesitas</h1>
-        <div className="flex flex-col 2xl:px-35 xl:px-20 xl:flex-row w-full gap-6 items-center">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.2 }}
+          transition={{ duration: 0.5, delay: 0.1 }}
+          className="mt-16 flex w-full flex-col items-center gap-8 xl:flex-row xl:items-stretch xl:gap-6"
+        >
           {pricingPlans.map((plan) => (
             <PricingCard
               key={plan.id}
               id={plan.id}
-              icon={plan.icon}
               title={plan.title}
               target={plan.target}
               price={plan.price}
               features={plan.features}
+              popular={plan.popular}
             />
           ))}
-        </div>
-      </motion.div>
+        </motion.div>
       </div>
     </section>
   );
 };
 
 export default Pricing;
-
-

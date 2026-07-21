@@ -3,8 +3,10 @@ import { motion } from "framer-motion";
 import React from "react";
 import { useForm } from "react-hook-form";
 import Button from "./Button";
-import useSendEmail from "../hooks/useSendEmail"; // Importamos el hook
+import Eyebrow from "./Eyebrow";
+import useSendEmail from "../hooks/useSendEmail";
 import Image from 'next/image';
+import { Mail, Send } from "lucide-react";
 
 type FormValues = {
   name: string;
@@ -14,6 +16,9 @@ type FormValues = {
   message: string;
 };
 
+const inputClass =
+  "block w-full rounded-lg border border-stroke-sub-300 bg-white-0 px-4 py-2.5 text-sm text-strong-950 placeholder-soft-400 transition-colors duration-200 focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-100";
+
 const Contacto: React.FC = () => {
   const { register, handleSubmit, formState: { errors }, reset } = useForm<FormValues>();
   const { sendContactMessage, loading, error, success } = useSendEmail();
@@ -21,137 +26,109 @@ const Contacto: React.FC = () => {
   const onSubmit = async (data: FormValues) => {
     try {
       const sent = await sendContactMessage(data);
-
-      if (sent) {
-        reset();
-      }
+      if (sent) reset();
     } catch (err) {
       console.error("Error al enviar el correo:", err);
     }
   };
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 0 }}
+    <motion.section
+      id="Contacto"
+      initial={{ opacity: 0, y: 16 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, amount: 0.3 }}
-      transition={{ duration: 0.6 }}
+      transition={{ duration: 0.5 }}
+      className="w-full px-5 py-20 lg:py-28"
     >
-      <div id="Contacto" className="relative">
-        <div className="md:h-[40px] h-[0px]"></div>
-        <div className="container mx-auto">
-          <div className="flex flex-col xl:flex-row-reverse items-center justify-center">
-            <motion.div
-              initial={{ opacity: 0, x: -50 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true, amount: 0.3 }}
-              transition={{ duration: 0.6 }}
-              className="flex justify-center w-full h-full min-w-[45%] md:w-[45%] 2xl:w-1/2 md:mb-6 mb-0 xl:mb-0 xl:order-last"
-            >
-              <div className="text-center">
-                <Image
-                  src="/contacto2.png"
-                  alt="contact photo"
-                  width={500}
-                  height={650}
-                  className="md:min-w-[500px] w-auto h-auto 2xl:h-[650px] md:min-h-[500px]"
-                />
-              </div>
-            </motion.div>
-
-            <div className="px-4 w-full xl:w-1/2 xl:pl-6">
-              <p className="md:pl-4 w-full text-[var(--primary-color)] text-[18px] font-semibold pb-2">
-                Contáctanos
-              </p>
-              <h1 className="md:pl-3 xl:w-[90%] xl:pb-6 text-[var(--heading-color)] text-[2rem] 2xl:text-[50px] lg:text-[2.5em] leading-[1.4em] font-bold">
-                Comunícate con Nosotros Hoy
-              </h1>
-              <div className="h-[40px] lg:h-[20px]"></div>
-
-              <form onSubmit={handleSubmit(onSubmit)} className="flex flex-wrap">
-                <div className="md:px-[12px] md:w-1/2 w-full sm:mb-0">
-                  <input
-                    {...register("name", { required: true })}
-                    type="text"
-                    placeholder="Nombre Completo*"
-                    className="bg-white block w-full py-[11px] px-[20px] text-gray-700 placeholder-gray-600 border-[0.3px] border-gray-400 rounded-md transition-colors duration-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-                  />
-                  {errors.name && <span className="text-red-500 text-sm">Campo requerido</span>}
-                  <div className="h-[30px] lg:h-[30px]"></div>
-                </div>
-
-                <div className="md:px-[12px] md:w-1/2 w-full sm:mb-0">
-                  <input
-                    {...register("email", { required: true })}
-                    type="email"
-                    placeholder="Correo Electrónico*"
-                    className="bg-white block w-full py-[11px] px-[20px] text-gray-700 placeholder-gray-600 border-[0.3px] border-gray-400 rounded-md transition-colors duration-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-                  />
-                  {errors.email && <span className="text-red-500 text-sm">Campo requerido</span>}
-                  <div className="h-[30px] lg:h-[30px]"></div>
-                </div>
-
-                <div className="md:px-[12px] md:w-1/2 w-full sm:mb-0">
-                  <input
-                    {...register("phone", { required: true })}
-                    type="text"
-                    placeholder="Teléfono Móvil*"
-                    className="bg-white block w-full py-[11px] px-[20px] text-gray-700 placeholder-gray-600 border-[0.3px] border-gray-400 rounded-md transition-colors duration-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-                  />
-                  {errors.phone && <span className="text-red-500 text-sm">Campo requerido</span>}
-                  <div className="h-[30px] lg:h-[30px]"></div>
-                </div>
-
-                <div className="md:px-[12px] md:w-1/2 w-full sm:mb-0">
-                  <input
-                    {...register("subject", { required: true })}
-                    type="text"
-                    placeholder="Asunto*"
-                    className="bg-white block w-full py-[11px] px-[20px] text-gray-700 placeholder-gray-600 border-[0.3px] border-gray-400 rounded-md transition-colors duration-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-                  />
-                  {errors.subject && <span className="text-red-500 text-sm">Campo requerido</span>}
-                  <div className="h-[30px] lg:h-[30px]"></div>
-                </div>
-
-                <div className="md:px-[12px] w-full">
-                  <textarea
-                    {...register("message", { required: true })}
-                    rows={7}
-                    placeholder="Mensaje"
-                    className="bg-white block w-full py-[11px] px-[20px] text-gray-700 placeholder-gray-600 border-[0.3px] border-gray-400 rounded-md transition-colors duration-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-                  />
-                  {errors.message && <span className="text-red-500 text-sm">Campo requerido</span>}
-                  <div className="h-[30px] lg:h-[30px]"></div>
-                </div>
-
-                <div className="md:px-[12px] w-full mb-4">
-                  {error && (
-                    <p className="text-red-600 text-sm">{error}</p>
-                  )}
-                  {success && (
-                    <p className="text-green-600 text-sm">Mensaje enviado con éxito.</p>
-                  )}
-                </div>
-
-                <div className="md:px-[12px] w-full h-full">
-                  <Button
-                    text={"Enviar mensaje"}
-                    theme="black"
-                    variant="inverted"
-                    styles="px-[30px] py-[12px]"
-                    loading={loading}
-                  />
-                </div>
-              </form>
-
-            </div>
-          </div>
+      <div className="mx-auto flex w-full max-w-[1120px] flex-col items-center gap-14 lg:flex-row lg:items-stretch">
+        <div className="hidden w-full max-w-md overflow-hidden rounded-2xl border border-stroke-soft-200 bg-weak-50 lg:block lg:w-[42%]">
+          <Image
+            src="/contacto2.png"
+            alt="Contacto con AmunPOS"
+            width={500}
+            height={650}
+            className="h-full w-full object-cover"
+          />
         </div>
-        <div className="h-[80px] md:h-[120px]"></div>
+
+        <div className="w-full lg:w-[54%]">
+          <Eyebrow icon={<Mail className="size-3.5" />} text="Contáctanos" />
+          <h2 className="mt-5 text-3xl font-medium leading-tight tracking-[-0.01em] text-strong-950 lg:text-[2.5rem]">
+            Comunícate con nosotros hoy
+          </h2>
+
+          <form onSubmit={handleSubmit(onSubmit)} className="mt-10 grid grid-cols-1 gap-5 sm:grid-cols-2">
+            <div className="flex flex-col gap-1.5">
+              <input
+                {...register("name", { required: true })}
+                type="text"
+                placeholder="Nombre completo*"
+                className={inputClass}
+              />
+              {errors.name && <span className="text-xs text-red-500">Campo requerido</span>}
+            </div>
+
+            <div className="flex flex-col gap-1.5">
+              <input
+                {...register("email", { required: true })}
+                type="email"
+                placeholder="Correo electrónico*"
+                className={inputClass}
+              />
+              {errors.email && <span className="text-xs text-red-500">Campo requerido</span>}
+            </div>
+
+            <div className="flex flex-col gap-1.5">
+              <input
+                {...register("phone", { required: true })}
+                type="text"
+                placeholder="Teléfono móvil*"
+                className={inputClass}
+              />
+              {errors.phone && <span className="text-xs text-red-500">Campo requerido</span>}
+            </div>
+
+            <div className="flex flex-col gap-1.5">
+              <input
+                {...register("subject", { required: true })}
+                type="text"
+                placeholder="Asunto*"
+                className={inputClass}
+              />
+              {errors.subject && <span className="text-xs text-red-500">Campo requerido</span>}
+            </div>
+
+            <div className="flex flex-col gap-1.5 sm:col-span-2">
+              <textarea
+                {...register("message", { required: true })}
+                rows={5}
+                placeholder="Mensaje"
+                className={inputClass}
+              />
+              {errors.message && <span className="text-xs text-red-500">Campo requerido</span>}
+            </div>
+
+            <div className="sm:col-span-2">
+              {error && <p className="text-sm text-red-600">{error}</p>}
+              {success && <p className="text-sm text-green-600">Mensaje enviado con éxito.</p>}
+            </div>
+
+            <div className="sm:col-span-2">
+              <Button
+                text="Enviar mensaje"
+                type="submit"
+                variant="primary"
+                trailingIcon={<Send className="size-4" />}
+                loading={loading}
+                styles="w-full sm:w-auto"
+              />
+            </div>
+          </form>
+        </div>
       </div>
-    </motion.div>
+    </motion.section>
   );
 };
 
 export default Contacto;
-
