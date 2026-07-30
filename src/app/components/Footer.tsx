@@ -42,7 +42,7 @@ const Footer: React.FC = () => {
     <div className="flex flex-col w-full items-center">
       <div className="h-[1px] w-full bg-[var(--body-color)] mb-5 xl:w-[90%]"></div>
       <div className="flex-wrap flex justify-center text-center text-gray-400 font-normal mb-5">
-         © Copyright 2025. Design by<a href="https://themeforest.net/user/awesomethemez/portfolio" target="_blank" className="ml-1 text-[var(--primary-color)]">amunpos</a>
+         © 2026 AmunPOS. Todos los derechos reservados.
       </div>
     </div>
   </footer>
