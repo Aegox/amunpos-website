@@ -31,7 +31,7 @@ const productItems: MenuItem[] = [
 
 const companyItems: MenuItem[] = [
   { icon: RiCompass3Line, title: "Nosotros", desc: "Quiénes somos y por qué existe AmunPOS", href: "#Inicio" },
-  { icon: RiChatQuoteLine, title: "Testimonios", desc: "Negocios que ya confían en AmunPOS", href: "#Testimonios" },
+  { icon: RiChatQuoteLine, title: "Beneficios", desc: "Lo que tu negocio va a lograr", href: "#Testimonios" },
   { icon: RiMailLine, title: "Contacto", desc: "Habla con nuestro equipo", href: "#Contacto" },
 ];
 

@@ -1,27 +1,21 @@
 ---
-import { RiStarFill } from "@remixicon/react";
+import { RiStackLine, RiMoneyDollarCircleLine, RiLineChartLine } from "@remixicon/react";
 
-const testimonials = [
+const outcomes = [
   {
-    client: "Wizard Bona",
-    company: "Voila Caffe",
-    review: "La IA nos leyó las facturas de tres proveedores en minutos. Lo que hacíamos a mano un día completo, ahora es de una sentada.",
-    rating: 5,
-    img: "/user1.png",
+    icon: RiStackLine,
+    title: "Todo en un solo lugar",
+    text: "Deja de saltar entre POS, Excel, WhatsApp y apps de delivery. Un solo sistema para vender, controlar y hacer crecer tu negocio.",
   },
   {
-    client: "Ansari Patron",
-    company: "Green Lodge",
-    review: "Migramos todo nuestro inventario con la IA de AmunPOS sin tocar una hoja de cálculo. Datos siempre sincronizados entre sucursales.",
-    rating: 5,
-    img: "/user2.png",
+    icon: RiMoneyDollarCircleLine,
+    title: "Menos comisiones, más margen",
+    text: "Delivery con app de repartidor propia y módulos incluidos: te quedas con lo que otras herramientas se llevan en comisiones.",
   },
   {
-    client: "Tonima Mozeja",
-    company: "Almas Market",
-    review: "El asistente de IA responde preguntas del negocio al instante — ya no espero al cierre de mes para saber qué se vendió mejor.",
-    rating: 5,
-    img: "/user3.png",
+    icon: RiLineChartLine,
+    title: "Decisiones con datos, no a ojo",
+    text: "Reportes de utilidad y un asistente con IA que te dice, en tiempo real, dónde ganas y dónde pierdes.",
   },
 ];
 ---
@@ -29,27 +23,25 @@ const testimonials = [
 <section id="Testimonios" class="w-full px-5 py-20 xl:py-28">
   <div class="mx-auto flex w-full max-w-[1240px] flex-col items-center">
     <h2 class="text-pretty text-center text-title-h4 text-gray-900 xl:text-title-h3">
-      Negocios que ya recuperaron su tiempo
+      Lo que tu negocio va a lograr
     </h2>
+    <p class="mt-3 max-w-lg text-center text-paragraph-md text-gray-600">
+      No es solo un punto de venta: es la plataforma que ordena y hace crecer tu comercio.
+    </p>
 
     <div class="mt-14 grid w-full grid-cols-1 gap-5 md:grid-cols-3">
-      {testimonials.map((t) => (
-        <article class="flex flex-col rounded-18 border border-gray-200 bg-gray-0 p-7">
-          <div class="flex items-center gap-1">
-            {Array.from({ length: 5 }).map((_, i) => (
-              <RiStarFill className={i < t.rating ? "size-4 text-primary-base" : "size-4 text-gray-200"} />
-            ))}
-          </div>
-          <p class="mt-4 flex-1 text-paragraph-sm text-gray-700">{t.review}</p>
-          <div class="mt-6 flex items-center gap-3 border-t border-gray-200 pt-5">
-            <img src={t.img} alt={`Foto de ${t.client}`} class="size-10 shrink-0 rounded-full object-cover" />
-            <div class="flex flex-col">
-              <h3 class="text-label-sm text-gray-900">{t.client}</h3>
-              <span class="text-paragraph-xs text-gray-500">{t.company}</span>
+      {outcomes.map((o) => {
+        const Icon = o.icon;
+        return (
+          <article class="flex flex-col rounded-18 border border-gray-200 bg-gray-0 p-7">
+            <div class="flex size-11 items-center justify-center rounded-[10px] bg-primary-alpha-10">
+              <Icon className="size-5 text-primary-base" />
             </div>
-          </div>
-        </article>
-      ))}
+            <h3 class="mt-5 text-title-h6 text-gray-900">{o.title}</h3>
+            <p class="mt-2 text-paragraph-sm text-gray-700">{o.text}</p>
+          </article>
+        );
+      })}
     </div>
   </div>
 </section>

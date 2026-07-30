@@ -4,24 +4,24 @@ import { RiCheckLine } from "@remixicon/react";
 const plans = [
   {
     title: "Básico",
-    target: "Para pequeños negocios",
-    price: "$24",
+    target: "Para negocios que empiezan",
+    price: "$29",
     popular: false,
-    features: ["Hasta 1 usuario", "Gestión de inventario", "Informes y análisis de ventas", "Asistente IA incluido", "Soporte 24/7"],
+    features: ["POS para retail y restaurante", "Inventario y control de caja", "Facturación con IVA", "Asistente IA incluido", "1 sucursal"],
   },
   {
     title: "Estándar",
-    target: "Para profesionales",
-    price: "$50",
+    target: "Para negocios en crecimiento",
+    price: "$49",
     popular: true,
-    features: ["Hasta 3 usuarios", "Inventario multi-sucursal", "Migración y facturación con IA", "Informes y análisis de ventas", "Soporte 24/7 prioritario"],
+    features: ["Todo lo del plan Básico", "Multi-sucursal (hasta 3)", "Predicción de stock con IA", "Reportes y asistente con IA", "Fidelización de clientes"],
   },
   {
     title: "Profesional",
-    target: "Para grandes empresas",
-    price: "$85",
+    target: "Para cadenas y multisucursal",
+    price: "$79",
     popular: false,
-    features: ["Usuarios ilimitados", "Inventario multi-sucursal", "Todas las funciones de IA", "Informes y análisis avanzados", "Soporte 24/7 dedicado"],
+    features: ["Todo lo del plan Estándar", "Sucursales ilimitadas", "Domicilios con app de repartidor", "Nómina con IA", "Marketing automático y contabilidad"],
   },
 ];
 ---
@@ -32,7 +32,7 @@ const plans = [
       Planes transparentes, la IA incluida en todos
     </h2>
     <p class="mt-3 max-w-lg text-center text-paragraph-md text-gray-600">
-      Sin costos ocultos ni complementos sorpresa: elige según el tamaño de tu equipo.
+      Sin costos ocultos. Paga por sucursal y suma módulos cuando los necesites.
     </p>
 
     <div class="mt-14 flex w-full flex-col items-center gap-6 xl:flex-row xl:items-stretch">
