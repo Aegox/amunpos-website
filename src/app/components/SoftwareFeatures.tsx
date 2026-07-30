@@ -12,23 +12,23 @@ interface Caracteristica {
 const caracteristicas: Caracteristica[] = [
   {
     id: 1,
-    nombre: "Gestión de inventario",
-    descripcion: "Permite un seguimiento preciso y rápido de los productos en stock."
+    nombre: "Inventario con IA",
+    descripcion: "Seguimiento por sucursal y predicción de stock: sabe qué comprar y cuándo, antes de que te quedes sin producto."
   },
   {
     id: 2,
-    nombre: "Proceso de ventas y pagos",
-    descripcion: "Facilita transacciones rápidas y seguras, con un análisis detallado de las ventas."
+    nombre: "Ventas, caja y pagos",
+    descripcion: "Cobra en efectivo, tarjeta o transferencia, con caja, mesas y facturación integradas."
   },
   {
     id: 3,
-    nombre: "Informes y análisis",
-    descripcion: "Ofrece informes detallados para ayudar a tomar decisiones informadas."
+    nombre: "Reportes y asistente con IA",
+    descripcion: "Analítica en tiempo real y un asistente de negocio que te dice dónde ganas y dónde pierdes."
   },
   {
     id: 4,
-    nombre: "Transacciones rápidas y seguras",
-    descripcion: "Garantiza pagos seguros y rápidos, protegiendo la información del cliente."
+    nombre: "Multisucursal y accesos",
+    descripcion: "Controla stock, cajas, permisos y reportes por sucursal desde un mismo panel."
   }
 ];
 

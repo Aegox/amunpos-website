@@ -11,24 +11,24 @@ interface CardDataProps {
 }
 
 const cardData: CardDataProps[] = [
-  { 
-    title: "Adecuado para todos los tipos de negocios", 
-    text: "Nuestra satisfacción supera cualquier renuncia, incluso cuando parece insignificante.",
+  {
+    title: "Retail y restaurante en un solo producto",
+    text: "La tienda de la esquina y el restaurante con mesas usan la misma plataforma. No necesitas dos sistemas distintos.",
     icon: "/shop.svg"
   },
-  { 
-    title: "Rentable con Precio Asequible", 
-    text: "Nuestra solución es económica y ofrece un excelente valor por el precio.",
+  {
+    title: "Incluye lo que otros cobran aparte",
+    text: "Delivery con app de repartidor propia y nómina, dentro del mismo plan. Menos herramientas sueltas y menos comisiones.",
     icon: "/price_bar.svg"
   },
-  { 
-    title: "Fácil de Configurar & Sin Conocimientos", 
-    text: "Nuestro sistema es fácil de instalar y no requiere conocimientos técnicos avanzados.",
+  {
+    title: "Multisucursal desde el diseño",
+    text: "Stock, caja, accesos y reportes pensados por sucursal. AmunPOS crece con tu negocio sin complicarse.",
     icon: "/setup.svg"
   },
-  { 
-    title: "Panel de Usuario Moderno y Atractivo", 
-    text: "Nuestro panel de usuario es moderno y fácil de usar, diseñado para mejorar tu experiencia. Explora sus características.",
+  {
+    title: "IA nativa que trabaja por ti",
+    text: "Predice tu stock, sugiere precios y compras, y migra automáticamente desde tu POS anterior.",
     icon: "/ui.svg"
   }
 ];
@@ -44,7 +44,7 @@ const Features: React.FC = () => {
             className="w-full flex flex-col items-center"
        >
       <h4 className="text-center text-[var(--primary-color)] text-[18px] pb-2 font-semibold">
-        Crea y Haz Crecer Tu Negocio con amunpos
+        Por qué los negocios eligen amunpos
       </h4>
 
       </motion.div>
@@ -56,10 +56,10 @@ const Features: React.FC = () => {
             className="w-full flex flex-col items-center"
        >
       <h1 className="text-center text-[var(--heading-color)] text-[2rem] 2xl:text-[3em] lg:text-[2.5em] leading-[1.4em] font-bold w-[90%]">
-        Simple y Astutamente Complejo 
+        Cuatro cosas que nadie más
       </h1>
       <h1 className="text-center text-[var(--heading-color)] text-[2rem] 2xl:text-[3em] lg:text-[2.5em] leading-[1.4em] font-bold w-[90%]">
-        Nuestro Sistema de Punto de Venta
+        tiene juntas
       </h1>
       </motion.div>
 
