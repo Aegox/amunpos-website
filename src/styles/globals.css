@@ -230,3 +230,34 @@ body {
   background: linear-gradient(180deg, rgba(12, 113, 194, 0), var(--primary-base));
   animation: spark-fall 4s linear infinite;
 }
+
+/* ── Scroll reveal ──────────────────────────────────────────────
+   Elementos con [data-reveal] entran con un fade-up al hacer scroll.
+   Solo se ocultan cuando <html> tiene la clase .js-reveal, que el
+   script del <head> agrega únicamente si hay JS + IntersectionObserver
+   + motion permitido. Así, sin JS o con prefers-reduced-motion, todo
+   se muestra normal (sin flash y sin quedar oculto). El observer en
+   Layout.astro les agrega .is-visible; se escalona con --reveal-delay. */
+.js-reveal [data-reveal] {
+  opacity: 0;
+  transform: translateY(18px);
+  transition:
+    opacity 0.6s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+  transition-delay: var(--reveal-delay, 0ms);
+  will-change: opacity, transform;
+}
+.js-reveal [data-reveal].is-visible {
+  opacity: 1;
+  transform: none;
+}
+
+/* Levantar suave al pasar el cursor sobre tarjetas */
+.hover-lift {
+  transition:
+    transform 0.25s ease-out,
+    box-shadow 0.25s ease-out;
+}
+.hover-lift:hover {
+  transform: translateY(-4px);
+}

@@ -30,11 +30,11 @@ const faqData = [
 ---
 
 <section id="Faq" class="flex w-full scroll-mt-16 flex-col items-center px-5 py-20 xl:py-28">
-  <h2 class="text-pretty text-center text-title-h4 text-gray-900 xl:text-title-h3">Aquí hay algunas respuestas</h2>
+  <h2 data-reveal class="text-pretty text-center text-title-h4 text-gray-900 xl:text-title-h3">Aquí hay algunas respuestas</h2>
 
   <div class="mt-12 flex w-full max-w-[720px] flex-col gap-3">
-    {faqData.map((item) => (
-      <details class="group rounded-18 border border-gray-200 bg-gray-0 px-6 py-1 open:pb-5">
+    {faqData.map((item, i) => (
+      <details data-reveal style={`--reveal-delay: ${i * 60}ms`} class="group rounded-18 border border-gray-200 bg-gray-0 px-6 py-1 open:pb-5 transition-shadow duration-200 hover:shadow-button-white">
         <summary class="flex cursor-pointer list-none items-center justify-between gap-4 py-4 text-label-md text-gray-900 [&::-webkit-details-marker]:hidden">
           {item.question}
           <RiAddLine className="size-5 shrink-0 text-gray-400 transition-transform duration-200 group-open:rotate-45" />
