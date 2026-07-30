@@ -18,45 +18,45 @@ const pricingPlans: PricingPlan[] = [
     id: 1,
     title: "Básico",
     icon: "/symbol.svg",
-    target: "Para pequeños negocios",
-    price: "$24",
+    target: "Para negocios que empiezan",
+    price: "$29",
     features: [
-      "Hasta 1 usuario",
-      "Gestión de inventario",
-      "Informes y análisis de ventas",
-      "Funcionalidades avanzadas",
-      "Escaneo de código de barras",
-      "Soporte 24/7 gratuito"
+      "POS para retail y restaurante",
+      "Inventario y control de caja",
+      "Facturación con IVA",
+      "Predicción de stock con IA",
+      "Multisucursal",
+      "Domicilios y nómina"
     ]
   },
   {
     id: 2,
     title: "Estándar",
     icon: "/symbol1.svg",
-    target: "Para profesionales",
-    price: "$50",
+    target: "Para negocios en crecimiento",
+    price: "$49",
     features: [
-      "Hasta 1 usuario",
-      "Gestión de inventario",
-      "Informes y análisis de ventas",
-      "Funcionalidades avanzadas",
-      "Escaneo de código de barras",
-      "Soporte 24/7 gratuito"
+      "Todo lo del plan Básico",
+      "Multisucursal (hasta 3)",
+      "Predicción de stock con IA",
+      "Reportes y asistente con IA",
+      "Domicilios con app de repartidor",
+      "Nómina y marketing con IA"
     ]
   },
   {
     id: 3,
     title: "Profesional",
     icon: "/symbol2.svg",
-    target: "Para grandes empresas",
-    price: "$85",
+    target: "Para cadenas y multisucursal",
+    price: "$79",
     features: [
-      "Hasta 1 usuario",
-      "Gestión de inventario",
-      "Informes y análisis de ventas",
-      "Funcionalidades avanzadas",
-      "Escaneo de código de barras",
-      "Soporte 24/7 gratuito"
+      "Todo lo del plan Estándar",
+      "Sucursales ilimitadas",
+      "Domicilios con app de repartidor propia",
+      "Nómina con IA",
+      "Marketing automático omnicanal",
+      "Contabilidad y reportes P&L"
     ]
   }
 ];
@@ -85,7 +85,7 @@ const Pricing: React.FC = () => {
             transition={{ duration: 0.5 }}
             className="z-10 flex flex-col items-center w-full"
        >
-        <h1 className="text-center pb-10 xl:pb-25 xl:w-[65%] text-[var(--heading-color)]  text-[2rem] 2xl:text-[3em] lg:text-[2.5em] leading-[1.4em] font-bold">Planes transparentes, encuentra el ajuste perfecto que necesitas</h1>
+        <h1 className="text-center pb-10 xl:pb-25 xl:w-[65%] text-[var(--heading-color)]  text-[2rem] 2xl:text-[3em] lg:text-[2.5em] leading-[1.4em] font-bold">Precios que crecen con tu negocio. Paga por sucursal, sin sorpresas.</h1>
         <div className="flex flex-col 2xl:px-35 xl:px-20 xl:flex-row w-full gap-6 items-center">
           {pricingPlans.map((plan) => (
             <PricingCard

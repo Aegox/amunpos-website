@@ -33,8 +33,8 @@ const Hero: React.FC = () => {
         alt="a hero sprite"
       />
       <section className="flex flex-col gap-10 lg:w-[25%] lg:min-w-[50%] lg:gap-4 w-full xl:w-[40%] xl:min-w-[600px]">
-        <h1 className="w-[100%] xl:w-[600px] text-[3em] 2xl:text-[4em] xl:text-[3em] sm:text-[2em] leading-[1.4em] font-bold">Maximiza Ventas con Nuestro Terminal POS</h1>
-        <p className="text-[var(--gray-color)] font-normal w-[100%] xl:w-[90%] xl:min-w-[600px] xl:text-[1.1em] lg:w-[350px] text-[1em] md:text-[1em]">Nuestro software POS avanzado está diseñado para transformar tus operaciones comerciales. Con sus características potentes y una interfaz intuitiva, mejora la experiencia del cliente y optimiza tu eficiencia global.</p>
+        <h1 className="w-[100%] xl:w-[600px] text-[3em] 2xl:text-[4em] xl:text-[3em] sm:text-[2em] leading-[1.4em] font-bold">El sistema operativo del comercio en Latinoamérica</h1>
+        <p className="text-[var(--gray-color)] font-normal w-[100%] xl:w-[90%] xl:min-w-[600px] xl:text-[1.1em] lg:w-[350px] text-[1em] md:text-[1em]">Una sola plataforma para vender, controlar inventario y caja, facturar, repartir a domicilio, pagar la nómina y atraer clientes con marketing automático. Todo con IA nativa, para retail y restaurante.</p>
         <div className="flex gap-5 lg:pt-2" >
           <Button theme="black" variant="normal" text="Producto demo" styles="py-[12px] px-[30px]"/>
           <Button theme="black" variant="inverted" text="Prueba gratis" styles="py-[12px] px-[30px]"/>
@@ -48,8 +48,8 @@ const Hero: React.FC = () => {
       <div className="light-effect4 "></div>
       <section className="flex flex-col gap-10 lg:w-[25%] lg:min-w-[50%] lg:gap-4 w-full xl:w-[40%] xl:min-w-[600px] relative z-10">
       <Image src="/bar.png" alt="a icon of stats" width={36} height={35} className="z-100 object-contain w-[36px] h-auto"/>
-        <h1 className="w-[100%] xl:w-[600px] text-[3em] 2xl:text-[4em] xl:text-[3em] sm:text-[2em] leading-[1.4em] font-bold">Maximiza Ventas con Nuestro Terminal POS</h1>
-        <p className="text-[var(--gray-color)] font-normal w-[100%] xl:w-[90%] xl:min-w-[600px] xl:text-[1.1em] lg:w-[350px] text-[1em] md:text-[1em]">Nuestro software POS avanzado está diseñado para transformar tus operaciones comerciales. Con sus características potentes y una interfaz intuitiva, mejora la experiencia del cliente y optimiza tu eficiencia global.</p>
+        <h1 className="w-[100%] xl:w-[600px] text-[3em] 2xl:text-[4em] xl:text-[3em] sm:text-[2em] leading-[1.4em] font-bold">El sistema operativo del comercio en Latinoamérica</h1>
+        <p className="text-[var(--gray-color)] font-normal w-[100%] xl:w-[90%] xl:min-w-[600px] xl:text-[1.1em] lg:w-[350px] text-[1em] md:text-[1em]">Una sola plataforma para vender, controlar inventario y caja, facturar, repartir a domicilio, pagar la nómina y atraer clientes con marketing automático. Todo con IA nativa, para retail y restaurante.</p>
         <div className="flex md:flex-row flex-col md:gap-5 gap-2 lg:pt-2 relative" >
           <Button
             theme="black"

@@ -14,24 +14,28 @@ interface FaqItem {
 
 const faqData: FaqItem[] = [
   {
-    question: "¿Cómo beneficia un sistema POS a mi negocio?",
-    answer: "Un sistema POS beneficia a tu negocio al mejorar la eficiencia en las transacciones, proporcionar información detallada sobre las ventas y ayudar a gestionar inventarios. Además, facilita la recompensa a los clientes con puntos, descuentos o ofertas especiales.",
+    question: "¿AmunPOS sirve para retail y para restaurantes?",
+    answer: "Sí. La misma plataforma cubre la tienda de la esquina y el restaurante con mesas: carrito, descuentos, pago dividido, plano de mesas y cortes de caja. No necesitas dos sistemas distintos.",
   },
   {
-    question: "¿Puedo integrar el sistema POS con mi tienda en línea?",
-    answer: "Sí, muchos sistemas POS permiten la integración con tiendas en línea, lo que facilita la sincronización de inventarios y la gestión de pedidos tanto en línea como en tiendas físicas.",
+    question: "¿Puedo manejar varias sucursales?",
+    answer: "Sí, AmunPOS es multisucursal desde el diseño. Controlas stock, cajas, permisos y reportes por local, con analítica consolidada de todo el negocio en un solo panel.",
   },
   {
-    question: "¿Necesito capacitación especial para usar un sistema POS?",
-    answer: "Generalmente, no se requiere capacitación especial para usar un sistema POS, ya que suelen ser intuitivos y fáciles de usar. Sin embargo, algunas empresas ofrecen soporte y capacitación para asegurar un uso óptimo.",
+    question: "¿Qué incluye el delivery? ¿Cobran comisión por pedido?",
+    answer: "El delivery viene con app de repartidor propia, zonas y mapa, dentro de tu plan. No cobramos comisión por pedido como las apps de terceros: tú te quedas con tu margen.",
   },
   {
-    question: "¿Qué tipo de análisis de ventas proporciona un sistema POS?",
-    answer: "Un sistema POS proporciona análisis detallados de las ventas, incluyendo datos sobre productos más vendidos, horas pico de ventas, y comportamiento del cliente. Esto ayuda a tomar decisiones informadas para mejorar las estrategias de ventas.",
+    question: "¿Cómo me ayuda la IA en el día a día?",
+    answer: "La IA predice tu stock y sugiere qué comprar, recomienda precios, te asiste con un chat de negocio y genera reportes de utilidad. Además, el marketing automático atrae clientes según lo que tienes en stock y las fechas clave.",
   },
   {
-    question: "¿Cómo puedo elegir el sistema POS adecuado para mi negocio?",
-    answer: "Para elegir el sistema POS adecuado, considera el tipo de negocio, tamaño, presupuesto, características requeridas y potencial de crecimiento futuro. Investiga varias opciones y lee reseñas para tomar una decisión informada.",
+    question: "Ya uso otro POS. ¿Puedo migrar mis datos?",
+    answer: "Sí. AmunPOS importa tu información desde otros sistemas de punto de venta, así que empiezas con tus productos e inventario cargados, sin volver a hacerlo a mano.",
+  },
+  {
+    question: "¿Cuánto cuesta y puedo probarlo antes?",
+    answer: "Los planes van desde US$29 al mes por sucursal e incluyen lo que otros cobran aparte (delivery y nómina según el plan). Puedes empezar con una prueba gratis y crecer sumando sucursales y módulos cuando lo necesites.",
   },
 ];
 

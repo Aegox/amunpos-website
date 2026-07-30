@@ -10,7 +10,7 @@ const Footer: React.FC = () => {
       <div className="gap-8 h-full xl:w-[90%]  mb-[50px] xl:mb-[110px] flex flex-col xl:flex-row xl:justify-between  ">
       <article>
         <Image src="/logo.png" alt="amunpos logo" width={150} height={25} className="w-auto h-[25px] mb-8 mt-2"/>
-        <p className="text-white w-full xl:w-[330px]">Nuestro software de punto de venta es una solución definitiva que transforma tus operaciones comerciales en una fuerza eficiente y fluida, destacando la simplicidad, versatilidad de vanguardia.</p>
+        <p className="text-white w-full xl:w-[330px]">El sistema operativo del comercio en Latinoamérica: vende, controla inventario y caja, factura, reparte a domicilio, paga la nómina y atrae clientes con marketing automático — todo en un solo lugar.</p>
         <Socials styles=""/>
 
       </article>
