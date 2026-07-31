@@ -6,7 +6,10 @@ import {
   RiStackLine,
   RiTeamLine,
   RiAlarmWarningLine,
-  RiCheckLine,
+  RiLockLine,
+  RiShareBoxLine,
+  RiAddLine,
+  RiFileCopyLine,
 } from "@remixicon/react";
 import { cn } from "@/lib/utils";
 
@@ -17,73 +20,72 @@ const tabs: {
   label: string;
   icon: React.ComponentType<{ className?: string }>;
   ai?: boolean;
+  badge?: string;
+  tagline: string;
   path: string;
-  title: string;
-  desc: string;
-  bullets?: string[];
 }[] = [
   {
     id: "panel",
     label: "Panel",
     icon: RiLayoutGridLine,
+    tagline: "Ventas, caja e inventario al instante",
     path: "dashboard",
-    title: "Todo tu negocio, en una sola pantalla",
-    desc: "Ventas, caja, inventario y utilidad del día en tiempo real — sin abrir cinco herramientas para entender cómo va el negocio.",
   },
   {
     id: "ia",
-    label: "IA",
+    label: "Asistente",
     icon: RiSparklingLine,
     ai: true,
+    badge: "IA",
+    tagline: "Pregunta, migra y automatiza",
     path: "asistente",
-    title: "Pregúntale a tu negocio, como si hablaras con un socio",
-    desc: "El asistente responde en lenguaje natural, migra tu inventario desde Excel o una foto, y lee las facturas de tus proveedores por ti.",
-    bullets: [
-      "Responde preguntas de negocio al instante",
-      "Migra tu catálogo sin planillas",
-      "Lee facturas de proveedores automáticamente",
-    ],
   },
   {
     id: "ventas",
-    label: "Ventas",
+    label: "Ventas y caja",
     icon: RiShoppingCart2Line,
+    tagline: "Cobra con cualquier método",
     path: "caja",
-    title: "Cobra en segundos, con el método que tu cliente prefiera",
-    desc: "Carrito rápido, pago dividido y tickets claros. La misma caja sirve para la tienda de la esquina y para el restaurante con mesas.",
   },
   {
     id: "inventario",
     label: "Inventario",
     icon: RiStackLine,
+    tagline: "Stock por sucursal, con alertas",
     path: "inventario",
-    title: "Stock que no se descuadra entre sucursales",
-    desc: "Existencias en tiempo real por local, con alertas antes de que un producto se agote de verdad.",
   },
   {
     id: "nomina",
     label: "Nómina",
     icon: RiTeamLine,
+    tagline: "Fichaje, horarios y pagos",
     path: "equipo",
-    title: "Equipo y nómina bajo control, sin planillas sueltas",
-    desc: "Fichaje por PIN, horarios generados con IA y pagos por país, todo desde el mismo panel.",
   },
 ];
 
-/** Marco de "ventana de navegador" común a todas las vistas previas. */
+/** Ventana de navegador (semáforo de colores + URL centrada con candado),
+ *  el mismo encuadre que usa alignui.com para presentar su producto. */
 function Frame({ path, children }: { path: string; children: React.ReactNode }) {
   return (
-    <div className="relative overflow-hidden rounded-2xl border border-gray-200 bg-gray-0 shadow-[0_28px_70px_-24px_rgba(16,24,40,0.28)]">
-      <div className="flex items-center gap-1.5 border-b border-gray-200 bg-gray-50 px-4 py-3">
-        <span className="size-2.5 rounded-full bg-gray-300" />
-        <span className="size-2.5 rounded-full bg-gray-300" />
-        <span className="size-2.5 rounded-full bg-gray-300" />
-        <span className="ml-3 hidden rounded-md bg-gray-0 px-2.5 py-1 text-paragraph-xs text-gray-450 ring-1 ring-gray-200 sm:inline">
-          app.amunpos.com/{path}
+    <div className="relative overflow-hidden rounded-[20px] border border-gray-200 bg-gray-0 shadow-[0_28px_70px_-24px_rgba(16,24,40,0.28)]">
+      <div className="relative flex items-center gap-2 bg-gray-50 px-4 py-3.5">
+        <span className="size-3 rounded-full bg-[#FF5F57]" />
+        <span className="size-3 rounded-full bg-[#FEBC2E]" />
+        <span className="size-3 rounded-full bg-[#28C840]" />
+
+        <span className="absolute left-1/2 flex -translate-x-1/2 items-center gap-1.5 text-paragraph-sm text-gray-600">
+          <RiLockLine className="size-3.5 text-gray-450" />
+          <span className="hidden sm:inline">app.amunpos.com/{path}</span>
+        </span>
+
+        <span className="ml-auto flex items-center gap-3 text-gray-400">
+          <RiShareBoxLine className="size-4" />
+          <RiAddLine className="size-4" />
+          <RiFileCopyLine className="size-4" />
         </span>
       </div>
       {/* Alto fijo: cambiar de pestaña no debe mover el resto de la página */}
-      <div className="h-[300px] overflow-hidden sm:h-[380px] lg:h-[440px]">{children}</div>
+      <div className="h-[320px] overflow-hidden border-t border-gray-200 sm:h-[400px] lg:h-[460px]">{children}</div>
     </div>
   );
 }
@@ -126,68 +128,101 @@ function AppShell({ title, action, children }: { title: string; action?: React.R
 export default function ProductShowcase() {
   const [active, setActive] = useState<TabId>("panel");
   const current = tabs.find((t) => t.id === active)!;
+  const activeIndex = tabs.findIndex((t) => t.id === active);
 
   return (
     <div className="flex flex-col items-center">
-      {/* Selector de iconos clickeables */}
+      {/* Selector: columnas separadas por divisores dentro de un marco de
+          "regla" con puntos en las esquinas — el mismo encuadre que usa
+          alignui.com en la sección que sigue a su hero. El icono de la
+          pestaña activa se rellena con el color de marca (animado). */}
       <div
         role="tablist"
         aria-label="Capacidades de AmunPOS"
-        className="flex w-full max-w-3xl flex-wrap items-center justify-center gap-2"
+        className="ruler-frame relative -mx-5 flex w-[calc(100%+2.5rem)] items-stretch overflow-x-auto px-5 py-6 md:mx-0 md:w-full md:overflow-visible md:px-[26px]"
       >
-        {tabs.map((tab) => {
+        <span className="corner-dot hidden md:block" style={{ left: 0, top: 0, transform: "translate(-50%, -50%)" }} />
+        <span className="corner-dot hidden md:block" style={{ right: 0, top: 0, transform: "translate(50%, -50%)" }} />
+        <span className="corner-dot hidden md:block" style={{ left: 0, bottom: 0, transform: "translate(-50%, 50%)" }} />
+        <span className="corner-dot hidden md:block" style={{ right: 0, bottom: 0, transform: "translate(50%, 50%)" }} />
+
+        {/* Indicador activo: una línea corta de color que se desliza sobre el
+            borde superior del marco, como en alignui.com. El contenedor mide lo
+            que una columna y se desplaza con transform; la línea visible va
+            centrada dentro y es corta. */}
+        <span
+          aria-hidden="true"
+          className="pointer-events-none absolute -top-px left-0 hidden h-0.5 transition-transform duration-300 ease-out md:block"
+          style={{
+            width: `${100 / tabs.length}%`,
+            transform: `translateX(${activeIndex * 100}%)`,
+          }}
+        >
+          <span
+            className={cn(
+              "mx-auto block h-full w-12 rounded-full transition-colors duration-300",
+              current.ai ? "bg-ai-base" : "bg-primary-base",
+            )}
+          />
+        </span>
+
+        {tabs.map((tab, i) => {
           const Icon = tab.icon;
           const isActive = tab.id === active;
           return (
-            <button
-              key={tab.id}
-              role="tab"
-              aria-selected={isActive}
-              onClick={() => setActive(tab.id)}
-              className={cn(
-                "group flex items-center gap-2.5 rounded-13 px-3.5 py-2.5 transition duration-200 ease-out",
-                isActive
-                  ? "bg-gray-0 text-gray-900 shadow-button-white ring-1 ring-gray-200"
-                  : "text-gray-600 hover:bg-gray-50 hover:text-gray-900",
-              )}
-            >
-              <span
-                className={cn(
-                  "flex size-8 items-center justify-center rounded-[9px] transition duration-200",
-                  isActive
-                    ? tab.ai
-                      ? "bg-ai-base text-gray-0"
-                      : "bg-primary-base text-gray-0"
-                    : "bg-gray-100 text-gray-500 group-hover:bg-gray-200",
-                )}
+            <React.Fragment key={tab.id}>
+              {i > 0 && <span aria-hidden="true" className="my-1 w-px shrink-0 self-stretch bg-gray-200" />}
+              <button
+                role="tab"
+                aria-selected={isActive}
+                onClick={() => setActive(tab.id)}
+                className="group flex w-[190px] shrink-0 flex-col items-center px-4 text-center outline-none md:w-auto md:flex-1"
               >
-                <Icon className="size-[18px]" />
-              </span>
-              <span className="text-label-sm">{tab.label}</span>
-            </button>
+                {/* Negro en reposo y azul (o azul-IA) al seleccionarlo. El
+                    contenedor mide lo mismo que la línea indicadora y ambos van
+                    centrados en la columna, así el icono queda justo debajo. */}
+                <span
+                  className={cn(
+                    "flex size-12 items-center justify-center rounded-[14px] bg-gray-50 ring-1 ring-inset transition-colors duration-300 ease-out group-focus-visible:ring-2 group-focus-visible:ring-primary-base/40",
+                    isActive
+                      ? cn("ring-gray-200", tab.ai ? "text-ai-base" : "text-primary-base")
+                      : "text-gray-900 ring-transparent group-hover:bg-gray-100",
+                  )}
+                >
+                  <Icon className="size-5" />
+                </span>
+
+                <span className="mt-4 flex items-center justify-center gap-1.5">
+                  <span
+                    className={cn(
+                      "text-label-sm transition-colors duration-200",
+                      isActive ? "text-gray-900" : "text-gray-700 group-hover:text-gray-900",
+                    )}
+                  >
+                    {tab.label}
+                  </span>
+                  {tab.badge && (
+                    <span className="rounded-[5px] bg-ai-light px-1.5 py-0.5 text-subheading-xs text-ai-dark">
+                      {tab.badge}
+                    </span>
+                  )}
+                </span>
+
+                <span className="mt-1 max-w-[200px] text-pretty text-paragraph-xs text-gray-600">{tab.tagline}</span>
+              </button>
+            </React.Fragment>
           );
         })}
       </div>
 
-      {/* Texto de la capacidad activa */}
-      <div key={`t-${active}`} className="animate-fade-up mt-10 max-w-2xl text-center">
-        <h3 className="text-pretty text-title-h6 text-gray-900 md:text-title-h5">{current.title}</h3>
-        <p className="mt-3 text-pretty text-paragraph-md text-gray-600">{current.desc}</p>
-        {current.bullets && (
-          <ul className="mt-5 flex flex-wrap items-center justify-center gap-x-5 gap-y-2">
-            {current.bullets.map((b) => (
-              <li key={b} className="flex items-center gap-2 text-paragraph-sm text-gray-700">
-                <RiCheckLine className="size-4 shrink-0 text-ai-base" />
-                {b}
-              </li>
-            ))}
-          </ul>
-        )}
-      </div>
+      {/* Sin título ni descripción aquí: cada card del selector ya lleva su
+          propio texto, repetirlo debajo era redundante. */}
 
       {/* Vista previa grande */}
-      <div className="relative mt-10 w-full max-w-[1080px]">
-        <div className="pointer-events-none absolute -inset-x-8 -top-6 bottom-6 rounded-[48px] bg-primary-base/10 blur-[90px]" />
+      <div className="relative mt-12 w-full max-w-[1080px]">
+        {/* inset-x-0 en móvil: con -inset-x-8 el glow sobresalía y generaba
+            scroll horizontal en la página (12px) */}
+        <div className="pointer-events-none absolute inset-x-0 -top-6 bottom-6 rounded-[48px] bg-primary-base/10 blur-[90px] sm:-inset-x-8" />
         <div key={`v-${active}`} className="animate-fade-up relative">
           {active === "panel" && (
             <Frame path="dashboard">

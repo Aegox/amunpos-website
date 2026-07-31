@@ -1,6 +1,6 @@
 ---
 import TypewriterWord from "./TypewriterWord";
-import { RiSparklingLine, RiArrowRightSLine, RiPulseLine, RiGitBranchLine, RiTruckLine } from "@remixicon/react";
+import { RiSparklingLine, RiArrowRightSLine } from "@remixicon/react";
 ---
 
 <!-- pt-28: el navbar flota fijo (top-4 + 56px de alto) y con pt-20 su sombra
@@ -70,34 +70,5 @@ import { RiSparklingLine, RiArrowRightSLine, RiPulseLine, RiGitBranchLine, RiTru
       </div>
     </div>
 
-    <div class="mt-11 xl:mt-20">
-      <div class="ruler-frame -mx-5 flex items-stretch gap-2 overflow-x-auto px-5 py-4 md:mx-0 md:justify-center md:gap-8 md:px-[26px]">
-        <span class="corner-dot hidden md:block" style="left: 0; top: 0; transform: translate(-50%, -50%);"></span>
-        <span class="corner-dot hidden md:block" style="right: 0; top: 0; transform: translate(50%, -50%);"></span>
-        <span class="corner-dot hidden md:block" style="left: 0; bottom: 0; transform: translate(-50%, 50%);"></span>
-        <span class="corner-dot hidden md:block" style="right: 0; bottom: 0; transform: translate(50%, 50%);"></span>
-        {[
-          { icon: RiPulseLine, label: "Panel en tiempo real", desc: "Ventas, caja e inventario al instante", tag: null },
-          { icon: RiSparklingLine, label: "IA integrada", desc: "Automatiza tareas repetitivas", tag: "IA" },
-          { icon: RiGitBranchLine, label: "Multi-sucursal", desc: "Todo tu negocio, un solo panel", tag: null },
-          { icon: RiTruckLine, label: "Delivery sin comisión", desc: "App de repartidor propia, incluida", tag: null },
-        ].map(({ icon: Icon, label, desc, tag }) => (
-          <div class="flex w-[220px] shrink-0 items-center gap-3 text-left md:w-auto md:flex-1 md:flex-col md:gap-0 md:text-center">
-            <div class="flex size-9 shrink-0 items-center justify-center rounded-9 bg-gray-100 md:size-8">
-              <Icon className="size-4 text-primary-base" />
-            </div>
-            <div class="min-w-0 md:mt-4">
-              <div class="flex items-center gap-1.5 text-label-sm text-gray-900 md:justify-center">
-                {label}
-                {tag && (
-                  <span class="rounded-[5px] bg-ai-light px-[5px] py-[3px] text-subheading-xs text-ai-dark">{tag}</span>
-                )}
-              </div>
-              <div class="mt-1 text-pretty text-paragraph-xs text-gray-600 md:max-w-[200px]">{desc}</div>
-            </div>
-          </div>
-        ))}
-      </div>
-    </div>
   </div>
 </section>
