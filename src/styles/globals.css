@@ -9,10 +9,9 @@
  * Excepción intencional: --primary-* usa el azul histórico de AmunPOS
  * (#0c71c2), no el gris neutro que AlignUI usa como color de botón
  * principal en su propia landing — es nuestra marca, no la de ellos.
- * El verde de IA (--ai-*) sí es fiel al original: en el HTML real, el
- * badge "NEW" de su AI Template usa exactamente #12A557 y su tarjeta
- * usa un borde/resplandor verde — esa es SU convención real para "esto es
- * IA", así que la adoptamos tal cual para nuestra propia sección de IA.
+ * Nota: AlignUI usa un verde (#12A557) como convención de "esto es IA".
+ * Aquí lo cambiamos por un AZUL de marca (--ai-*) para una identidad
+ * unificada de AmunPOS; ver los tokens --ai-* más abajo.
  */
 :root {
   /* Escala neutra real (gray-0 a gray-950), extraída de las clases bg-ln-gray-N y text-ln-gray-N */
@@ -39,10 +38,12 @@
   --primary-alpha-10: hsl(204 88% 40% / 10%);
   --primary-alpha-16: hsl(204 88% 40% / 16%);
 
-  /* Verde IA, fiel al real #12A557 / #10934e de alignui.com */
-  --ai-base: #12a557;
-  --ai-dark: #0e7a41;
-  --ai-light: #e3f7ec;
+  /* Acento de IA en AZUL de marca (antes era el verde #12A557 de alignui.com).
+     Se usa un azul un poco más brillante que --primary para dar "pop" a lo de
+     IA sin salirse de la identidad de AmunPOS. */
+  --ai-base: hsl(204 90% 46%);
+  --ai-dark: hsl(204 90% 36%);
+  --ai-light: hsl(204 90% 95%);
 }
 
 @theme {
@@ -149,7 +150,7 @@
   --shadow-button-white: 0 1px 1px 0.5px rgba(51,51,51,.04), 0 3px 3px -1.5px rgba(51,51,51,.02), 0 6px 6px -3px rgba(51,51,51,.04), 0 12px 12px -6px rgba(51,51,51,.04), 0 24px 24px -12px rgba(51,51,51,.04), 0 0 0 1px rgba(51,51,51,.1), inset 0 -1px 1px -0.5px rgba(51,51,51,.06);
   --shadow-button-gray: 0 16px 8px rgba(31,31,31,.01), 0 12px 6px rgba(31,31,31,.04), 0 4px 4px rgba(31,31,31,.07), 0 1.5px 3px rgba(31,31,31,.08), 0 0 0 1px #0f0f0f, inset 0 1px 2px hsla(0,0%,100%,.12);
   --shadow-badge-gray: 0 0 0 1px rgba(61,61,61,.12), inset 0 0.75px 0.75px hsla(0,0%,100%,.64);
-  --shadow-ai-glow: 0 0 0 1px rgba(26,26,26,.28), 0 16px 8px rgba(3,78,39,.05), 0 12px 6px rgba(3,78,39,.08), 0 4px 4px rgba(3,78,39,.1), inset 0 1px 2px hsla(0,0%,100%,.12);
+  --shadow-ai-glow: 0 0 0 1px rgba(26,26,26,.28), 0 16px 8px rgba(4,58,102,.05), 0 12px 6px rgba(4,58,102,.08), 0 4px 4px rgba(4,58,102,.1), inset 0 1px 2px hsla(0,0%,100%,.12);
 }
 
 html {
