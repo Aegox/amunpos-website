@@ -261,9 +261,23 @@ body {
     transform: none;
     filter: none;
   }
+  /* La chispa deja de CAER, pero no desaparece.
+     Estaba en `opacity: 0`, así que con las animaciones del sistema apagadas la
+     sección oscura perdía sus dos líneas laterales por completo y se veía plana
+     y sin rematar. Reducir el movimiento significa "que no se mueva", no "que no
+     exista": aquí se queda como un degradado quieto sobre el borde, que es el
+     mismo acento sin desplazamiento. */
   .spark-line {
     animation: none;
-    opacity: 0;
+    top: 0;
+    height: 100%;
+    opacity: 0.5;
+    background: linear-gradient(
+      180deg,
+      rgba(12, 113, 194, 0) 0%,
+      var(--primary-base) 50%,
+      rgba(12, 113, 194, 0) 100%
+    );
   }
 }
 
