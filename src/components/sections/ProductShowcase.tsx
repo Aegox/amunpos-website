@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef, useLayoutEffect, useCallback } from "react";
 import {
   RiLayoutGridLine,
   RiSparklingLine,
@@ -130,6 +130,43 @@ export default function ProductShowcase() {
   const current = tabs.find((t) => t.id === active)!;
   const activeIndex = tabs.findIndex((t) => t.id === active);
 
+  // La línea indicadora se MIDE del botón activo, no se calcula por porcentaje.
+  //
+  // Antes era `width: 100/tabs.length %` con `translateX(i * 100%)`, y quedaba
+  // descuadrada respecto al icono por tres motivos a la vez: el contenedor tiene
+  // `px-[26px]` y un elemento absoluto se posiciona contra la caja de relleno,
+  // así que arrastraba esos 26 px; los 4 divisores de 1 px se comen ancho que el
+  // porcentaje no descuenta; y en móvil las columnas son de ancho fijo (190 px)
+  // en vez de repartirse por igual, así que el porcentaje ni se acerca.
+  //
+  // Midiendo el botón no hay nada que suponer: funciona con cualquier padding,
+  // número de pestañas o punto de ruptura.
+  const listaRef = useRef<HTMLDivElement>(null);
+  const botonesRef = useRef<(HTMLButtonElement | null)[]>([]);
+  const [marca, setMarca] = useState<{ left: number; width: number } | null>(null);
+
+  const medir = useCallback(() => {
+    const lista = listaRef.current;
+    const boton = botonesRef.current[activeIndex];
+    if (!lista || !boton) return;
+    // offsetLeft es relativo al contenedor posicionado, así que ya descuenta el
+    // padding y el desplazamiento horizontal del carrusel en móvil.
+    setMarca({ left: boton.offsetLeft, width: boton.offsetWidth });
+  }, [activeIndex]);
+
+  useLayoutEffect(() => {
+    medir();
+    const lista = listaRef.current;
+    if (!lista) return;
+    // Al cambiar de tamaño el contenedor cambian los anchos de columna.
+    const observador = new ResizeObserver(medir);
+    observador.observe(lista);
+    // Las fuentes web cambian el ancho del texto al cargar y desplazan las
+    // columnas; sin esto la línea se queda donde estaba con la fuente de reserva.
+    document.fonts?.ready.then(medir).catch(() => {});
+    return () => observador.disconnect();
+  }, [medir]);
+
   return (
     <div className="flex flex-col items-center">
       {/* Selector: columnas separadas por divisores dentro de un marco de
@@ -137,6 +174,7 @@ export default function ProductShowcase() {
           alignui.com en la sección que sigue a su hero. El icono de la
           pestaña activa se rellena con el color de marca (animado). */}
       <div
+        ref={listaRef}
         role="tablist"
         aria-label="Capacidades de AmunPOS"
         className="ruler-frame relative -mx-5 flex w-[calc(100%+2.5rem)] items-stretch overflow-x-auto px-5 py-6 md:mx-0 md:w-full md:overflow-visible md:px-[26px]"
@@ -152,11 +190,17 @@ export default function ProductShowcase() {
             centrada dentro y es corta. */}
         <span
           aria-hidden="true"
-          className="pointer-events-none absolute -top-px left-0 hidden h-0.5 transition-transform duration-300 ease-out md:block"
-          style={{
-            width: `${100 / tabs.length}%`,
-            transform: `translateX(${activeIndex * 100}%)`,
-          }}
+          className={cn(
+            "pointer-events-none absolute -top-px left-0 h-0.5 transition-[transform,width] duration-300 ease-out",
+            // Hasta que se mide, oculta: pintarla en 0,0 daría un salto visible
+            // en la primera carga.
+            marca ? "opacity-100" : "opacity-0",
+          )}
+          style={
+            marca
+              ? { width: `${marca.width}px`, transform: `translateX(${marca.left}px)` }
+              : undefined
+          }
         >
           <span
             className={cn(
@@ -173,6 +217,7 @@ export default function ProductShowcase() {
             <React.Fragment key={tab.id}>
               {i > 0 && <span aria-hidden="true" className="my-1 w-px shrink-0 self-stretch bg-gray-200" />}
               <button
+                ref={(el) => { botonesRef.current[i] = el; }}
                 role="tab"
                 aria-selected={isActive}
                 onClick={() => setActive(tab.id)}
