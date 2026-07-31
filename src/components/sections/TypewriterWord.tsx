@@ -26,14 +26,20 @@ export default function TypewriterWord() {
     return () => clearTimeout(t);
   }, [charCount, deleting, wordIndex]);
 
-  // min-width reservado al carácter más largo ("ahorrar tiempo") para que el
-  // h1 no reflowe letra a letra — sin esto, cada tick del typewriter movía el
-  // titular y el CTA de abajo (layout shift). "ch" escala con el font-size,
-  // así que la reserva funciona igual en cada breakpoint.
+  // Sin reservar ancho: el <h1> se ajusta al texto real y queda CENTRADO en todo
+  // momento (reservar el ancho de la palabra más larga era justo lo que dejaba el
+  // título visualmente desplazado a la izquierda). Como el titular va en una sola
+  // línea, la altura no cambia y nada de lo que está debajo se mueve.
+  // El cursor se saca del flujo (absolute) para que no sume ancho y el re-centrado
+  // sea solo por letras reales.
   return (
-    <span className="inline-block min-w-[15ch] whitespace-nowrap text-left">
+    <span className="relative whitespace-nowrap">
       {words[wordIndex].slice(0, charCount)}
-      <span className="text-primary-base">|</span>
+      <span
+        aria-hidden="true"
+        className="animate-caret absolute -right-[0.06em] top-1/2 h-[0.78em] w-[3px] -translate-y-1/2 rounded-full bg-primary-base"
+      />
+      <span className="sr-only">{words[wordIndex]}</span>
     </span>
   );
 }

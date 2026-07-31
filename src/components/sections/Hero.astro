@@ -3,12 +3,14 @@ import TypewriterWord from "./TypewriterWord";
 import { RiSparklingLine, RiArrowRightSLine, RiPulseLine, RiGitBranchLine, RiTruckLine } from "@remixicon/react";
 ---
 
-<section id="Inicio" class="relative w-full scroll-mt-16 overflow-hidden pt-20 pb-8">
+<!-- pt-28: el navbar flota fijo (top-4 + 56px de alto) y con pt-20 su sombra
+     quedaba encima del banner de IA. Este padding le da aire real. -->
+<section id="Inicio" class="relative w-full scroll-mt-16 overflow-hidden pb-8 pt-28">
   <div class="hero-mesh" aria-hidden="true"></div>
 
   <!-- Banner: adaptación del banner de sync-con-Figma real, ahora sobre IA -->
   <a
-    href="#IA"
+    href="#Producto"
     class="relative z-10 mx-auto flex h-11 w-fit items-center gap-2 rounded-b-18 border-x border-b border-gray-200 bg-gray-50 px-4 shadow-badge-gray"
   >
     <RiSparklingLine className="size-5 text-ai-base" />
@@ -31,7 +33,11 @@ import { RiSparklingLine, RiArrowRightSLine, RiPulseLine, RiGitBranchLine, RiTru
         </p>
       </div>
 
-      <h1 class="mt-5 text-center text-[34px]/[40px] font-medium -tracking-[0.022em] text-gray-900 md:text-title-h3 xl:text-title-h1">
+      <!-- Desde md el titular va en UNA sola línea (nowrap + tamaño por clamp);
+           antes caía a dos líneas y la segunda quedaba descuadrada. En móvil se
+           permite el salto natural —ambas líneas centradas— para no forzar
+           scroll horizontal en pantallas angostas. -->
+      <h1 class="hero-title mt-5 text-center text-[32px]/[38px] font-medium -tracking-[0.022em] text-gray-900 md:whitespace-nowrap">
         Hecho para <TypewriterWord client:load />
       </h1>
 

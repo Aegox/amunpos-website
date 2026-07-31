@@ -23,10 +23,10 @@ type MenuItem = {
 };
 
 const productItems: MenuItem[] = [
-  { icon: RiSparklingLine, title: "Asistente de IA", desc: "Pregunta, migra y automatiza con IA", href: "#IA", ai: true },
-  { icon: RiShoppingCart2Line, title: "Ventas y caja", desc: "Cobra en segundos con cualquier método", href: "#IA" },
-  { icon: RiStackLine, title: "Inventario en tiempo real", desc: "Stock sincronizado entre sucursales", href: "#IA" },
-  { icon: RiTeamLine, title: "Nómina y equipo", desc: "Horarios con IA, fichaje y pagos", href: "#IA" },
+  { icon: RiSparklingLine, title: "Asistente de IA", desc: "Pregunta, migra y automatiza con IA", href: "#Producto", ai: true },
+  { icon: RiShoppingCart2Line, title: "Ventas y caja", desc: "Cobra en segundos con cualquier método", href: "#Producto" },
+  { icon: RiStackLine, title: "Inventario en tiempo real", desc: "Stock sincronizado entre sucursales", href: "#Producto" },
+  { icon: RiTeamLine, title: "Nómina y equipo", desc: "Horarios con IA, fichaje y pagos", href: "#Producto" },
 ];
 
 const companyItems: MenuItem[] = [
@@ -81,6 +81,7 @@ function NavDropdown({ label, items }: { label: string; items: MenuItem[] }) {
 
 export default function NavBar() {
   const [menuOpen, setMenuOpen] = useState(false);
+  const [hidden, setHidden] = useState(false);
 
   useEffect(() => {
     document.body.style.overflow = menuOpen ? "hidden" : "";
@@ -89,24 +90,52 @@ export default function NavBar() {
     };
   }, [menuOpen]);
 
+  // Auto-hide: se esconde al bajar y reaparece al subir. No se esconde cerca del
+  // tope (para no tapar el hero al volver) ni con el menú móvil abierto.
+  useEffect(() => {
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+
+    let lastY = window.scrollY;
+    let ticking = false;
+
+    const onScroll = () => {
+      if (ticking) return;
+      ticking = true;
+      requestAnimationFrame(() => {
+        const y = window.scrollY;
+        const delta = y - lastY;
+        if (y < 120 || menuOpen) {
+          setHidden(false);
+        } else if (Math.abs(delta) > 6) {
+          setHidden(delta > 0);
+        }
+        lastY = y;
+        ticking = false;
+      });
+    };
+
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, [menuOpen]);
+
   return (
-    <div className="fixed inset-x-0 top-3 z-50 flex justify-center px-3 lg:top-4">
-      <header className="flex h-16 w-full items-center justify-between gap-4 rounded-2xl bg-gray-25 px-4 shadow-button-white lg:h-auto lg:w-auto lg:justify-start lg:rounded-3xl lg:bg-gray-0 lg:p-[18px]">
-        <div className="flex items-center gap-2.5 pr-3">
-          <a className="focus:outline-none" href="#Inicio">
-            <img src="/logo.png" alt="AmunPOS" className="h-5 w-auto" />
-          </a>
-        </div>
+    <div
+      className={cn(
+        "fixed inset-x-0 top-3 z-50 flex justify-center px-3 transition-transform duration-300 ease-out lg:top-4",
+        hidden && "-translate-y-[calc(100%+1.5rem)]",
+      )}
+    >
+      <header className="flex h-16 w-full items-center justify-between gap-4 rounded-2xl bg-gray-25 px-4 shadow-button-white lg:h-auto lg:w-auto lg:justify-start lg:gap-0 lg:rounded-3xl lg:bg-gray-0 lg:py-2.5 lg:pl-5 lg:pr-2.5">
+        <a className="flex items-center focus:outline-none" href="#Inicio">
+          <img src="/logo.png" alt="AmunPOS" className="h-5 w-auto" />
+        </a>
 
-        <nav className="hidden items-center gap-2.5 lg:flex">
+        {/* Un solo grupo de navegación con ritmo uniforme: antes el logo, el
+            dropdown "Producto" y el resto de enlaces eran 3 bloques con gaps
+            distintos (2.5 / 5) separados por un punto decorativo suelto, y el
+            espaciado se leía irregular. */}
+        <nav className="ml-8 hidden items-center gap-6 lg:flex">
           <NavDropdown label="Producto" items={productItems} />
-        </nav>
-
-        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20" className="hidden size-5 shrink-0 text-gray-300 lg:block">
-          <path fill="currentColor" d="M10.003 11.108a1.183 1.183 0 0 1-1.176-1.176c0-.644.532-1.176 1.176-1.176s1.176.532 1.176 1.176-.532 1.176-1.176 1.176" />
-        </svg>
-
-        <div className="hidden items-center gap-5 lg:flex">
           <a href="#Planes" className="text-label-sm text-gray-600 transition duration-200 ease-linear hover:text-gray-800">
             Precios
           </a>
@@ -114,9 +143,9 @@ export default function NavBar() {
             Preguntas frecuentes
           </a>
           <NavDropdown label="Empresa" items={companyItems} />
-        </div>
+        </nav>
 
-        <div className="hidden items-center gap-2.5 lg:flex">
+        <div className="ml-8 hidden items-center gap-2 lg:flex">
           <a href="#" className="flex h-9 items-center rounded-9 px-3.5 text-label-sm text-gray-700 transition duration-200 ease-linear hover:bg-gray-50">
             Iniciar sesión
           </a>

@@ -1,5 +1,6 @@
 ---
 import { RiSparklingLine, RiPulseLine, RiRocket2Line } from "@remixicon/react";
+import ProductShowcase from "./ProductShowcase";
 
 const props = [
   {
@@ -23,35 +24,17 @@ const props = [
 ];
 ---
 
-<section class="w-full px-5 pt-10 pb-14 xl:pt-14 xl:pb-20">
-  <div class="mx-auto max-w-[1080px]">
-    <!-- Showcase del producto: captura real del panel, enmarcada con "chrome"
-         de navegador y un glow azul de marca detrás. -->
-    <div class="relative" data-reveal>
-      <div class="pointer-events-none absolute -inset-x-8 -top-6 bottom-6 rounded-[48px] bg-primary-base/10 blur-[90px]"></div>
-      <div class="relative overflow-hidden rounded-2xl border border-gray-200 bg-gray-0 shadow-[0_28px_70px_-24px_rgba(16,24,40,0.28)]">
-        <div class="flex items-center gap-1.5 border-b border-gray-200 bg-gray-50 px-4 py-3">
-          <span class="size-2.5 rounded-full bg-gray-300"></span>
-          <span class="size-2.5 rounded-full bg-gray-300"></span>
-          <span class="size-2.5 rounded-full bg-gray-300"></span>
-          <span class="ml-3 hidden rounded-md bg-gray-0 px-2.5 py-1 text-paragraph-xs text-gray-450 ring-1 ring-gray-200 sm:inline">
-            app.amunpos.com
-          </span>
-        </div>
-        <img
-          src="/capture-of-pos.webp"
-          width="1679"
-          height="918"
-          alt="Panel de AmunPOS: ventas, inventario y reportes en un solo lugar"
-          class="h-auto w-full"
-          loading="lazy"
-          decoding="async"
-        />
-      </div>
+<!-- Sección inmediatamente posterior al hero: el "momento interactivo" del
+     landing. Iconos clickeables que cambian la vista previa del producto
+     (mismo patrón que usa alignui.com justo debajo de su hero). -->
+<section id="Producto" class="w-full scroll-mt-24 px-5 pb-14 pt-10 xl:pb-20 xl:pt-14">
+  <div class="mx-auto max-w-[1240px]">
+    <div data-reveal>
+      <ProductShowcase client:visible />
     </div>
 
-    <!-- Propuestas de valor, como soporte del visual -->
-    <div class="mt-12 grid grid-cols-1 gap-8 md:grid-cols-3 xl:mt-16">
+    <!-- Propuestas de valor, como cierre de la sección -->
+    <div class="mt-14 grid grid-cols-1 gap-8 md:grid-cols-3 xl:mt-20">
       {
         props.map(({ icon: Icon, title, desc, color }, i) => (
           <div
