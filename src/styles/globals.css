@@ -166,6 +166,25 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
+/* Fondo del hero: dot-grid muy sutil + un mesh radial azul de marca, apagados
+   con mask-image para que se desvanezcan hacia los bordes. Restringido a
+   propósito (alignui.com real prioriza estructura y whitespace sobre brillo);
+   esto es la textura mínima para que el hero no se sienta plano, no un efecto. */
+.hero-mesh {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background-image:
+    radial-gradient(circle at 50% 0%, hsl(204 90% 50% / 0.10), transparent 60%),
+    radial-gradient(var(--gray-200) 1px, transparent 1px);
+  background-size:
+    100% 100%,
+    28px 28px;
+  background-position: center, center;
+  mask-image: radial-gradient(ellipse 70% 60% at 50% 30%, black 40%, transparent 100%);
+  -webkit-mask-image: radial-gradient(ellipse 70% 60% at 50% 30%, black 40%, transparent 100%);
+}
+
 /* Punto decorativo de esquina — el mismo truco visual que usa alignui.com
    en las cajas con "regla" (antes usaban una imagen dot.png de 9x9px) */
 .corner-dot {
@@ -232,6 +251,22 @@ body {
   animation: spark-fall 4s linear infinite;
 }
 
+/* Red de seguridad: .animate-fade-up y .spark-line no estaban gateadas por
+   prefers-reduced-motion (a diferencia del sistema [data-reveal]). Con
+   reduced-motion, se muestran directo en su estado final, sin animar. */
+@media (prefers-reduced-motion: reduce) {
+  .animate-fade-up {
+    animation: none;
+    opacity: 1;
+    transform: none;
+    filter: none;
+  }
+  .spark-line {
+    animation: none;
+    opacity: 0;
+  }
+}
+
 /* ── Scroll reveal ──────────────────────────────────────────────
    Elementos con [data-reveal] entran con un fade-up al hacer scroll.
    Solo se ocultan cuando <html> tiene la clase .js-reveal, que el
@@ -253,12 +288,34 @@ body {
   transform: none;
 }
 
-/* Levantar suave al pasar el cursor sobre tarjetas */
+/* Acordeón FAQ animado con <details> nativo (accesible: focus, teclado, y
+   funciona sin JS) + el truco de grid-template-rows 0fr→1fr para animar una
+   altura que en CSS puro no se puede animar directo. El hojeo de estilos de
+   <details> oculta con display:none todo lo que no sea <summary> cuando está
+   cerrado — hay que ganarle esa regla con una clase propia, si no el panel
+   nunca llega a animar (aparece/desaparece de golpe). */
+.faq-item:not([open]) > .faq-panel {
+  display: grid;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .faq-panel,
+  .faq-item summary svg {
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* Levantar suave al pasar el cursor sobre tarjetas. Compone con --lift-rest
+   (offset de reposo, p.ej. la card "Popular" de Pricing que ya arranca
+   levantada con -translate-y-3) en vez de pisar `transform` directo — si no,
+   el hover reemplazaría por completo cualquier transform de reposo y la
+   tarjeta "saltaría" en vez de levantarse un poco más. */
 .hover-lift {
+  transform: translateY(var(--lift-rest, 0));
   transition:
     transform 0.25s ease-out,
     box-shadow 0.25s ease-out;
 }
 .hover-lift:hover {
-  transform: translateY(-4px);
+  transform: translateY(calc(var(--lift-rest, 0px) - 4px));
 }

@@ -26,8 +26,12 @@ export default function TypewriterWord() {
     return () => clearTimeout(t);
   }, [charCount, deleting, wordIndex]);
 
+  // min-width reservado al carácter más largo ("ahorrar tiempo") para que el
+  // h1 no reflowe letra a letra — sin esto, cada tick del typewriter movía el
+  // titular y el CTA de abajo (layout shift). "ch" escala con el font-size,
+  // así que la reserva funciona igual en cada breakpoint.
   return (
-    <span className="whitespace-nowrap">
+    <span className="inline-block min-w-[15ch] whitespace-nowrap text-left">
       {words[wordIndex].slice(0, charCount)}
       <span className="text-primary-base">|</span>
     </span>

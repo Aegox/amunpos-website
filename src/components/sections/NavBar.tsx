@@ -96,10 +96,6 @@ export default function NavBar() {
           <a className="focus:outline-none" href="#Inicio">
             <img src="/logo.png" alt="AmunPOS" className="h-5 w-auto" />
           </a>
-          <span className="hidden items-center gap-1 rounded-[7px] bg-ai-light px-2 py-1 text-label-xs font-medium text-ai-dark shadow-badge-gray sm:flex">
-            <RiSparklingLine className="size-3.5" />
-            IA activa
-          </span>
         </div>
 
         <nav className="hidden items-center gap-2.5 lg:flex">

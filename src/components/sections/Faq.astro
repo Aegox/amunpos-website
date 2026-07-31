@@ -34,12 +34,16 @@ const faqData = [
 
   <div class="mt-12 flex w-full max-w-[720px] flex-col gap-3">
     {faqData.map((item, i) => (
-      <details data-reveal style={`--reveal-delay: ${i * 60}ms`} class="group rounded-18 border border-gray-200 bg-gray-0 px-6 py-1 open:pb-5 transition-shadow duration-200 hover:shadow-button-white">
+      <details data-reveal style={`--reveal-delay: ${i * 60}ms`} class="group faq-item rounded-18 border border-gray-200 bg-gray-0 px-6 transition-shadow duration-200 hover:shadow-button-white">
         <summary class="flex cursor-pointer list-none items-center justify-between gap-4 py-4 text-label-md text-gray-900 [&::-webkit-details-marker]:hidden">
           {item.question}
-          <RiAddLine className="size-5 shrink-0 text-gray-400 transition-transform duration-200 group-open:rotate-45" />
+          <RiAddLine className="size-5 shrink-0 text-gray-400 transition-transform duration-300 ease-out group-open:rotate-45" />
         </summary>
-        <p class="text-paragraph-sm text-gray-600">{item.answer}</p>
+        <div class="faq-panel grid grid-rows-[0fr] transition-[grid-template-rows] duration-300 ease-out group-open:grid-rows-[1fr]">
+          <div class="overflow-hidden">
+            <p class="pb-5 text-paragraph-sm text-gray-600">{item.answer}</p>
+          </div>
+        </div>
       </details>
     ))}
   </div>

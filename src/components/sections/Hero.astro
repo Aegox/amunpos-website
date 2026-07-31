@@ -1,9 +1,11 @@
 ---
 import TypewriterWord from "./TypewriterWord";
-import { RiSparklingLine, RiArrowRightSLine } from "@remixicon/react";
+import { RiSparklingLine, RiArrowRightSLine, RiPulseLine, RiGitBranchLine, RiTruckLine } from "@remixicon/react";
 ---
 
 <section id="Inicio" class="relative w-full scroll-mt-16 overflow-hidden pt-20 pb-8">
+  <div class="hero-mesh" aria-hidden="true"></div>
+
   <!-- Banner: adaptación del banner de sync-con-Figma real, ahora sobre IA -->
   <a
     href="#IA"
@@ -69,14 +71,14 @@ import { RiSparklingLine, RiArrowRightSLine } from "@remixicon/react";
         <span class="corner-dot hidden md:block" style="left: 0; bottom: 0; transform: translate(-50%, 50%);"></span>
         <span class="corner-dot hidden md:block" style="right: 0; bottom: 0; transform: translate(50%, 50%);"></span>
         {[
-          { label: "Panel en tiempo real", desc: "Ventas, caja e inventario al instante", tag: null },
-          { label: "IA integrada", desc: "Automatiza tareas repetitivas", tag: "IA" },
-          { label: "Multi-sucursal", desc: "Todo tu negocio, un solo panel", tag: null },
-          { label: "Soporte 24/7", desc: "Siempre hay alguien para ayudarte", tag: null },
-        ].map(({ label, desc, tag }) => (
+          { icon: RiPulseLine, label: "Panel en tiempo real", desc: "Ventas, caja e inventario al instante", tag: null },
+          { icon: RiSparklingLine, label: "IA integrada", desc: "Automatiza tareas repetitivas", tag: "IA" },
+          { icon: RiGitBranchLine, label: "Multi-sucursal", desc: "Todo tu negocio, un solo panel", tag: null },
+          { icon: RiTruckLine, label: "Delivery sin comisión", desc: "App de repartidor propia, incluida", tag: null },
+        ].map(({ icon: Icon, label, desc, tag }) => (
           <div class="flex w-[220px] shrink-0 items-center gap-3 text-left md:w-auto md:flex-1 md:flex-col md:gap-0 md:text-center">
             <div class="flex size-9 shrink-0 items-center justify-center rounded-9 bg-gray-100 md:size-8">
-              <span class="size-2 rounded-full bg-primary-base"></span>
+              <Icon className="size-4 text-primary-base" />
             </div>
             <div class="min-w-0 md:mt-4">
               <div class="flex items-center gap-1.5 text-label-sm text-gray-900 md:justify-center">
