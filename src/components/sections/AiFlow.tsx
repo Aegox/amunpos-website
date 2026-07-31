@@ -5,8 +5,8 @@ import {
   RiCircleLine,
   RiSparkling2Fill,
   RiArrowRightDoubleLine,
-  RiAlertLine,
   RiTruckLine,
+  RiInstagramLine,
 } from "@remixicon/react";
 import { cn } from "@/lib/utils";
 
@@ -25,10 +25,17 @@ import { cn } from "@/lib/utils";
  *   izquierdo es la conversación y el derecho lo que quedó hecho.
  *
  * · **Los tres pasos cuentan UNA historia, no tres cosas sueltas.** Igual que
- *   alignui va construyendo una sola pantalla de login, aquí se monta un
- *   negocio: primero entra la carta, luego se vigila el stock, y al final se le
- *   pide al proveedor lo que falta. Encadenarlos es lo que hace creíble que el
- *   asistente trabaja, en vez de responder preguntas sueltas.
+ *   alignui va construyendo una sola pantalla de login, aquí se recorre la vida
+ *   del negocio: ENTRAR (montar el inventario sin teclear), REPONER (qué pedirle
+ *   al proveedor) y VENDER MÁS (la publicación). Encadenarlos es lo que hace
+ *   creíble que el asistente trabaja, en vez de responder preguntas sueltas.
+ *
+ * Los tres salen del deck y son los que más levantan la ceja de un dueño:
+ * alta de productos desde facturas, `suggestPurchase` (velocidad de venta a
+ * 30/60/90 días + stock + días de entrega del proveedor) y el generador de
+ * marketing con contexto REAL (top vendidos del mes + brand kit + fecha clave).
+ * Lo que los hace atractivos es que la IA usa los datos del negocio, no que
+ * "tiene IA": por eso cada respuesta dice de dónde sacó la conclusión.
  */
 
 type Fila = { nombre: string; detalle: string; valor?: string };
@@ -42,50 +49,50 @@ const pasos: {
   pie?: { icono: React.ComponentType<{ className?: string }>; texto: string };
 }[] = [
   {
-    prompt: "Carga la carta desde esta foto del menú",
-    promptCorto: "Carga la carta",
+    prompt: "Móntame el inventario con estas facturas",
+    promptCorto: "Monta el inventario",
     chat: [
-      "Leí la foto y encontré 14 platos.",
-      "Los agrupé por categoría y detecté los precios.",
+      "Leí las 3 facturas: 47 productos con su costo.",
+      "Les puse precio con tu margen y los dejé listos.",
     ],
     titulo: "Productos creados",
     filas: [
-      { nombre: "Bandeja paisa", detalle: "Fuertes", valor: "$38.000" },
-      { nombre: "Ajiaco santafereño", detalle: "Fuertes", valor: "$32.000" },
-      { nombre: "Limonada de coco", detalle: "Bebidas", valor: "$11.000" },
-      { nombre: "Arepa de choclo", detalle: "Entradas", valor: "$12.000" },
+      { nombre: "Bandeja paisa", detalle: "Costo $16.000", valor: "$38.000" },
+      { nombre: "Ajiaco santafereño", detalle: "Costo $13.000", valor: "$32.000" },
+      { nombre: "Limonada de coco", detalle: "Costo $3.500", valor: "$11.000" },
+      { nombre: "Cerveza", detalle: "Costo $4.500", valor: "$9.000" },
     ],
-    pie: { icono: RiSparkling2Fill, texto: "14 productos listos para vender" },
+    pie: { icono: RiSparkling2Fill, texto: "47 productos · sin teclear ninguno" },
   },
   {
-    prompt: "Avísame antes de que se acabe el pollo",
-    promptCorto: "Vigila el stock",
+    prompt: "¿Qué le pido al proveedor esta semana?",
+    promptCorto: "Qué pedir",
     chat: [
-      "Miré tus últimas 4 semanas de ventas.",
-      "Gastas 12 kg al día: te aviso con 2 días de margen.",
+      "Miré cuánto vendes de cada uno en 30, 60 y 90 días.",
+      "La Distribuidora tarda 3 días: pedí para cubrirlos.",
     ],
-    titulo: "Alerta configurada",
+    titulo: "Pedido sugerido",
     filas: [
-      { nombre: "Pollo", detalle: "Quedan 31 kg", valor: "2,5 días" },
-      { nombre: "Papa criolla", detalle: "Quedan 48 kg", valor: "6 días" },
-      { nombre: "Aguacate", detalle: "Quedan 9 kg", valor: "1 día" },
+      { nombre: "Pollo", detalle: "Vendes 12 kg/día · quedan 2,5", valor: "60 kg" },
+      { nombre: "Aguacate", detalle: "Vendes 8 kg/día · queda 1", valor: "40 kg" },
+      { nombre: "Papa criolla", detalle: "Vendes 9 kg/día · quedan 6", valor: "50 kg" },
     ],
-    pie: { icono: RiAlertLine, texto: "Aguacate se agota mañana" },
+    pie: { icono: RiTruckLine, texto: "$980.000 · tú confirmas antes de enviar" },
   },
   {
-    prompt: "Ármale el pedido al proveedor",
-    promptCorto: "Pide al proveedor",
+    prompt: "Hazme un post para el Día de la Madre",
+    promptCorto: "Haz un post",
     chat: [
-      "Junté lo que está por acabarse en un solo pedido.",
-      "Distribuidora La 33, entrega el jueves.",
+      "Usé tus 3 platos más vendidos del mes y tu logo.",
+      "Copy, hashtags e imagen 1080×1080 listos.",
     ],
-    titulo: "Pedido de compra",
+    titulo: "Publicación lista",
     filas: [
-      { nombre: "Pollo", detalle: "60 kg", valor: "$540.000" },
-      { nombre: "Aguacate", detalle: "40 kg", valor: "$260.000" },
-      { nombre: "Papa criolla", detalle: "50 kg", valor: "$180.000" },
+      { nombre: "Imagen 1080×1080", detalle: "Con tus colores y tu logo" },
+      { nombre: "Texto y hashtags", detalle: "3 variantes para elegir" },
+      { nombre: "Bandeja paisa", detalle: "Tu plato más vendido", valor: "$38.000" },
     ],
-    pie: { icono: RiTruckLine, texto: "Total $980.000 · listo para enviar" },
+    pie: { icono: RiInstagramLine, texto: "Publicar o compartir por WhatsApp" },
   },
 ];
 
@@ -145,8 +152,8 @@ export default function AiFlow() {
           <br className="hidden sm:inline" /> Lo deja hecho.
         </h2>
         <p className="mt-3 max-w-xl text-pretty text-center text-paragraph-md text-gray-600 xl:text-paragraph-lg">
-          Sin menús que aprender: el asistente monta tu carta, vigila el stock y
-          arma el pedido al proveedor mientras tú atiendes.
+          No es un chat que responde: usa los datos de tu negocio. Monta el
+          inventario, calcula qué pedirle al proveedor y arma tus publicaciones.
         </p>
 
         {/* ── Las tres instrucciones ── */}
@@ -175,35 +182,43 @@ export default function AiFlow() {
                         : "bg-gray-50 text-gray-500 ring-1 ring-inset ring-gray-200",
                   )}
                 >
-                  {/* El haz solo existe en la pastilla que se está ejecutando */}
+                  {/* El haz recorriendo el borde, solo en la pastilla activa.
+                      Son dos capas apiladas, sin `mask-composite`: una que
+                      recorta el cónico girando a la forma de la pastilla, y otra
+                      del color del fondo que tapa el centro y deja a la vista
+                      únicamente el anillo de 1 px. La versión con máscara no
+                      pintaba nada — el navegador descartaba la declaración
+                      entera —, y esta es geometría pura, así que no depende de
+                      qué propiedades soporte cada navegador. */}
                   {trabajando && (
-                    <span
-                      aria-hidden="true"
-                      className="pointer-events-none absolute -inset-px rounded-full p-px"
-                      style={{
-                        mask: "linear-gradient(#000 0 0) exclude, linear-gradient(#000 0 0) content-box",
-                        WebkitMask: "linear-gradient(#000 0 0) exclude, linear-gradient(#000 0 0) content-box",
-                      }}
-                    >
+                    <>
                       <span
-                        // `key` con el paso: al cambiar de pastilla React monta
-                        // un nodo nuevo y la vuelta arranca desde cero. Sin esto
-                        // el haz heredaba el ángulo del anterior y entraba a
-                        // media vuelta.
-                        key={paso}
-                        className="haz-borde absolute left-1/2 top-1/2 aspect-square w-full origin-center -translate-x-1/2 -translate-y-1/2"
-                        style={{
-                          // La vuelta dura lo que dura el paso: el haz cierra el
-                          // círculo y justo ahí pasa el relevo a la siguiente.
-                          ["--vuelta" as string]: `${DURACION - 400}ms`,
-                          backgroundImage:
-                            "conic-gradient(from -100deg, transparent 0deg, transparent 4deg, var(--ai-base) 45deg, var(--ai-base) 90deg, transparent 90deg, transparent)",
-                        }}
+                        aria-hidden="true"
+                        className="pointer-events-none absolute -inset-px overflow-hidden rounded-full"
+                      >
+                        <span
+                          // `key` con el paso: al cambiar de pastilla React monta
+                          // un nodo nuevo y la vuelta arranca desde cero, en vez
+                          // de heredar el ángulo de la anterior y entrar a medias.
+                          key={paso}
+                          className="haz-borde absolute left-1/2 top-1/2 aspect-square w-[115%] origin-center -translate-x-1/2 -translate-y-1/2"
+                          style={{
+                            // La vuelta dura lo que dura el paso: cierra el
+                            // círculo y justo ahí pasa el relevo a la siguiente.
+                            ["--vuelta" as string]: `${DURACION - 400}ms`,
+                            backgroundImage:
+                              "conic-gradient(from -100deg, transparent 0deg, transparent 4deg, var(--ai-base) 45deg, var(--ai-base) 92deg, transparent 92deg, transparent)",
+                          }}
+                        />
+                      </span>
+                      <span
+                        aria-hidden="true"
+                        className="pointer-events-none absolute inset-0 rounded-full bg-gray-0"
                       />
-                    </span>
+                    </>
                   )}
 
-                  <span className="grid size-4 shrink-0 place-items-center">
+                  <span className="relative grid size-4 shrink-0 place-items-center">
                     <span key={`${i}-${hecho}-${trabajando}`} className="icono-entra col-start-1 row-start-1">
                       {hecho ? (
                         <RiCheckboxCircleFill className="size-4 text-ai-base" />
@@ -215,8 +230,8 @@ export default function AiFlow() {
                     </span>
                   </span>
 
-                  <span className="md:hidden">{p.promptCorto}</span>
-                  <span className="hidden md:inline">{p.prompt}</span>
+                  <span className="relative md:hidden">{p.promptCorto}</span>
+                  <span className="relative hidden md:inline">{p.prompt}</span>
                 </button>
               </React.Fragment>
             );
