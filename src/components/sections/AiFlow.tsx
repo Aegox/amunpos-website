@@ -113,10 +113,20 @@ export default function AiFlow() {
   // cambia el paso, incluido cuando lo cambia el usuario pinchando. Con un
   // intervalo fijo, pinchar una pastilla podía saltar a la siguiente a los
   // pocos milisegundos, porque el reloj seguía corriendo por su cuenta.
+  //
+  // Avanza TAMBIÉN con "reducir movimiento" activado. Antes salía antes de
+  // empezar, y en un equipo con esa opción puesta el recorrido no pasaba nunca
+  // de la primera instrucción: parecía roto. Reducir movimiento significa que no
+  // haya desplazamientos que mareen — el haz girando y el texto escribiéndose ya
+  // los apaga el CSS —, no que el contenido se quede congelado. Con la opción
+  // puesta cada paso dura más, para dar tiempo a leerlo sin animación que guíe.
   useEffect(() => {
     if (!visible) return;
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-    const t = setTimeout(() => setPaso((p) => (p + 1) % pasos.length), DURACION);
+    const menosMovimiento = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const t = setTimeout(
+      () => setPaso((p) => (p + 1) % pasos.length),
+      menosMovimiento ? DURACION * 1.6 : DURACION,
+    );
     return () => clearTimeout(t);
   }, [visible, paso]);
 
@@ -176,8 +186,16 @@ export default function AiFlow() {
                       }}
                     >
                       <span
+                        // `key` con el paso: al cambiar de pastilla React monta
+                        // un nodo nuevo y la vuelta arranca desde cero. Sin esto
+                        // el haz heredaba el ángulo del anterior y entraba a
+                        // media vuelta.
+                        key={paso}
                         className="haz-borde absolute left-1/2 top-1/2 aspect-square w-full origin-center -translate-x-1/2 -translate-y-1/2"
                         style={{
+                          // La vuelta dura lo que dura el paso: el haz cierra el
+                          // círculo y justo ahí pasa el relevo a la siguiente.
+                          ["--vuelta" as string]: `${DURACION - 400}ms`,
                           backgroundImage:
                             "conic-gradient(from -100deg, transparent 0deg, transparent 4deg, var(--ai-base) 45deg, var(--ai-base) 90deg, transparent 90deg, transparent)",
                         }}

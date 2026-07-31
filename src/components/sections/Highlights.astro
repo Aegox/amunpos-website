@@ -33,7 +33,10 @@ const props = [
       <ProductShowcase client:visible />
     </div>
 
-    <!-- Propuestas de valor, como cierre de la sección -->
+    <!-- Las tres propuestas de valor se retiran de aquí a la espera de
+         reubicarlas. El bloque queda entero, con sus datos en `props` arriba,
+         para volver a colocarlo donde toque sin rehacerlo:
+
     <div class="mt-14 grid grid-cols-1 gap-8 md:grid-cols-3 xl:mt-20">
       {
         props.map(({ icon: Icon, title, desc, color }, i) => (
@@ -51,5 +54,7 @@ const props = [
         ))
       }
     </div>
+    -->
+    <!-- prettier-ignore -->
   </div>
 </section>

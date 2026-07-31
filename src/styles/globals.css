@@ -244,7 +244,10 @@ body {
 .spark-line {
   position: absolute;
   top: -300px;
-  left: 0;
+  /* SIN `left: 0` a propósito. Estaba aquí y le ganaba a la utilidad `right-0`
+     del marcado, así que las DOS chispas caían por el borde izquierdo, una
+     encima de la otra, y el borde derecho se quedaba sin la suya. El lado lo
+     decide quien la coloca. */
   height: 300px;
   width: 1px;
   background: linear-gradient(180deg, rgba(12, 113, 194, 0), var(--primary-base));
@@ -383,7 +386,14 @@ body {
   to { transform: translate3d(-50%, -50%, 0) rotate(360deg); }
 }
 .haz-borde {
-  animation: haz-entrada 0.6s cubic-bezier(0.6, 0.6, 0, 1), haz-giro 4s 0.6s linear infinite;
+  /* UNA sola vuelta, y su duración la fija el componente con --vuelta para que
+     coincida con lo que dura el paso. Antes giraba en bucle cada 4 s mientras el
+     paso cambiaba a los 4,2 s: el haz nunca llegaba a cerrar el círculo antes de
+     saltar, así que no se leía como "terminó esto, sigo con lo siguiente".
+     Ahora la vuelta se completa y el relevo cae justo ahí. */
+  animation:
+    haz-entrada 0.4s cubic-bezier(0.6, 0.6, 0, 1),
+    haz-giro var(--vuelta, 3.8s) 0.4s linear 1 forwards;
 }
 
 /* El icono de estado entra desde el centro, no aparece de golpe: el cambio de
