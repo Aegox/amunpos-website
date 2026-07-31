@@ -3,6 +3,7 @@ import Layout from "../layouts/Layout.astro";
 import NavBar from "../components/sections/NavBar";
 import Hero from "../components/sections/Hero.astro";
 import Highlights from "../components/sections/Highlights.astro";
+import AiFlow from "../components/sections/AiFlow";
 import WhatsInside from "../components/sections/WhatsInside.astro";
 import SectionDivider from "../components/sections/SectionDivider.astro";
 import Pricing from "../components/sections/Pricing.astro";
@@ -16,6 +17,7 @@ import Footer from "../components/sections/Footer.astro";
   <Hero />
   <Highlights />
   <SectionDivider />
+  <AiFlow client:visible />
   <WhatsInside />
   <SectionDivider />
   <Pricing />

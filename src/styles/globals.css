@@ -362,3 +362,77 @@ body {
 .hover-lift:hover {
   transform: translateY(calc(var(--lift-rest, 0px) - 4px));
 }
+
+/* ─────────────────────────────────────────────────────────────
+   Flujo del asistente IA (AiFlow.tsx)
+
+   Réplica del recurso de alignui.com en su sección "Rapid Development":
+   pastillas de instrucción que se van completando una a una mientras el panel
+   de abajo muestra el resultado en vivo. Allí el resultado es código; aquí es
+   la pantalla del POS, que es lo que le importa a un restaurante.
+   ───────────────────────────────────────────────────────────── */
+
+/* Haz de luz que recorre el borde de la pastilla activa.
+   Un cónico girando dentro de una máscara que solo deja ver el anillo del
+   borde: es lo que da la sensación de "esto se está procesando ahora". */
+@keyframes haz-entrada {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+@keyframes haz-giro {
+  to { transform: translate3d(-50%, -50%, 0) rotate(360deg); }
+}
+.haz-borde {
+  animation: haz-entrada 0.6s cubic-bezier(0.6, 0.6, 0, 1), haz-giro 4s 0.6s linear infinite;
+}
+
+/* El icono de estado entra desde el centro, no aparece de golpe: el cambio de
+   pendiente → trabajando → hecho se lee como una transición, no como un salto. */
+@keyframes icono-entra {
+  from { opacity: 0; transform: scale(0.4); filter: blur(4px); }
+  to { opacity: 1; transform: scale(1); filter: blur(0); }
+}
+.icono-entra { animation: icono-entra 0.4s cubic-bezier(0, 0.55, 0.45, 1) both; }
+
+/* Las líneas que bajan de las pastillas al panel se dibujan solas. */
+@keyframes traza-linea {
+  from { stroke-dashoffset: 1; }
+  to { stroke-dashoffset: 0; }
+}
+.traza-linea {
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  animation: traza-linea 1.2s ease-out 0.2s both;
+}
+
+/* Cada línea del chat se escribe de izquierda a derecha. `--chars` la fija en
+   unidades `ch` para que el ancho pare justo al final del texto. */
+@keyframes escribe {
+  from { width: 0; }
+  to { width: calc(var(--chars) * 1ch); }
+}
+.escribe {
+  display: inline-block;
+  overflow: hidden;
+  white-space: nowrap;
+  vertical-align: bottom;
+  width: calc(var(--chars) * 1ch);
+  animation: escribe calc(var(--chars) * 0.022s) steps(var(--chars), end) both;
+}
+
+/* Las filas del resultado entran escalonadas, como si el asistente las fuera
+   colocando. El retardo lo pone el componente con --i. */
+@keyframes fila-entra {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: none; }
+}
+.fila-entra { animation: fila-entra 0.45s cubic-bezier(0.16, 1, 0.3, 1) both; animation-delay: calc(var(--i, 0) * 0.11s); }
+
+/* Con "menos movimiento" se muestra el resultado final, sin recorrido. */
+@media (prefers-reduced-motion: reduce) {
+  .haz-borde, .icono-entra, .traza-linea, .escribe, .fila-entra {
+    animation: none !important;
+  }
+  .escribe { width: auto; }
+  .traza-linea { stroke-dashoffset: 0; }
+}
