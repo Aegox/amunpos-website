@@ -473,9 +473,11 @@ body {
 }
 
 /* ── Excepción deliberada a prefers-reduced-motion ──────────────
-   Dos animaciones siguen corriendo con "reducir movimiento" activado: el haz
-   que recorre el borde de la pastilla activa (.haz-borde) y las chispas que
-   caen por los lados de la sección oscura (.spark-line).
+   Tres animaciones siguen corriendo con "reducir movimiento" activado: el haz
+   que recorre el borde de la pastilla activa (.haz-borde), las chispas que
+   caen por los lados de la sección oscura (.spark-line) y el deslizamiento del
+   navbar al ocultarse y volver (NavBar.tsx, que por eso ya no lleva
+   `motion-reduce:transition-none`).
 
    Es una decisión de producto tomada a sabiendas, no un descuido. Pararlas las
    dejaba como un contorno azul fijo y dos rayas quietas — que además de no

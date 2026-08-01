@@ -93,10 +93,12 @@ export default function NavBar() {
   // Auto-hide: se esconde al bajar y reaparece al subir. No se esconde cerca del
   // tope (para no tapar el hero al volver) ni con el menú móvil abierto.
   // Ocultar el navbar al bajar NO es una animación decorativa: es lo que
-  // devuelve la pantalla al contenido. Antes esto salía antes de tiempo si el
-  // sistema pedía menos movimiento, y entonces la barra no se ocultaba nunca.
-  // Lo que hay que suprimir en ese caso es la transición, no la función; de eso
-  // se encarga la clase `motion-reduce:transition-none` de abajo.
+  // devuelve la pantalla al contenido.
+  //
+  // La transición TAMPOCO se apaga con "reducir movimiento" — ver la nota de
+  // excepción al final de globals.css. Sin ella la barra aparecía y
+  // desaparecía de golpe, que no se lee como "vuelve la navegación" sino como
+  // un parpadeo, y con esa opción del sistema puesta era lo único que se veía.
   useEffect(() => {
     let lastY = window.scrollY;
     let ticking = false;
@@ -124,7 +126,7 @@ export default function NavBar() {
   return (
     <div
       className={cn(
-        "fixed inset-x-0 top-3 z-50 flex justify-center px-3 transition-transform duration-300 ease-out motion-reduce:transition-none lg:top-4",
+        "fixed inset-x-0 top-3 z-50 flex justify-center px-3 transition-transform duration-300 ease-out lg:top-4",
         hidden && "-translate-y-[calc(100%+1.5rem)]",
       )}
     >

@@ -177,7 +177,18 @@ export default function ProductShowcase() {
         ref={listaRef}
         role="tablist"
         aria-label="Capacidades de amunpos"
-        className="ruler-frame relative -mx-5 flex w-[calc(100%+2.5rem)] items-stretch overflow-x-auto px-5 py-6 md:mx-0 md:w-full md:overflow-visible md:px-[26px]"
+        /* `md:w-[calc(100%-60px)]` — el marco va METIDO respecto a los dos raíles de la
+           página, no al ras. Estaba a 1240, exactamente el ancho de los
+           raíles, así que sus dos rayas horizontales morían justo encima de
+           ellos y el conjunto se leía como una sola caja soldada a la
+           retícula. En alignui.com el marco ocupa un 95 % de lo que separan
+           los raíles, y esa franja de aire a cada lado es lo que lo deja
+           respirar como pieza aparte.
+
+           Con márgenes NO vale: el padre es un flex en columna con
+           `items-center`, así que el ancho `auto` encoge la caja hasta el
+           contenido y el marco se quedaba en 1061 en vez de 1180. */
+        className="ruler-frame relative -mx-5 flex w-[calc(100%+2.5rem)] items-stretch overflow-x-auto px-5 py-6 md:mx-0 md:w-[calc(100%-60px)] md:overflow-visible md:px-[26px]"
       >
         <span className="corner-dot hidden md:block" style={{ left: 0, top: 0, transform: "translate(-50%, -50%)" }} />
         <span className="corner-dot hidden md:block" style={{ right: 0, top: 0, transform: "translate(50%, -50%)" }} />
@@ -215,7 +226,12 @@ export default function ProductShowcase() {
           const isActive = tab.id === active;
           return (
             <React.Fragment key={tab.id}>
-              {i > 0 && <span aria-hidden="true" className="my-1 w-px shrink-0 self-stretch bg-gray-200" />}
+              {/* Margen NEGATIVO para comerse parte del `py-6` del marco: los
+                  divisores tienen que quedar a unos 18 px de las rayas de
+                  arriba y abajo, que es la proporción de alignui.com (110 de
+                  146). Con el relleno tal cual se quedaban a 28 y el bloque se
+                  veía descosido por el centro. */}
+              {i > 0 && <span aria-hidden="true" className="-my-1.5 w-px shrink-0 self-stretch bg-gray-200" />}
               <button
                 ref={(el) => { botonesRef.current[i] = el; }}
                 role="tab"

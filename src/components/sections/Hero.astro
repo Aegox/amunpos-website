@@ -3,9 +3,13 @@ import TypewriterWord from "./TypewriterWord";
 import { RiSparklingLine, RiArrowRightSLine } from "@remixicon/react";
 ---
 
-<!-- pt-28: el navbar flota fijo (top-4 + 56px de alto) y con pt-20 su sombra
-     quedaba encima del banner de IA. Este padding le da aire real. -->
-<section id="Inicio" class="relative w-full scroll-mt-16 overflow-hidden pb-8 pt-28">
+<!-- El relleno superior es EXACTAMENTE lo que ocupa el navbar, para que el
+     banner cuelgue pegado a él: abajo de lg son 12 px de `top-3` + 64 px de
+     `h-16` = 76; de lg para arriba, 16 px de `top-4` + 56 px de alto = 72.
+     El banner tiene el borde y el redondeo solo abajo justamente para eso —
+     con los 112 px de antes quedaba flotando a 40 px, y un elemento diseñado
+     para colgar de algo, colgando de nada, se lee como un fallo. -->
+<section id="Inicio" class="relative w-full scroll-mt-16 overflow-hidden pb-8 pt-[76px] lg:pt-[72px]">
   <div class="hero-mesh" aria-hidden="true"></div>
 
   <!-- Banner: adaptación del banner de sync-con-Figma real, ahora sobre IA -->
@@ -19,19 +23,18 @@ import { RiSparklingLine, RiArrowRightSLine } from "@remixicon/react";
   </a>
 
   <div class="container mx-auto max-w-[1240px] px-5">
-    <div class="flex flex-col items-center pt-11 xl:pt-16">
-      <!-- Trust bar con avatares -->
-      <div class="flex flex-col gap-3 rounded-full md:flex-row md:items-center md:gap-0 md:bg-gray-25 md:px-2 md:py-1.5 md:ring-1 md:ring-gray-200">
-        <div class="flex shrink-0 -space-x-1">
-          {["/user1.png", "/user2.png", "/user3.png", "/user4.png"].map((src) => (
-            <img src={src} width="24" height="24" alt="" class="size-6 rounded-full ring-2 ring-gray-25" />
-          ))}
-        </div>
-        <div class="hidden h-4 w-px bg-gray-200 md:mx-3 md:block"></div>
-        <p class="text-paragraph-sm text-gray-600">
-          Hecho para el <span class="text-label-sm text-gray-900">comercio de Latinoamérica</span>
-        </p>
-      </div>
+    <div class="flex flex-col items-center pt-12 xl:pt-16">
+      <!-- Aquí había una barra con cuatro avatares y "Hecho para el comercio de
+           Latinoamérica". Fuera por dos motivos:
+
+           Uno, decía "Hecho para" tres veces en el mismo golpe de vista — la
+           barra, el titular ("Hecho para vender…") y la línea de abajo ("Hecho
+           para retail"). Repetido tres veces deja de significar nada.
+
+           Y dos, cuatro caras de banco de imágenes es prueba social fingida: al
+           que duda no le convence y al que se da cuenta le resta. Cuando haya
+           clientes reales que enseñar —logos, un número de negocios, una cita
+           con nombre y apellido— este es el sitio, y entonces sí suma. -->
 
       <!-- Desde md el titular va en UNA sola línea (nowrap + tamaño por clamp);
            antes caía a dos líneas y la segunda quedaba descuadrada. En móvil se
@@ -46,13 +49,22 @@ import { RiSparklingLine, RiArrowRightSLine } from "@remixicon/react";
         artificial que migra tus datos, lee tus facturas y arma los horarios de tu equipo.
       </p>
 
+      <!-- Antes decía "Hecho para retail · Y restaurantes", y eso PONÍA UN
+           TECHO: quien tiene una farmacia, una ferretería o una peluquería
+           leía que no era para él. Nombrar sectores siempre deja fuera a
+           alguien.
+
+           Se cambia por el eje contrario: en vez de a qué rubro sirve, hasta
+           dónde te acompaña. Es cierto —multi-sucursal desde el diseño— y
+           responde a la duda real del que compra un POS: "¿me va a quedar
+           chico?". -->
       <div class="mt-4 flex items-center justify-center gap-2.5 xl:mt-7">
         <span class="text-paragraph-sm text-gray-600 xl:text-paragraph-md">
-          Hecho para <span class="font-medium text-gray-800">retail</span>
+          Desde <span class="font-medium text-gray-800">un solo local</span>
         </span>
         <span class="size-1 rounded-full bg-gray-300"></span>
         <span class="text-paragraph-sm text-gray-600 xl:text-paragraph-md">
-          Y <span class="font-medium text-gray-800">restaurantes</span>
+          Hasta <span class="font-medium text-gray-800">toda una cadena</span>
         </span>
       </div>
 
@@ -61,9 +73,15 @@ import { RiSparklingLine, RiArrowRightSLine } from "@remixicon/react";
           href="#Planes"
           class="group inline-flex h-11 items-center gap-3.5 rounded-13 bg-gray-900 px-[18px] text-label-sm text-gray-0 shadow-button-gray transition duration-200 ease-out hover:bg-gray-800"
         >
-          <span class="flex items-center gap-1">
-            <span>Empieza gratis</span>
-            <span class="text-paragraph-sm text-gray-500">— sin tarjeta</span>
+          <!-- Dos partes separadas por un punto, igual que alignui.com
+               ("Get Started · It's free"): la acción y el precio. El guion
+               largo de antes ("— sin tarjeta") pesaba mucho más que el punto y
+               partía el botón en dos mitades en vez de en una frase con un
+               apunte. -->
+          <span class="flex items-center gap-1.5">
+            <span>Empieza</span>
+            <span class="size-1 rounded-full bg-gray-600"></span>
+            <span class="text-paragraph-sm text-gray-500">Es gratis</span>
           </span>
           <RiArrowRightSLine className="-mx-1.5 size-5 shrink-0 text-gray-500" />
         </a>
