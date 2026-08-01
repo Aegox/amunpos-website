@@ -1,5 +1,19 @@
 ---
-import { RiFacebookFill, RiTwitterXFill, RiLinkedinFill, RiInstagramLine, RiSendPlaneFill } from "@remixicon/react";
+import {
+  RiFacebookFill,
+  RiTwitterXFill,
+  RiLinkedinFill,
+  RiInstagramLine,
+  RiArrowRightSLine,
+  RiBookOpenLine,
+  RiMailLine,
+  RiCheckboxCircleFill,
+} from "@remixicon/react";
+
+// Lo que se lleva quien deja el correo, dicho en concreto. "Novedades" a secas
+// no convence a nadie: el que duda quiere saber cada cuánto le vas a escribir y
+// de qué.
+const promesas = ["Novedades del producto", "Trucos para tu negocio", "Acceso anticipado a lo nuevo"];
 
 /**
  * Pie calcado del de alignui.com: logo centrado, la frase de la empresa
@@ -46,27 +60,72 @@ const socials = [
 ];
 ---
 
-<section id="Contacto" class="w-full scroll-mt-16 px-5 py-16 xl:py-20">
-  <div class="mx-auto flex w-full max-w-[720px] flex-col items-center text-center">
-    <h2 data-reveal class="text-title-h4 text-gray-900">Suscríbete para novedades de IA</h2>
-    <p data-reveal style="--reveal-delay: 80ms" class="mt-3 max-w-md text-paragraph-md text-gray-600">
-      Te avisamos cuando lancemos nuevas funciones de inteligencia artificial. Sin spam.
+<section id="Contacto" class="relative w-full scroll-mt-16 px-5 pb-16 pt-4 xl:pb-24">
+  <!-- El conector que baja de la sección anterior y entra en el boletín, el
+       mismo recurso que enhebra las secciones en alignui.com. -->
+  <svg
+    aria-hidden="true"
+    viewBox="0 0 1004 48"
+    preserveAspectRatio="none"
+    class="mx-auto hidden h-12 w-full max-w-[780px] xl:block"
+    fill="none"
+  >
+    <path d="M2 0v8c0 8.84 7.16 16 16 16h468c8.84 0 16 7.16 16 16v8" class="stroke-gray-200" stroke-width="1" vector-effect="non-scaling-stroke"></path>
+    <path d="M502 0v18" class="stroke-gray-200" stroke-width="1" vector-effect="non-scaling-stroke"></path>
+    <path d="M1002 0v8c0 8.84-7.16 16-16 16H518c-8.84 0-16 7.16-16 16v8" class="stroke-gray-200" stroke-width="1" vector-effect="non-scaling-stroke"></path>
+  </svg>
+
+  <!-- El contenedor va a 720 y el texto se estrecha a 560 por dentro: así los
+       tres visto-buenos caben en una sola fila, que es donde se leen de un
+       golpe. Con todo a 560 el tercero se caía a una segunda línea y parecían
+       dos grupos. -->
+  <div class="mx-auto flex w-full max-w-[720px] flex-col items-center pt-10 text-center [&>h2]:max-w-[560px] [&>p]:max-w-[560px]">
+    <span data-reveal class="flex h-8 items-center gap-1.5 rounded-9 bg-gray-0 pl-2 pr-3 text-label-sm text-gray-700 shadow-button-white">
+      <RiBookOpenLine className="size-4 text-gray-400" />
+      Mantente al día
+    </span>
+
+    <h2 data-reveal style="--reveal-delay: 60ms" class="mt-4 text-balance text-title-h4 text-gray-900">
+      Suscríbete a nuestro boletín
+    </h2>
+    <p data-reveal style="--reveal-delay: 120ms" class="mt-3 text-pretty text-paragraph-md text-gray-600">
+      Te contamos lo nuevo de AmunPOS y lo que estamos aprendiendo de otros
+      negocios como el tuyo. Sin spam.
     </p>
-    <form class="mt-6 flex w-full max-w-sm gap-2">
+
+    <!-- El botón va DENTRO del campo, no al lado: así el conjunto se lee como
+         una sola pieza y no como un formulario de dos trozos. El `pr-12` del
+         input reserva el sitio para que el texto largo no pase por debajo. -->
+    <form data-reveal style="--reveal-delay: 180ms" class="group relative mt-7 w-full max-w-[420px]">
+      <label for="correo" class="sr-only">Tu correo electrónico</label>
+      <RiMailLine className="pointer-events-none absolute left-3.5 top-1/2 size-[18px] -translate-y-1/2 text-gray-400" />
       <input
+        id="correo"
         type="email"
-        placeholder="Tu correo electrónico"
-        class="h-11 w-full rounded-13 border border-gray-200 bg-gray-0 px-4 text-paragraph-sm text-gray-900 placeholder-gray-450 focus:border-primary-base focus:outline-none"
+        required
+        placeholder="Escribe tu correo…"
+        class="h-12 w-full rounded-13 bg-gray-0 pl-11 pr-12 text-paragraph-sm text-gray-900 shadow-button-white outline-none transition placeholder:text-gray-450 focus:ring-2 focus:ring-primary-alpha-16"
       />
       <button
         type="submit"
         aria-label="Suscribirse"
-        class="flex h-11 shrink-0 items-center justify-center rounded-13 bg-gray-900 px-4 text-gray-0 shadow-button-gray transition duration-200 hover:bg-gray-800"
+        class="absolute right-1.5 top-1/2 flex size-9 -translate-y-1/2 items-center justify-center rounded-9 bg-gray-0 text-gray-500 shadow-badge-gray transition duration-200 hover:bg-gray-50 hover:text-gray-900"
       >
-        <RiSendPlaneFill className="size-4" />
+        <RiArrowRightSLine className="size-4" />
       </button>
     </form>
-    <p class="mt-2 text-paragraph-xs text-gray-500">Respetamos tu privacidad.</p>
+    <p class="mt-3 text-paragraph-xs text-gray-450">Respetamos tu privacidad.</p>
+
+    <ul data-reveal style="--reveal-delay: 240ms" class="mt-7 flex flex-wrap items-center justify-center gap-x-6 gap-y-2">
+      {
+        promesas.map((texto) => (
+          <li class="flex items-center gap-1.5 text-paragraph-sm text-gray-600">
+            <RiCheckboxCircleFill className="size-[18px] shrink-0 text-success-base" />
+            {texto}
+          </li>
+        ))
+      }
+    </ul>
   </div>
 </section>
 

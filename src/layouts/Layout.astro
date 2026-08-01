@@ -42,7 +42,29 @@ const {
     />
   </head>
   <body class="antialiased">
-    <slot />
+    <div class="relative">
+      <slot />
+
+      <!-- Los dos raíles que recorren la página entera por el borde del
+           contenido, con un puntito en cada juntura de secciones. Es la
+           retícula de alignui.com: lo que hace que el sitio se lea como UN
+           plano continuo y no como bloques apilados que casualmente van
+           seguidos.
+
+           Va DESPUÉS del contenido y sin z-index propio, así que se pinta por
+           encima de los fondos de sección (el gris de Planes) pero cualquier
+           sección que necesite tapar los raíles solo tiene que subirse de capa
+           — es lo que hace la oscura, que trae los suyos en blanco.
+
+           Solo de xl para arriba: por debajo el contenido llega hasta el borde
+           de la pantalla y los raíles no tendrían dónde caer. -->
+      <div class="pointer-events-none absolute inset-0 hidden justify-center xl:flex" aria-hidden="true">
+        <div id="rieles" class="relative h-full w-full max-w-[1240px]">
+          <div class="absolute inset-y-0 left-0 w-px bg-gray-200"></div>
+          <div class="absolute inset-y-0 right-0 w-px bg-gray-200"></div>
+        </div>
+      </div>
+    </div>
 
     <script is:inline>
       (function () {
@@ -67,6 +89,79 @@ const {
 
         if (document.readyState !== "loading") start();
         else document.addEventListener("DOMContentLoaded", start);
+      })();
+    </script>
+
+    <!-- Los puntitos de las junturas se colocan aquí y no en el marcado porque
+         dependen de DÓNDE acaba cada sección, que es algo que solo se sabe una
+         vez maquetado: cambia con el ancho, con el texto y con lo que se abra o
+         se cierre. Ponerlos a mano obligaría a tocar cada sección y a
+         mantenerlos a mano cada vez que se mueva algo.
+
+         Cada punto se rellena con el fondo REAL de la sección que empieza ahí,
+         que es lo que hace que tape el cruce del raíl en vez de quedar un
+         cuadrito flotando encima.
+
+         Sin JS quedan los raíles limpios, que es una degradación perfectamente
+         válida para un adorno. -->
+    <script is:inline>
+      (function () {
+        const rieles = document.getElementById("rieles");
+        if (!rieles) return;
+
+        const fondoDe = (el) => {
+          let n = el;
+          while (n && n !== document.documentElement) {
+            const c = getComputedStyle(n).backgroundColor;
+            if (c && c !== "transparent" && !/rgba\(0, 0, 0, 0\)/.test(c)) return c;
+            n = n.parentElement;
+          }
+          return "#fff";
+        };
+
+        const pintar = () => {
+          rieles.querySelectorAll("[data-juntura]").forEach((n) => n.remove());
+          if (!matchMedia("(min-width: 1280px)").matches) return;
+
+          const base = rieles.getBoundingClientRect().top + scrollY;
+          // Los hermanos del propio overlay. Se descartan los que no ocupan
+          // sitio (la barra de navegación va fija y mediría 0 aquí): una
+          // juntura sin sección debajo es un punto suelto en mitad de nada.
+          const bloques = [...rieles.parentElement.parentElement.children].filter(
+            (el) => !el.contains(rieles) && el.getBoundingClientRect().height > 20,
+          );
+
+          // Las junturas son los bordes SUPERIORES, más el final del último: un
+          // punto por cada línea donde una sección da paso a la siguiente.
+          const alturas = bloques.map((el) => el.getBoundingClientRect().top + scrollY - base);
+          const ultimo = bloques[bloques.length - 1];
+          if (ultimo) alturas.push(ultimo.getBoundingClientRect().bottom + scrollY - base);
+
+          alturas.forEach((y, i) => {
+            const fondo = fondoDe(bloques[Math.min(i, bloques.length - 1)]);
+            for (const lado of ["left", "right"]) {
+              const punto = document.createElement("span");
+              punto.dataset.juntura = "";
+              punto.style.cssText =
+                "position:absolute;width:5px;height:5px;border:1px solid var(--gray-300);" +
+                "top:" + y + "px;" + lado + ":0;" +
+                "transform:translate(" + (lado === "left" ? "-2px" : "2px") + ",-2px);" +
+                "background:" + fondo + ";";
+              rieles.appendChild(punto);
+            }
+          });
+        };
+
+        const arrancar = () => {
+          pintar();
+          addEventListener("resize", pintar);
+          // El contenido cambia de alto al abrirse una pregunta o al entrar las
+          // animaciones, y los puntos tienen que seguirlo.
+          if ("ResizeObserver" in window) new ResizeObserver(pintar).observe(document.body);
+        };
+
+        if (document.readyState === "complete") arrancar();
+        else addEventListener("load", arrancar);
       })();
     </script>
   </body>

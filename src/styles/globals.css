@@ -38,6 +38,11 @@
   --primary-alpha-10: hsl(204 88% 40% / 10%);
   --primary-alpha-16: hsl(204 88% 40% / 16%);
 
+  /* Verde de "esto lo tienes incluido". Es color SEMÁNTICO, no de marca: un
+     visto bueno en verde no compite con el azul, lo confirma. Por eso no sale
+     de la escala --primary ni de la --ai. */
+  --success-base: hsl(148 79% 36%);
+
   /* Acento de IA en AZUL de marca (antes era el verde #12A557 de alignui.com).
      Se usa un azul un poco más brillante que --primary para dar "pop" a lo de
      IA sin salirse de la identidad de AmunPOS. */
@@ -69,6 +74,7 @@
   --color-primary-alpha-10: var(--primary-alpha-10);
   --color-primary-alpha-16: var(--primary-alpha-16);
 
+  --color-success-base: var(--success-base);
   --color-ai-base: var(--ai-base);
   --color-ai-dark: var(--ai-dark);
   --color-ai-light: var(--ai-light);
