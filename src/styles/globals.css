@@ -191,14 +191,18 @@ body {
   -webkit-mask-image: radial-gradient(ellipse 70% 60% at 50% 30%, black 40%, transparent 100%);
 }
 
-/* Punto decorativo de esquina — el mismo truco visual que usa alignui.com
-   en las cajas con "regla" (antes usaban una imagen dot.png de 9x9px) */
+/* Remate de las esquinas de las cajas con "regla".
+   CUADRADO y hueco, no un punto relleno: es lo que hace alignui.com y no es un
+   capricho — el relleno es del color del fondo, así que el cuadradito TAPA el
+   final de la raya. La raya deja de morir a media calle y parece que pasa por
+   detrás. Con un punto relleno de gris se veía el remate como una bolita
+   pegada al final de una raya cortada. */
 .corner-dot {
   position: absolute;
   width: 5px;
   height: 5px;
-  border-radius: 9999px;
-  background: var(--gray-300);
+  border: 1px solid var(--gray-300);
+  background: var(--gray-0);
   z-index: 30;
 }
 

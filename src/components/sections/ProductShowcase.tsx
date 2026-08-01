@@ -223,15 +223,19 @@ export default function ProductShowcase() {
                 onClick={() => setActive(tab.id)}
                 className="group flex w-[190px] shrink-0 flex-col items-center px-4 text-center outline-none md:w-auto md:flex-1"
               >
-                {/* Negro en reposo y azul (o azul-IA) al seleccionarlo. El
-                    contenedor mide lo mismo que la línea indicadora y ambos van
-                    centrados en la columna, así el icono queda justo debajo. */}
+                {/* En reposo: fondo gris con el icono en negro. Al
+                    seleccionarlo se le da la vuelta — el fondo pasa al color de
+                    marca y el icono a blanco.
+                    Antes solo se teñía el icono de azul sobre el mismo gris, y
+                    a un vistazo las cinco pastillas se veían iguales: había que
+                    fijarse en el tono del dibujito para saber cuál estaba
+                    puesta. Invirtiendo el bloque entero se ve desde lejos. */}
                 <span
                   className={cn(
-                    "flex size-12 items-center justify-center rounded-[14px] bg-gray-50 ring-1 ring-inset transition-colors duration-300 ease-out group-focus-visible:ring-2 group-focus-visible:ring-primary-base/40",
+                    "flex size-12 items-center justify-center rounded-[14px] ring-1 ring-inset transition-colors duration-300 ease-out group-focus-visible:ring-2 group-focus-visible:ring-primary-base/40",
                     isActive
-                      ? cn("ring-gray-200", tab.ai ? "text-ai-base" : "text-primary-base")
-                      : "text-gray-900 ring-transparent group-hover:bg-gray-100",
+                      ? cn("text-gray-0 ring-transparent", tab.ai ? "bg-ai-base" : "bg-primary-base")
+                      : "bg-gray-50 text-gray-900 ring-transparent group-hover:bg-gray-100",
                   )}
                 >
                   <Icon className="size-5" />
