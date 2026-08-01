@@ -1,50 +1,96 @@
 ---
 import { RiAddLine } from "@remixicon/react";
 
-const faqData = [
+/**
+ * Estructura calcada de la sección de preguntas frecuentes de alignui.com:
+ * el título se queda a la izquierda y las preguntas van a la derecha, sin
+ * tarjetas — solo filas separadas por una raya fina — y AGRUPADAS bajo una
+ * etiqueta gris.
+ *
+ * Los grupos no son decorado: quien entra a mirar precio no entra a mirar si
+ * el delivery cobra comisión. Separarlos deja que cada uno vaya directo a lo
+ * suyo en vez de leerse seis preguntas seguidas.
+ */
+const grupos = [
   {
-    question: "¿AmunPOS sirve para retail y para restaurantes?",
-    answer: "Sí. La misma plataforma cubre la tienda de la esquina y el restaurante con mesas: carrito, descuentos, pago dividido, plano de mesas y cortes de caja. No necesitas dos sistemas distintos.",
+    titulo: "El producto",
+    items: [
+      {
+        question: "¿AmunPOS sirve para retail y para restaurantes?",
+        answer:
+          "Sí. La misma plataforma cubre la tienda de la esquina y el restaurante con mesas: carrito, descuentos, pago dividido, plano de mesas y cortes de caja. No necesitas dos sistemas distintos.",
+      },
+      {
+        question: "¿Puedo manejar varias sucursales?",
+        answer:
+          "Sí, AmunPOS es multi-sucursal desde el diseño. Controlas stock, cajas, permisos y reportes por local, con analítica consolidada de todo el negocio en un solo panel.",
+      },
+      {
+        question: "¿El delivery cobra comisión por cada pedido?",
+        answer:
+          "No. El delivery viene con app de repartidor propia, zonas y mapa, dentro de tu plan. No cobramos comisión por pedido como las apps de terceros: tú te quedas con tu margen.",
+      },
+      {
+        question: "¿Qué tan real es la parte de inteligencia artificial?",
+        answer:
+          "Es funcionalidad activa hoy, no una promesa: el asistente de negocio, la predicción de stock, la migración de datos y la lectura de facturas ya funcionan dentro de AmunPOS.",
+      },
+    ],
   },
   {
-    question: "¿Puedo manejar varias sucursales?",
-    answer: "Sí, AmunPOS es multi-sucursal desde el diseño. Controlas stock, cajas, permisos y reportes por local, con analítica consolidada de todo el negocio en un solo panel.",
-  },
-  {
-    question: "¿El delivery cobra comisión por cada pedido?",
-    answer: "No. El delivery viene con app de repartidor propia, zonas y mapa, dentro de tu plan. No cobramos comisión por pedido como las apps de terceros: tú te quedas con tu margen.",
-  },
-  {
-    question: "¿Qué tan real es la parte de inteligencia artificial?",
-    answer: "Es funcionalidad activa hoy, no una promesa: el asistente de negocio, la predicción de stock, la migración de datos y la lectura de facturas ya funcionan dentro de AmunPOS.",
-  },
-  {
-    question: "Ya uso otro POS. ¿Puedo migrar mis datos?",
-    answer: "Sí. AmunPOS importa tu información desde otros sistemas de punto de venta, así que empiezas con tus productos e inventario cargados, sin volver a hacerlo a mano.",
-  },
-  {
-    question: "¿Cuánto cuesta y puedo probarlo antes?",
-    answer: "Los planes van desde $29 al mes por sucursal e incluyen lo que otros cobran aparte, como delivery y nómina según el plan. Puedes empezar con una prueba gratis y crecer sumando sucursales y módulos.",
+    titulo: "Empezar",
+    items: [
+      {
+        question: "Ya uso otro POS. ¿Puedo migrar mis datos?",
+        answer:
+          "Sí. AmunPOS importa tu información desde otros sistemas de punto de venta, así que empiezas con tus productos e inventario cargados, sin volver a hacerlo a mano.",
+      },
+      {
+        question: "¿Cuánto cuesta y puedo probarlo antes?",
+        answer:
+          "Los planes van desde $29 al mes por sucursal e incluyen lo que otros cobran aparte, como delivery y nómina según el plan. Puedes empezar con una prueba gratis y crecer sumando sucursales y módulos.",
+      },
+    ],
   },
 ];
 ---
 
-<section id="Faq" class="flex w-full scroll-mt-16 flex-col items-center px-5 py-20 xl:py-28">
-  <h2 data-reveal class="text-pretty text-center text-title-h4 text-gray-900 xl:text-title-h3">Aquí hay algunas respuestas</h2>
+<section id="Faq" class="w-full scroll-mt-16 px-5 py-16 xl:py-24">
+  <div class="mx-auto grid w-full max-w-[1080px] gap-10 md:grid-cols-[minmax(0,320px)_minmax(0,1fr)] md:gap-16 xl:gap-24">
+    <!-- La columna del título se queda quieta mientras se recorren las
+         preguntas: en una lista larga, saber en qué sección estás sin tener
+         que subir es la mitad de la utilidad de agruparlas. -->
+    <div data-reveal class="md:sticky md:top-24 md:self-start">
+      <div class="text-label-sm uppercase tracking-[0.08em] text-gray-400">Preguntas frecuentes</div>
+      <h2 class="mt-3 text-balance text-title-h4 text-gray-900">Aquí hay algunas respuestas.</h2>
+      <p class="mt-3 text-pretty text-paragraph-md text-gray-500">
+        Lo que más nos preguntan antes de empezar. Si te queda otra, escríbenos.
+      </p>
+    </div>
 
-  <div class="mt-12 flex w-full max-w-[720px] flex-col gap-3">
-    {faqData.map((item, i) => (
-      <details data-reveal style={`--reveal-delay: ${i * 60}ms`} class="group faq-item rounded-18 border border-gray-200 bg-gray-0 px-6 transition-shadow duration-200 hover:shadow-button-white">
-        <summary class="flex cursor-pointer list-none items-center justify-between gap-4 py-4 text-label-md text-gray-900 [&::-webkit-details-marker]:hidden">
-          {item.question}
-          <RiAddLine className="size-5 shrink-0 text-gray-400 transition-transform duration-300 ease-out group-open:rotate-45" />
-        </summary>
-        <div class="faq-panel grid grid-rows-[0fr] transition-[grid-template-rows] duration-300 ease-out group-open:grid-rows-[1fr]">
-          <div class="overflow-hidden">
-            <p class="pb-5 text-paragraph-sm text-gray-600">{item.answer}</p>
+    <div data-reveal style="--reveal-delay: 90ms">
+      {
+        grupos.map((grupo) => (
+          <div class="mt-12 first:mt-0">
+            <div class="text-paragraph-sm text-gray-400">{grupo.titulo}</div>
+            <div class="mt-1">
+              {grupo.items.map((item) => (
+                <details class="group border-b border-gray-200">
+                  <summary class="flex cursor-pointer list-none items-center justify-between gap-6 py-4 text-left text-label-md text-gray-900 transition-colors duration-200 hover:text-gray-600 [&::-webkit-details-marker]:hidden">
+                    {item.question}
+                    <RiAddLine className="size-5 shrink-0 text-gray-400 transition-transform duration-300 ease-out group-open:rotate-45" />
+                  </summary>
+                  <div class="grid grid-rows-[0fr] transition-[grid-template-rows] duration-300 ease-out group-open:grid-rows-[1fr]">
+                    <div class="overflow-hidden">
+                      <p class="max-w-[60ch] pb-5 pr-8 text-pretty text-paragraph-sm text-gray-600">{item.answer}</p>
+                    </div>
+                  </div>
+                </details>
+              ))}
+            </div>
           </div>
-        </div>
-      </details>
-    ))}
+        ))
+      }
+    </div>
   </div>
 </section>

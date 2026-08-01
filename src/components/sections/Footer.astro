@@ -1,12 +1,43 @@
 ---
 import { RiFacebookFill, RiTwitterXFill, RiLinkedinFill, RiInstagramLine, RiSendPlaneFill } from "@remixicon/react";
 
-const productLinks = [
-  { label: "Características", id: "Caracteristicas" },
-  { label: "Inteligencia artificial", id: "IA" },
-  { label: "Precios", id: "Planes" },
-  { label: "Beneficios", id: "Testimonios" },
+/**
+ * Pie calcado del de alignui.com: logo centrado, la frase de la empresa
+ * partida en dos líneas —la segunda apagada—, los iconos sociales debajo, y
+ * las columnas de enlaces separadas por rayas VERTICALES con un puntito
+ * cuadrado en cada extremo. Ese puntito es lo que hace que la retícula se lea
+ * como un plano y no como una tabla; sin él las rayas parecen bordes sueltos.
+ *
+ * Tres columnas y no cinco como ellos: el sitio es de una sola página, así que
+ * todos los enlaces son anclas. Inventar columnas obligaría a repetir el mismo
+ * destino varias veces, que es peor que tener menos.
+ */
+const columnas = [
+  {
+    titulo: "Producto",
+    enlaces: [
+      { label: "Qué hay dentro", href: "#Producto" },
+      { label: "Planes", href: "#Planes" },
+      { label: "Preguntas frecuentes", href: "#Faq" },
+    ],
+  },
+  {
+    titulo: "Empresa",
+    enlaces: [
+      { label: "Nosotros", href: "#Inicio" },
+      { label: "Beneficios", href: "#Testimonios" },
+      { label: "Contacto", href: "#Contacto" },
+    ],
+  },
+  {
+    titulo: "Empezar",
+    enlaces: [
+      { label: "Crear cuenta", href: "#Planes" },
+      { label: "Iniciar sesión", href: "#" },
+    ],
+  },
 ];
+
 const socials = [
   { href: "https://www.facebook.com/", label: "Facebook", Icon: RiFacebookFill },
   { href: "https://twitter.com/", label: "Twitter", Icon: RiTwitterXFill },
@@ -15,7 +46,7 @@ const socials = [
 ];
 ---
 
-<section id="Contacto" class="w-full scroll-mt-16 border-t border-gray-200 px-5 py-20">
+<section id="Contacto" class="w-full scroll-mt-16 px-5 py-16 xl:py-20">
   <div class="mx-auto flex w-full max-w-[720px] flex-col items-center text-center">
     <h2 data-reveal class="text-title-h4 text-gray-900">Suscríbete para novedades de IA</h2>
     <p data-reveal style="--reveal-delay: 80ms" class="mt-3 max-w-md text-paragraph-md text-gray-600">
@@ -39,35 +70,79 @@ const socials = [
   </div>
 </section>
 
-<footer class="w-full bg-gray-0 px-5 pt-14">
-  <div class="mx-auto flex w-full max-w-[1240px] flex-col items-center gap-8 border-t border-gray-200 pb-10 pt-10 md:flex-row md:justify-between">
-    <div class="flex flex-col items-center gap-3 md:items-start">
-      <img src="/logo.png" alt="AmunPOS" class="h-5 w-auto" />
-      <p class="max-w-xs text-center text-paragraph-sm text-gray-500 md:text-left">El sistema operativo del comercio en Latinoamérica.</p>
+<footer class="w-full px-5 pb-8">
+  <div class="mx-auto w-full max-w-[1240px]">
+    <!-- Regla superior. El puntito va CENTRADO sobre el extremo de la raya
+         (de ahí los -translate de media unidad), no pegado al lado. -->
+    <div class="relative h-px bg-gray-200">
+      <span class="absolute -left-px top-1/2 size-[5px] -translate-y-1/2 border border-gray-300 bg-gray-0"></span>
+      <span class="absolute -right-px top-1/2 size-[5px] -translate-y-1/2 border border-gray-300 bg-gray-0"></span>
     </div>
 
-    <nav class="flex flex-wrap items-center justify-center gap-x-6 gap-y-2">
-      {productLinks.map(({ label, id }) => (
-        <a href={`#${id}`} class="text-paragraph-sm text-gray-600 transition-colors duration-200 hover:text-primary-base">{label}</a>
-      ))}
-    </nav>
-
-    <div class="flex gap-3">
-      {socials.map(({ href, label, Icon }) => (
-        <a
-          href={href}
-          aria-label={label}
-          target="_blank"
-          rel="noreferrer"
-          class="flex size-8 items-center justify-center rounded-9 bg-gray-0 text-gray-400 shadow-button-white transition duration-200 hover:bg-gray-25 hover:text-gray-600"
-        >
-          <Icon size={15} />
-        </a>
-      ))}
+    <!-- Bloque de marca -->
+    <div class="flex flex-col items-center px-5 py-12 xl:py-14">
+      <img src="/logo.png" alt="AmunPOS" class="h-7 w-auto" />
+      <p class="mt-5 text-balance text-center text-title-h6 text-gray-900 md:text-title-h5">
+        El sistema operativo del comercio
+        <span class="block text-gray-450">en Latinoamérica.</span>
+      </p>
+      <div class="mt-6 flex gap-2">
+        {
+          socials.map(({ href, label, Icon }) => (
+            <a
+              href={href}
+              aria-label={label}
+              target="_blank"
+              rel="noreferrer"
+              class="flex size-9 items-center justify-center rounded-9 bg-gray-0 text-gray-400 shadow-button-white transition duration-200 hover:bg-gray-25 hover:text-gray-700"
+            >
+              <Icon size={16} />
+            </a>
+          ))
+        }
+      </div>
     </div>
-  </div>
 
-  <div class="border-t border-gray-100 py-6">
-    <p class="text-center text-paragraph-xs text-gray-450">© {new Date().getFullYear()} AmunPOS. Todos los derechos reservados.</p>
+    <div class="relative h-px bg-gray-200">
+      <span class="absolute -left-px top-1/2 size-[5px] -translate-y-1/2 border border-gray-300 bg-gray-0"></span>
+      <span class="absolute -right-px top-1/2 size-[5px] -translate-y-1/2 border border-gray-300 bg-gray-0"></span>
+    </div>
+
+    <!-- Columnas. Las rayas verticales van en el hueco ENTRE columnas, no como
+         borde de cada una: con `border-l` la primera columna se queda coja y
+         las rayas caen pegadas al texto en vez de a media calle. -->
+    <div class="relative grid grid-cols-2 gap-x-8 gap-y-10 px-5 py-10 md:grid-cols-3 md:gap-x-10 xl:py-12">
+      {
+        columnas.map((c, i) => (
+          <div class="relative">
+            {i > 0 && (
+              <span class="absolute -left-4 top-0 hidden h-full w-px bg-gray-200 md:-left-5 md:block">
+                <span class="absolute -left-0.5 -top-px size-[5px] border border-gray-300 bg-gray-0" />
+                <span class="absolute -bottom-px -left-0.5 size-[5px] border border-gray-300 bg-gray-0" />
+              </span>
+            )}
+            <div class="text-label-sm text-gray-900">{c.titulo}</div>
+            <ul class="mt-4 flex flex-col gap-2.5">
+              {c.enlaces.map(({ label, href }) => (
+                <li>
+                  <a href={href} class="text-paragraph-sm text-gray-500 transition-colors duration-200 hover:text-gray-900">
+                    {label}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </div>
+        ))
+      }
+    </div>
+
+    <div class="relative h-px bg-gray-200">
+      <span class="absolute -left-px top-1/2 size-[5px] -translate-y-1/2 border border-gray-300 bg-gray-0"></span>
+      <span class="absolute -right-px top-1/2 size-[5px] -translate-y-1/2 border border-gray-300 bg-gray-0"></span>
+    </div>
+
+    <p class="py-7 text-center text-paragraph-sm text-gray-450">
+      © {new Date().getFullYear()} AmunPOS. Todos los derechos reservados.
+    </p>
   </div>
 </footer>
