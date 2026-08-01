@@ -1,6 +1,6 @@
 # amunpos-website — Astro + AlignUI, estructura inspirada en Untitled UI
 
-Landing page de AmunPOS reconstruida desde cero en **Astro + React** (islas),
+Landing page de amunpos reconstruida desde cero en **Astro + React** (islas),
 con el sistema de diseño real de [AlignUI](https://alignui.com) (ver
 `design-system/alignui/`) y la **arquitectura de página** tomada de las
 plantillas reales de [Untitled UI](https://www.untitledui.com/react/marketing/landing-pages)

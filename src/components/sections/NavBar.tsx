@@ -30,7 +30,7 @@ const productItems: MenuItem[] = [
 ];
 
 const companyItems: MenuItem[] = [
-  { icon: RiCompass3Line, title: "Nosotros", desc: "Quiénes somos y por qué existe AmunPOS", href: "#Inicio" },
+  { icon: RiCompass3Line, title: "Nosotros", desc: "Quiénes somos y por qué existe amunpos", href: "#Inicio" },
   { icon: RiChatQuoteLine, title: "Beneficios", desc: "Lo que tu negocio va a lograr", href: "#Testimonios" },
   { icon: RiMailLine, title: "Contacto", desc: "Habla con nuestro equipo", href: "#Contacto" },
 ];
@@ -130,7 +130,7 @@ export default function NavBar() {
     >
       <header className="flex h-16 w-full items-center justify-between gap-4 rounded-2xl bg-gray-25 px-4 shadow-button-white lg:h-auto lg:w-auto lg:justify-start lg:gap-0 lg:rounded-3xl lg:bg-gray-0 lg:py-2.5 lg:pl-5 lg:pr-2.5">
         <a className="flex items-center focus:outline-none" href="#Inicio">
-          <img src="/logo.png" alt="AmunPOS" className="h-5 w-auto" />
+          <img src="/logo.png" alt="amunpos" className="h-5 w-auto" />
         </a>
 
         {/* Un solo grupo de navegación con ritmo uniforme: antes el logo, el

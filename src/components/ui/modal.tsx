@@ -125,7 +125,7 @@ export {
 /*
   NOTA DE ADAPTACIÓN: el Header/Footer reales de AlignUI están pensados para
   modales con icono+título alineados a la izquierda y un footer con acciones
-  a la derecha (flujos de confirmación). El modal de auth de AmunPOS es
+  a la derecha (flujos de confirmación). El modal de auth de amunpos es
   distinto: logo centrado, título centrado, y un pie con un link de "cambiar
   de flujo" (login↔registro) centrado — por eso Header/Footer aquí se
   adaptaron a diseño centrado en vez de copiar el layout izquierda/derecha

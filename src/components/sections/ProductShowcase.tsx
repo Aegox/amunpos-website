@@ -91,7 +91,7 @@ function Frame({ path, children }: { path: string; children: React.ReactNode }) 
 }
 
 /** Cascarón de la app (rail lateral + barra superior) para que cada mockup se
- *  lea como una pantalla real de AmunPOS y no como una tarjeta suelta flotando
+ *  lea como una pantalla real de amunpos y no como una tarjeta suelta flotando
  *  en un marco vacío. Replica la estructura de la captura real del panel. */
 function AppShell({ title, action, children }: { title: string; action?: React.ReactNode; children: React.ReactNode }) {
   return (
@@ -176,7 +176,7 @@ export default function ProductShowcase() {
       <div
         ref={listaRef}
         role="tablist"
-        aria-label="Capacidades de AmunPOS"
+        aria-label="Capacidades de amunpos"
         className="ruler-frame relative -mx-5 flex w-[calc(100%+2.5rem)] items-stretch overflow-x-auto px-5 py-6 md:mx-0 md:w-full md:overflow-visible md:px-[26px]"
       >
         <span className="corner-dot hidden md:block" style={{ left: 0, top: 0, transform: "translate(-50%, -50%)" }} />
@@ -279,7 +279,7 @@ export default function ProductShowcase() {
                 src="/capture-of-pos.webp"
                 width="1679"
                 height="918"
-                alt="Panel de AmunPOS con ventas, inventario y reportes"
+                alt="Panel de amunpos con ventas, inventario y reportes"
                 className="h-full w-full object-cover object-top"
                 loading="lazy"
                 decoding="async"

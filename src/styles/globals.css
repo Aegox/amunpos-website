@@ -6,12 +6,12 @@
  * de componentes. Ver los valores computados reales en los archivos .css
  * de la carpeta "AlignUI Design System..._files/" que el usuario pegó.
  *
- * Excepción intencional: --primary-* usa el azul histórico de AmunPOS
+ * Excepción intencional: --primary-* usa el azul histórico de amunpos
  * (#0c71c2), no el gris neutro que AlignUI usa como color de botón
  * principal en su propia landing — es nuestra marca, no la de ellos.
  * Nota: AlignUI usa un verde (#12A557) como convención de "esto es IA".
  * Aquí lo cambiamos por un AZUL de marca (--ai-*) para una identidad
- * unificada de AmunPOS; ver los tokens --ai-* más abajo.
+ * unificada de amunpos; ver los tokens --ai-* más abajo.
  */
 :root {
   /* Escala neutra real (gray-0 a gray-950), extraída de las clases bg-ln-gray-N y text-ln-gray-N */
@@ -31,7 +31,7 @@
   --gray-925: #262626;
   --gray-950: #1c1c1c;
 
-  /* Marca AmunPOS (no de AlignUI) */
+  /* Marca amunpos (no de AlignUI) */
   --primary-base: hsl(204 88% 40%);
   --primary-dark: hsl(204 88% 34%);
   --primary-darker: hsl(204 88% 28%);
@@ -45,7 +45,7 @@
 
   /* Acento de IA en AZUL de marca (antes era el verde #12A557 de alignui.com).
      Se usa un azul un poco más brillante que --primary para dar "pop" a lo de
-     IA sin salirse de la identidad de AmunPOS. */
+     IA sin salirse de la identidad de amunpos. */
   --ai-base: hsl(204 90% 46%);
   --ai-dark: hsl(204 90% 36%);
   --ai-light: hsl(204 90% 95%);
@@ -235,7 +235,7 @@ body {
 
 /* "Spark" cayendo por una línea vertical — en alignui.com real es naranja
    (#F05023) sobre la sección oscura "Core Features"; aquí la adaptamos en
-   azul de marca para la sección oscura de AmunPOS ("¿Qué hay dentro?") */
+   azul de marca para la sección oscura de amunpos ("¿Qué hay dentro?") */
 @keyframes spark-fall {
   0% {
     top: -300px;
