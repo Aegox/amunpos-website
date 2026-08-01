@@ -446,3 +446,19 @@ body {
   .escribe { width: auto; }
   .traza-linea { stroke-dashoffset: 0; }
 }
+
+/* Cierre del recorrido del asistente: los tres resultados entran escalonados
+   desde abajo, con un desenfoque que se va. Es el mismo remate que alignui.com
+   pone bajo su panel (`animate-rapid-b-item`): el recorrido no termina en el
+   panel, termina diciendo QUÉ GANAS. */
+@keyframes remate-entra {
+  from { opacity: 0; transform: translateY(8px); filter: blur(4px); }
+  to { opacity: 1; transform: none; filter: blur(0); }
+}
+.remate-entra {
+  animation: remate-entra 0.7s cubic-bezier(0.16, 1, 0.3, 1) both;
+  animation-delay: calc(var(--i, 0) * 0.18s);
+}
+@media (prefers-reduced-motion: reduce) {
+  .remate-entra { animation: none; }
+}

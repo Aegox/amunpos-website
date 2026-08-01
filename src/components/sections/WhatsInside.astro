@@ -47,6 +47,40 @@ const items = [
           </div>
         </div>
       ))}
+
+      <!-- Rejilla: las dos verticales que separan las tres columnas y la
+           horizontal que separa las dos filas. A partir de `md` el grid apaga
+           sus propios `divide-y`/`border-t` y las seis funciones quedaban
+           flotando sueltas; estas líneas les devuelven la estructura.
+
+           El desfase de 4px es porque el 33,33% del contenedor NO cae en el
+           centro del hueco: con `gap-x-6` la columna mide (100%-48px)/3, así
+           que el 33,33% queda 4px a la derecha del centro del primer hueco (y
+           el 66,66% otros 4px a la izquierda del segundo). Sin corregirlo las
+           dos líneas se ven descentradas de forma distinta cada una. -->
+      <div
+        class="pointer-events-none absolute inset-y-0 hidden w-px bg-linear-to-b from-transparent via-white/[.08] to-transparent xl:block"
+        style="left: calc(33.3333% - 4px)"
+      >
+      </div>
+      <div
+        class="pointer-events-none absolute inset-y-0 hidden w-px bg-linear-to-b from-transparent via-white/[.08] to-transparent xl:block"
+        style="left: calc(66.6667% + 4px)"
+      >
+      </div>
+      <div class="pointer-events-none absolute inset-x-0 top-1/2 hidden h-px bg-linear-to-r from-transparent via-white/[.08] to-transparent xl:block"></div>
+
+      <!-- Un punto en cada cruce, como en la sección oscura de alignui.com. El
+           anillo es del color del fondo, así que TAPA el cruce: sin él se ve un
+           "+" duro; con él parece que las líneas pasan por detrás del punto. Es
+           el detalle que hace que esto se lea como una estructura y no como los
+           bordes de una tabla. -->
+      <span
+        class="pointer-events-none absolute top-1/2 hidden size-[7px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-white/[.14] ring-[6px] ring-gray-950 xl:block"
+        style="left: calc(33.3333% - 4px)"></span>
+      <span
+        class="pointer-events-none absolute top-1/2 hidden size-[7px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-white/[.14] ring-[6px] ring-gray-950 xl:block"
+        style="left: calc(66.6667% + 4px)"></span>
     </div>
   </div>
 </section>

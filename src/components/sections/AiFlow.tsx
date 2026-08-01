@@ -353,6 +353,76 @@ export default function AiFlow() {
             </div>
           </div>
         </div>
+
+        {/* ── El remate: qué gana el negocio ──
+            En alignui.com el recorrido no termina en el panel: baja otro
+            conector y cierra con tres frases de resultado. Es lo que convierte
+            la demo en argumento — enseñar la máquina funcionando no dice nada
+            si no rematas con lo que el dueño se lleva.
+
+            Los tres corresponden a los tres pasos de arriba (montar, reponer,
+            vender), así que la sección entra y sale con la misma idea. */}
+        {/* Aquí el conector va al revés que el de arriba: aquel juntaba tres
+            instrucciones en un panel, este REPARTE un panel en tres resultados.
+            Por eso las patas no acaban en las esquinas sino en el centro de
+            cada columna: con `gap-6` sobre 1004 la columna mide 318,67, así que
+            los centros caen en 159, 502 y 845. Si acabaran en las esquinas las
+            líneas apuntarían al vacío entre dos textos. */}
+        <svg
+          aria-hidden="true"
+          data-conector-abajo
+          viewBox="0 0 1004 48"
+          preserveAspectRatio="none"
+          className="mt-2 hidden h-12 w-full max-w-[1004px] xl:block"
+          fill="none"
+        >
+          {[
+            "M502 0v8c0 8.84-7.16 16-16 16H175c-8.84 0-16 7.16-16 16v8",
+            "M502 0v48",
+            "M502 0v8c0 8.84 7.16 16 16 16h311c8.84 0 16 7.16 16 16v8",
+          ].map((d) => (
+            <path
+              key={d}
+              d={d}
+              className="traza-linea stroke-gray-200"
+              strokeWidth="1"
+              vectorEffect="non-scaling-stroke"
+              pathLength="1"
+            />
+          ))}
+        </svg>
+
+        <div data-remate className="mt-10 grid w-full max-w-[1004px] gap-8 md:grid-cols-3 md:gap-6 xl:mt-4">
+          {[
+            {
+              icono: RiSparkling2Fill,
+              titulo: "Abres sin teclear",
+              texto: "El inventario entra desde las facturas que ya tienes, no a mano producto por producto.",
+            },
+            {
+              icono: RiTruckLine,
+              titulo: "No se te acaba nada",
+              texto: "Te avisa con tu ritmo real de venta y los días que tarda tu proveedor.",
+            },
+            {
+              icono: RiInstagramLine,
+              titulo: "Publicas sin diseñador",
+              texto: "Imagen y texto con tu marca, hechos con los platos que más vendes.",
+            },
+          ].map((r, i) => (
+            <div
+              key={r.titulo}
+              className="remate-entra flex gap-4 md:flex-col md:gap-0 md:text-center"
+              style={{ ["--i" as string]: i + 1 }}
+            >
+              <r.icono className="size-6 shrink-0 text-ai-base md:mx-auto" />
+              <div className="md:mt-4">
+                <div className="text-label-md text-gray-900">{r.titulo}</div>
+                <p className="mt-1 text-pretty text-paragraph-sm text-gray-600">{r.texto}</p>
+              </div>
+            </div>
+          ))}
+        </div>
       </div>
     </section>
   );
