@@ -264,24 +264,8 @@ body {
     transform: none;
     filter: none;
   }
-  /* La chispa deja de CAER, pero no desaparece.
-     Estaba en `opacity: 0`, así que con las animaciones del sistema apagadas la
-     sección oscura perdía sus dos líneas laterales por completo y se veía plana
-     y sin rematar. Reducir el movimiento significa "que no se mueva", no "que no
-     exista": aquí se queda como un degradado quieto sobre el borde, que es el
-     mismo acento sin desplazamiento. */
-  .spark-line {
-    animation: none;
-    top: 0;
-    height: 100%;
-    opacity: 0.5;
-    background: linear-gradient(
-      180deg,
-      rgba(12, 113, 194, 0) 0%,
-      var(--primary-base) 50%,
-      rgba(12, 113, 194, 0) 100%
-    );
-  }
+  /* .spark-line NO se para aquí, a propósito. Ver la nota de excepción al
+     final de este archivo. */
 }
 
 /* ── Scroll reveal ──────────────────────────────────────────────
@@ -448,20 +432,14 @@ body {
 
 /* Con "menos movimiento" se muestra el resultado final, sin recorrido. */
 @media (prefers-reduced-motion: reduce) {
-  .haz-borde, .icono-entra, .traza-linea, .escribe, .fila-entra {
+  .icono-entra, .traza-linea, .escribe, .fila-entra {
     animation: none !important;
   }
   .escribe { width: auto; }
   .traza-linea { stroke-dashoffset: 0; }
 
-  /* Parar el recorrido dejaba el trozo de trazo congelado donde arranca: un
-     pedacito de borde azul suelto, que no se lee como "esto está en marcha"
-     sino como un defecto de pintado. Se quita el hueco y queda el contorno
-     COMPLETO. El estado activo se sigue viendo; lo que desaparece es el
-     movimiento, que es justo lo que pide el ajuste. */
-  .haz-borde {
-    stroke-dasharray: none;
-  }
+  /* .haz-borde NO se para aquí, a propósito. Ver la nota de excepción al final
+     de este archivo. */
 }
 
 /* Cierre del recorrido del asistente: los tres resultados entran escalonados
@@ -479,3 +457,23 @@ body {
 @media (prefers-reduced-motion: reduce) {
   .remate-entra { animation: none; }
 }
+
+/* ── Excepción deliberada a prefers-reduced-motion ──────────────
+   Dos animaciones siguen corriendo con "reducir movimiento" activado: el haz
+   que recorre el borde de la pastilla activa (.haz-borde) y las chispas que
+   caen por los lados de la sección oscura (.spark-line).
+
+   Es una decisión de producto tomada a sabiendas, no un descuido. Pararlas las
+   dejaba como un contorno azul fijo y dos rayas quietas — que además de no
+   comunicar nada se leían como un defecto de pintado — y son EL recurso visual
+   de esas dos secciones.
+
+   Se acota a lo que menos molesta de todo lo que hay aquí: un trazo de 1,5 px
+   y dos de 1 px, que se desplazan poco, no siguen el scroll, no cambian el
+   tamaño de nada y no mueven texto. Lo que sí puede marear o dificultar la
+   lectura — los desplazamientos con desenfoque, el texto escribiéndose solo,
+   las filas entrando — sigue apagado más arriba, y el contenido avanza igual
+   sin depender de ninguna animación.
+
+   Si algún día hay que revisarlo, se revierte metiendo estos dos selectores en
+   los bloques @media de arriba; el resto del CSS no depende de esto. */
