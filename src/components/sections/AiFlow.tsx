@@ -100,8 +100,18 @@ const DURACION = 4200;
 
 export default function AiFlow() {
   const [paso, setPaso] = useState(0);
-  // Solo anima cuando la sección está a la vista: un temporizador corriendo en
-  // una sección que nadie ve gasta batería y desincroniza el recorrido.
+  // Arranca cuando la sección se ve por primera vez, y a partir de ahí NO se
+  // vuelve a tocar.
+  //
+  // Antes esto seguía el ir y venir de la visibilidad. El problema es que el
+  // recorrido del haz lo lleva el CSS y el relevo de paso lo lleva este
+  // temporizador: cada vez que la sección bajaba del 25 % visible —cosa que
+  // pasa sin más al hacer scroll— el temporizador se reiniciaba y el haz no,
+  // así que el haz terminaba su vuelta y se quedaba QUIETO en el borde de
+  // arriba esperando un relevo que ya no llegaba a tiempo. Se veía exactamente
+  // como una animación rota.
+  //
+  // Enganchando una sola vez, los dos relojes salen juntos y no se separan.
   const [visible, setVisible] = useState(false);
   const seccionRef = useRef<HTMLDivElement>(null);
 
@@ -109,7 +119,11 @@ export default function AiFlow() {
     const nodo = seccionRef.current;
     if (!nodo) return;
     const observador = new IntersectionObserver(
-      ([entrada]) => setVisible(entrada.isIntersecting),
+      ([entrada]) => {
+        if (!entrada.isIntersecting) return;
+        setVisible(true);
+        observador.disconnect();
+      },
       { threshold: 0.25 },
     );
     observador.observe(nodo);
@@ -183,39 +197,59 @@ export default function AiFlow() {
                   )}
                 >
                   {/* El haz recorriendo el borde, solo en la pastilla activa.
-                      Son dos capas apiladas, sin `mask-composite`: una que
-                      recorta el cónico girando a la forma de la pastilla, y otra
-                      del color del fondo que tapa el centro y deja a la vista
-                      únicamente el anillo de 1 px. La versión con máscara no
-                      pintaba nada — el navegador descartaba la declaración
-                      entera —, y esta es geometría pura, así que no depende de
-                      qué propiedades soporte cada navegador. */}
-                  {trabajando && (
-                    <>
-                      <span
-                        aria-hidden="true"
-                        className="pointer-events-none absolute -inset-px overflow-hidden rounded-full"
-                      >
-                        <span
-                          // `key` con el paso: al cambiar de pastilla React monta
-                          // un nodo nuevo y la vuelta arranca desde cero, en vez
-                          // de heredar el ángulo de la anterior y entrar a medias.
-                          key={paso}
-                          className="haz-borde absolute left-1/2 top-1/2 aspect-square w-[115%] origin-center -translate-x-1/2 -translate-y-1/2"
-                          style={{
-                            // La vuelta dura lo que dura el paso: cierra el
-                            // círculo y justo ahí pasa el relevo a la siguiente.
-                            ["--vuelta" as string]: `${DURACION - 400}ms`,
-                            backgroundImage:
-                              "conic-gradient(from -100deg, transparent 0deg, transparent 4deg, var(--ai-base) 45deg, var(--ai-base) 92deg, transparent 92deg, transparent)",
-                          }}
-                        />
-                      </span>
-                      <span
-                        aria-hidden="true"
-                        className="pointer-events-none absolute inset-0 rounded-full bg-gray-0"
+                      Es un trazo con hueco al que se le mueve el desfase: el
+                      trozo pintado avanza POR el contorno, esquinas redondeadas
+                      incluidas.
+
+                      Antes era un cónico girando detrás de una máscara. Girar
+                      un cono reparte el ángulo por igual, pero la pastilla es
+                      muy ancha y muy baja: el mismo ángulo barría media
+                      pastilla en los lados largos y casi nada en los extremos,
+                      así que no se veía un haz dando la vuelta sino dos rayas
+                      rectas parpadeando arriba y abajo. Recorrer el trazo va
+                      por la longitud real del contorno y sale a velocidad
+                      constante, que es lo que se quería.
+
+                      `pathLength=100` normaliza el perímetro, así que el hueco
+                      mide el mismo porcentaje en las tres pastillas aunque cada
+                      una tenga un ancho distinto. */}
+                  {/* `visible` además de `trabajando`: el haz lo pinta el CSS
+                      en cuanto el componente se hidrata, pero el relevo de paso
+                      no empieza hasta que la sección entra en pantalla. Si se
+                      monta antes, sale con ventaja, termina la vuelta y se queda
+                      parado en el borde esperando. Montándolo aquí los dos
+                      relojes salen a la vez. */}
+                  {trabajando && visible && (
+                    <svg
+                      aria-hidden="true"
+                      className="pointer-events-none absolute inset-0 size-full overflow-visible"
+                      fill="none"
+                    >
+                      <rect
+                        // `key` con el paso: al cambiar de pastilla React monta
+                        // un nodo nuevo y la vuelta arranca desde cero, en vez
+                        // de heredar el avance de la anterior y entrar a medias.
+                        key={paso}
+                        className="haz-borde"
+                        x="0"
+                        y="0"
+                        width="100%"
+                        height="100%"
+                        // la mitad de `h-11` (44 px): así el trazo cae justo
+                        // sobre el `rounded-full` del botón
+                        rx="22"
+                        ry="22"
+                        pathLength={100}
+                        stroke="var(--ai-base)"
+                        strokeWidth="1.5"
+                        strokeLinecap="round"
+                        style={{
+                          // La vuelta dura lo que dura el paso: cierra el
+                          // recorrido y justo ahí pasa el relevo a la siguiente.
+                          ["--vuelta" as string]: `${DURACION}ms`,
+                        }}
                       />
-                    </>
+                    </svg>
                   )}
 
                   <span className="relative grid size-4 shrink-0 place-items-center">

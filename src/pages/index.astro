@@ -19,7 +19,10 @@ import Footer from "../components/sections/Footer.astro";
   <SectionDivider />
   <AiFlow client:visible />
   <WhatsInside />
-  <SectionDivider />
+  <!-- Aquí NO va separador: el separador es para dar aire entre dos bloques que
+       comparten fondo. Entre la sección oscura y Planes (gris) el cambio de
+       fondo ya separa de sobra, y meterlo obligaba a abrir una franja blanca
+       entre el negro y el gris que se veía como un hueco sin rellenar. -->
   <Pricing />
   <Testimonials />
   <SectionDivider />

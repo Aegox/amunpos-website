@@ -376,24 +376,32 @@ body {
    ───────────────────────────────────────────────────────────── */
 
 /* Haz de luz que recorre el borde de la pastilla activa.
-   Un cónico girando dentro de una máscara que solo deja ver el anillo del
-   borde: es lo que da la sensación de "esto se está procesando ahora". */
+   Un trozo de trazo al que se le mueve el desfase, así que avanza siguiendo el
+   contorno real: es lo que da la sensación de "esto se está procesando ahora". */
 @keyframes haz-entrada {
   from { opacity: 0; }
   to { opacity: 1; }
 }
-@keyframes haz-giro {
-  to { transform: translate3d(-50%, -50%, 0) rotate(360deg); }
+@keyframes haz-recorre {
+  from { stroke-dashoffset: 100; }
+  to { stroke-dashoffset: 0; }
 }
 .haz-borde {
+  /* Con `pathLength=100` en el SVG, esto es "18 % pintado, 82 % hueco". */
+  stroke-dasharray: 18 82;
+
   /* UNA sola vuelta, y su duración la fija el componente con --vuelta para que
      coincida con lo que dura el paso. Antes giraba en bucle cada 4 s mientras el
-     paso cambiaba a los 4,2 s: el haz nunca llegaba a cerrar el círculo antes de
-     saltar, así que no se leía como "terminó esto, sigo con lo siguiente".
-     Ahora la vuelta se completa y el relevo cae justo ahí. */
+     paso cambiaba a los 4,2 s: el haz nunca llegaba a cerrar el recorrido antes
+     de saltar, así que no se leía como "terminó esto, sigo con lo siguiente".
+     Ahora la vuelta se completa y el relevo cae justo ahí.
+
+     Sin retardo a propósito: el haz sale andando y se funde a la vez. Con los
+     0,4 s de retardo que tenía antes se quedaba medio segundo quieto en el
+     punto de salida al empezar cada instrucción. */
   animation:
     haz-entrada 0.4s cubic-bezier(0.6, 0.6, 0, 1),
-    haz-giro var(--vuelta, 3.8s) 0.4s linear 1 forwards;
+    haz-recorre var(--vuelta, 4.2s) linear 1 forwards;
 }
 
 /* El icono de estado entra desde el centro, no aparece de golpe: el cambio de
@@ -445,6 +453,15 @@ body {
   }
   .escribe { width: auto; }
   .traza-linea { stroke-dashoffset: 0; }
+
+  /* Parar el recorrido dejaba el trozo de trazo congelado donde arranca: un
+     pedacito de borde azul suelto, que no se lee como "esto está en marcha"
+     sino como un defecto de pintado. Se quita el hueco y queda el contorno
+     COMPLETO. El estado activo se sigue viendo; lo que desaparece es el
+     movimiento, que es justo lo que pide el ajuste. */
+  .haz-borde {
+    stroke-dasharray: none;
+  }
 }
 
 /* Cierre del recorrido del asistente: los tres resultados entran escalonados
