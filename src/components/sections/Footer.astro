@@ -1,4 +1,5 @@
 ---
+import Regla from "./Regla.astro";
 import {
   RiFacebookFill,
   RiTwitterXFill,
@@ -129,17 +130,11 @@ const socials = [
   </div>
 </section>
 
-<footer class="w-full px-5 pb-8">
-  <div class="mx-auto w-full max-w-[1240px]">
-    <!-- Regla superior. El puntito va CENTRADO sobre el extremo de la raya
-         (de ahí los -translate de media unidad), no pegado al lado. -->
-    <div class="relative h-px bg-gray-200">
-      <span class="absolute -left-px top-1/2 size-[5px] -translate-y-1/2 border border-gray-300 bg-gray-0"></span>
-      <span class="absolute -right-px top-1/2 size-[5px] -translate-y-1/2 border border-gray-300 bg-gray-0"></span>
-    </div>
+<footer class="w-full pb-8">
+  <Regla />
 
     <!-- Bloque de marca -->
-    <div class="flex flex-col items-center px-5 py-12 xl:py-14">
+  <div class="mx-auto flex w-full max-w-[1240px] flex-col items-center px-5 py-12 xl:py-14">
       <img src="/logo.png" alt="AmunPOS" class="h-7 w-auto" />
       <p class="mt-5 text-balance text-center text-title-h6 text-gray-900 md:text-title-h5">
         El sistema operativo del comercio
@@ -162,15 +157,12 @@ const socials = [
       </div>
     </div>
 
-    <div class="relative h-px bg-gray-200">
-      <span class="absolute -left-px top-1/2 size-[5px] -translate-y-1/2 border border-gray-300 bg-gray-0"></span>
-      <span class="absolute -right-px top-1/2 size-[5px] -translate-y-1/2 border border-gray-300 bg-gray-0"></span>
-    </div>
+  <Regla />
 
     <!-- Columnas. Las rayas verticales van en el hueco ENTRE columnas, no como
          borde de cada una: con `border-l` la primera columna se queda coja y
          las rayas caen pegadas al texto en vez de a media calle. -->
-    <div class="relative grid grid-cols-2 gap-x-8 gap-y-10 px-5 py-10 md:grid-cols-3 md:gap-x-10 xl:py-12">
+  <div class="relative mx-auto grid w-full max-w-[1240px] grid-cols-2 gap-x-8 gap-y-10 px-5 py-10 md:grid-cols-3 md:gap-x-10 xl:py-12">
       {
         columnas.map((c, i) => (
           <div class="relative">
@@ -195,13 +187,9 @@ const socials = [
       }
     </div>
 
-    <div class="relative h-px bg-gray-200">
-      <span class="absolute -left-px top-1/2 size-[5px] -translate-y-1/2 border border-gray-300 bg-gray-0"></span>
-      <span class="absolute -right-px top-1/2 size-[5px] -translate-y-1/2 border border-gray-300 bg-gray-0"></span>
-    </div>
+  <Regla />
 
-    <p class="py-7 text-center text-paragraph-sm text-gray-450">
-      © {new Date().getFullYear()} AmunPOS. Todos los derechos reservados.
-    </p>
-  </div>
+  <p class="py-7 text-center text-paragraph-sm text-gray-450">
+    © {new Date().getFullYear()} AmunPOS. Todos los derechos reservados.
+  </p>
 </footer>

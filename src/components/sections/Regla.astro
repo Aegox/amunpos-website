@@ -1,0 +1,33 @@
+---
+/**
+ * Raya horizontal que separa bloques.
+ *
+ * Va A SANGRE, de borde a borde de la pantalla, y los remates NO marcan dónde
+ * termina sino dónde CRUZA los dos raíles verticales de la página. La raya
+ * sigue de largo después del cruce, que es lo que hace que la retícula se lea
+ * como un plano continuo: si la raya muriera en el raíl, cada sección volvería
+ * a parecer una caja cerrada.
+ *
+ * Los remates son cuadrados y huecos con el relleno del color del fondo, así
+ * que tapan el punto exacto del cruce en vez de dibujar un "+" duro.
+ *
+ * `calc(50% ∓ 620px)` es el borde del contenido (max-w-1240 centrado), o sea
+ * justo donde caen los raíles. Solo desde xl porque por debajo no hay raíles
+ * que cruzar.
+ */
+interface Props {
+  /** Color del relleno de los remates: tiene que ser el fondo real de la zona. */
+  fondo?: string;
+  class?: string;
+}
+const { fondo = "var(--gray-0)", class: clase = "" } = Astro.props;
+---
+
+<div class={`relative h-px w-full bg-gray-200 ${clase}`}>
+  <span
+    class="corner-dot hidden xl:block"
+    style={`left: calc(50% - 620px); top: 50%; transform: translate(-50%, -50%); background: ${fondo}`}></span>
+  <span
+    class="corner-dot hidden xl:block"
+    style={`left: calc(50% + 620px); top: 50%; transform: translate(-50%, -50%); background: ${fondo}`}></span>
+</div>
