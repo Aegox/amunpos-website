@@ -473,11 +473,13 @@ body {
 }
 
 /* ── Excepción deliberada a prefers-reduced-motion ──────────────
-   Tres animaciones siguen corriendo con "reducir movimiento" activado: el haz
+   Cuatro animaciones siguen corriendo con "reducir movimiento" activado: el haz
    que recorre el borde de la pastilla activa (.haz-borde), las chispas que
    caen por los lados de la sección oscura (.spark-line) y el deslizamiento del
    navbar al ocultarse y volver (NavBar.tsx, que por eso ya no lleva
-   `motion-reduce:transition-none`).
+   `motion-reduce:transition-none`) y el trazo de la flecha de precios
+   (.dibuja-flecha), que es EL efecto de esa anotación: sin dibujarse es una
+   flecha impresa cualquiera.
 
    Es una decisión de producto tomada a sabiendas, no un descuido. Pararlas las
    dejaba como un contorno azul fijo y dos rayas quietas — que además de no
@@ -493,3 +495,28 @@ body {
 
    Si algún día hay que revisarlo, se revierte metiendo estos dos selectores en
    los bloques @media de arriba; el resto del CSS no depende de esto. */
+
+/* ── La anotación a mano de la sección de precios ───────────────
+   La flecha se DIBUJA sola, como trazada a lápiz sobre la página. Con
+   `pathLength=1` el trazo se normaliza, así que el mismo par dasharray/offset
+   vale para cualquier curva sin tener que medirla. */
+@keyframes dibuja-flecha {
+  from { stroke-dashoffset: 1; }
+  to { stroke-dashoffset: 0; }
+}
+.dibuja-flecha {
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  /* `ease-in-out` y no lineal: una mano acelera al empezar el trazo y frena al
+     terminarlo. Con velocidad constante parece impreso, no escrito. */
+  animation: dibuja-flecha 1.1s cubic-bezier(0.65, 0, 0.35, 1) 0.5s both;
+}
+
+/* La letra de la nota. Sin fuente web a propósito: la cursiva del sistema
+   basta para dos palabras y no vale la pena cargar un archivo entero —ni
+   arriesgarse a que el navegador caiga en una fuente cualquiera sin avisar—
+   por un adorno de 17 px. */
+.nota-mano {
+  font-family: "Segoe Script", "Bradley Hand", "Brush Script MT", "Snell Roundhand", cursive;
+  font-weight: 600;
+}

@@ -1,87 +1,51 @@
 ---
-import { RiCheckLine } from "@remixicon/react";
-
-const plans = [
-  {
-    title: "Básico",
-    target: "Para negocios que empiezan",
-    price: "$29",
-    popular: false,
-    features: ["POS para retail y restaurante", "Inventario y control de caja", "Facturación con IVA", "Asistente IA incluido", "1 sucursal"],
-  },
-  {
-    title: "Estándar",
-    target: "Para negocios en crecimiento",
-    price: "$49",
-    popular: true,
-    features: ["Todo lo del plan Básico", "Multi-sucursal (hasta 3)", "Predicción de stock con IA", "Reportes y asistente con IA", "Fidelización de clientes"],
-  },
-  {
-    title: "Profesional",
-    target: "Para cadenas y multisucursal",
-    price: "$79",
-    popular: false,
-    features: ["Todo lo del plan Estándar", "Sucursales ilimitadas", "Domicilios con app de repartidor", "Nómina con IA", "Marketing automático y contabilidad"],
-  },
-];
+import { RiPriceTag3Line, RiInformationLine } from "@remixicon/react";
+import PricingTable from "./PricingTable";
 ---
 
 <section id="Planes" class="relative w-full scroll-mt-16 bg-gray-25 px-5 py-20 xl:py-28">
   <div class="mx-auto flex w-full max-w-[1240px] flex-col items-center">
-    <h2 data-reveal class="text-pretty text-center text-title-h4 text-gray-900 xl:text-title-h3">
-      Planes transparentes, la IA incluida en todos
+    <span
+      data-reveal
+      class="flex h-8 items-center gap-1.5 rounded-9 bg-gray-0 pl-2 pr-3 text-label-sm text-gray-700 shadow-button-white"
+    >
+      <RiPriceTag3Line className="size-4 text-gray-400" />
+      Precios
+    </span>
+
+    <h2 data-reveal style="--reveal-delay: 60ms" class="mt-4 text-balance text-center text-title-h4 text-gray-900 xl:text-title-h3">
+      Todo incluido, sin sorpresas.
     </h2>
-    <p data-reveal style="--reveal-delay: 80ms" class="mt-3 max-w-lg text-center text-paragraph-md text-gray-600">
-      Sin costos ocultos. Paga por sucursal y suma módulos cuando los necesites.
+    <p data-reveal style="--reveal-delay: 120ms" class="mt-3 max-w-xl text-pretty text-center text-paragraph-md text-gray-600">
+      Pagas por <span class="text-label-md text-gray-900">sucursal</span> y la
+      <span class="text-label-md text-gray-900">IA va incluida</span> en todos los planes. Sin
+      permanencia y sin costos ocultos.
     </p>
 
-    <div class="mt-14 flex w-full flex-col items-center gap-6 xl:flex-row xl:items-stretch">
-      {plans.map((plan, i) => (
-        <article
-          data-reveal
-          style={`--reveal-delay: ${i * 90}ms`}
-          class={`hover-lift relative flex w-full flex-col rounded-18 border bg-gray-0 p-7 md:w-[80%] xl:w-1/3 ${
-            plan.popular
-              ? "border-primary-base/30 shadow-[0_20px_50px_-20px_rgba(12,113,194,0.35)] xl:[--lift-rest:-12px]"
-              : "border-gray-200 hover:shadow-button-white"
-          }`}
-        >
-          {plan.popular && (
-            <span class="absolute -top-3.5 left-1/2 -translate-x-1/2 rounded-full bg-primary-base px-3 py-1 text-label-xs text-gray-0 shadow-button-gray">
-              Más elegido
-            </span>
-          )}
-          <div class="flex items-center justify-between">
-            <h3 class="text-title-h6 text-gray-900">{plan.title}</h3>
-          </div>
-          <p class="mt-1 text-paragraph-sm text-gray-600">{plan.target}</p>
+    <!-- `xl:mt-28` y no `mt-16`: encima del conmutador va la nota manuscrita,
+         que mide unos 80 px de alto y cuelga hacia arriba. Con menos aire se
+         montaba sobre el párrafo y se leían las dos cosas cruzadas. -->
+    <div data-reveal style="--reveal-delay: 180ms" class="mt-12 w-full xl:mt-32">
+      <PricingTable client:visible />
+    </div>
 
-          <div class="mt-6 flex items-baseline gap-1">
-            <span class="text-title-h4 text-gray-900">{plan.price}</span>
-            <span class="text-paragraph-sm text-gray-600">/ mes</span>
-          </div>
-
-          <a
-            href="#Contacto"
-            class={`mt-6 flex h-11 w-full items-center justify-center rounded-13 text-label-sm transition duration-200 ${
-              plan.popular ? "bg-primary-base text-gray-0 shadow-button-gray hover:bg-primary-dark" : "border border-gray-200 text-gray-900 hover:bg-gray-50"
-            }`}
-          >
-            Escoger plan
-          </a>
-
-          <div class="my-6 h-px w-full bg-gray-200"></div>
-
-          <ul class="flex flex-col gap-3">
-            {plan.features.map((item) => (
-              <li class="flex items-center gap-2.5 text-paragraph-sm text-gray-700">
-                <RiCheckLine className="size-4 shrink-0 text-primary-base" />
-                {item}
-              </li>
-            ))}
-          </ul>
-        </article>
-      ))}
+    <!-- La nota de abajo, como la de alignui: lo que no cabe en la tabla pero
+         cambia la decisión de quien está mirando el precio. -->
+    <div
+      data-reveal
+      class="mt-3 flex w-full items-start gap-3 rounded-[18px] bg-gray-0 p-5 ring-1 ring-gray-200"
+    >
+      <span class="flex size-8 shrink-0 items-center justify-center rounded-9 bg-gray-25 text-gray-500">
+        <RiInformationLine className="size-[18px]" />
+      </span>
+      <div>
+        <div class="text-label-sm text-gray-900">¿Varias sucursales o un caso raro?</div>
+        <p class="mt-0.5 text-pretty text-paragraph-sm text-gray-600">
+          A partir de cinco locales el precio por sucursal baja. Escríbenos a
+          <a href="mailto:hola@amunpos.com" class="text-primary-base underline underline-offset-2">hola@amunpos.com</a>
+          y lo armamos contigo.
+        </p>
+      </div>
     </div>
   </div>
 </section>
