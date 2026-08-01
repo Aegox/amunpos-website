@@ -98,6 +98,11 @@ const pasos: {
 
 const DURACION = 4200;
 
+// La cola del haz: 8 trocitos del 3 % del contorno cada uno, encadenados, que
+// suman una línea de un 24 % que se va apagando hacia atrás.
+const TRAZOS = 8;
+const LARGO_TRAZO = 3;
+
 export default function AiFlow() {
   const [paso, setPaso] = useState(0);
   // Arranca cuando la sección se ve por primera vez, y a partir de ahí NO se
@@ -197,9 +202,9 @@ export default function AiFlow() {
                   )}
                 >
                   {/* El haz recorriendo el borde, solo en la pastilla activa.
-                      Es un trazo con hueco al que se le mueve el desfase: el
-                      trozo pintado avanza POR el contorno, esquinas redondeadas
-                      incluidas.
+                      Es el MISMO recurso que las chispas que caen por los lados
+                      de la sección oscura, puesto sobre un contorno redondeado:
+                      una cabeza sólida con la cola desvaneciéndose detrás.
 
                       Antes era un cónico girando detrás de una máscara. Girar
                       un cono reparte el ángulo por igual, pero la pastilla es
@@ -208,47 +213,51 @@ export default function AiFlow() {
                       así que no se veía un haz dando la vuelta sino dos rayas
                       rectas parpadeando arriba y abajo. Recorrer el trazo va
                       por la longitud real del contorno y sale a velocidad
-                      constante, que es lo que se quería.
+                      constante.
 
-                      `pathLength=100` normaliza el perímetro, así que el hueco
-                      mide el mismo porcentaje en las tres pastillas aunque cada
-                      una tenga un ancho distinto. */}
-                  {/* `visible` además de `trabajando`: el haz lo pinta el CSS
-                      en cuanto el componente se hidrata, pero el relevo de paso
-                      no empieza hasta que la sección entra en pantalla. Si se
-                      monta antes, sale con ventaja, termina la vuelta y se queda
-                      parado en el borde esperando. Montándolo aquí los dos
-                      relojes salen a la vez. */}
-                  {trabajando && visible && (
+                      El degradado no se puede hacer con un `stroke` en
+                      degradado: ese se queda quieto en el espacio y el trocito
+                      cambiaría de color según por dónde pasa, en vez de llevar
+                      su cola encima. Se hace con varios trocitos consecutivos,
+                      cada uno un poco más atrás en el tiempo y un poco más
+                      apagado; con las puntas rectas encajan unos con otros y se
+                      leen como una sola línea que se difumina.
+
+                      `pathLength=100` normaliza el perímetro: cada trocito mide
+                      el mismo porcentaje en las tres pastillas aunque cada una
+                      tenga un ancho distinto. */}
+                  {trabajando && (
                     <svg
                       aria-hidden="true"
-                      className="pointer-events-none absolute inset-0 size-full overflow-visible"
+                      className="haz-entra pointer-events-none absolute inset-0 size-full overflow-visible"
                       fill="none"
                     >
-                      <rect
-                        // `key` con el paso: al cambiar de pastilla React monta
-                        // un nodo nuevo y la vuelta arranca desde cero, en vez
-                        // de heredar el avance de la anterior y entrar a medias.
-                        key={paso}
-                        className="haz-borde"
-                        x="0"
-                        y="0"
-                        width="100%"
-                        height="100%"
-                        // la mitad de `h-11` (44 px): así el trazo cae justo
-                        // sobre el `rounded-full` del botón
-                        rx="22"
-                        ry="22"
-                        pathLength={100}
-                        stroke="var(--ai-base)"
-                        strokeWidth="1.5"
-                        strokeLinecap="round"
-                        style={{
-                          // La vuelta dura lo que dura el paso: cierra el
-                          // recorrido y justo ahí pasa el relevo a la siguiente.
-                          ["--vuelta" as string]: `${DURACION}ms`,
-                        }}
-                      />
+                      {Array.from({ length: TRAZOS }).map((_, k) => (
+                        <rect
+                          key={k}
+                          className="haz-borde"
+                          x="0"
+                          y="0"
+                          width="100%"
+                          height="100%"
+                          // la mitad de `h-11` (44 px): así el trazo cae justo
+                          // sobre el `rounded-full` del botón
+                          rx="22"
+                          ry="22"
+                          pathLength={100}
+                          stroke="var(--ai-base)"
+                          strokeWidth="1.5"
+                          strokeDasharray={`${LARGO_TRAZO} ${100 - LARGO_TRAZO}`}
+                          strokeOpacity={1 - k / TRAZOS}
+                          style={{
+                            ["--vuelta" as string]: `${DURACION}ms`,
+                            // Retardo negativo = adelantar la fase. El trocito 0
+                            // va en cabeza y cada siguiente se queda justo un
+                            // largo por detrás, que es lo que forma la cola.
+                            animationDelay: `${-(DURACION - k * LARGO_TRAZO * (DURACION / 100))}ms`,
+                          }}
+                        />
+                      ))}
                     </svg>
                   )}
 
