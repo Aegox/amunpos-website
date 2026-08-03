@@ -64,7 +64,7 @@ export default function TypewriterWord() {
       {/* El emoji, solo con la frase entera. Va DESPUÉS del cursor y con margen
           propio para que no se solapen. */}
       {completa && (
-        <span aria-hidden="true" className="emoji-remate ml-[0.16em] inline-block">
+        <span aria-hidden="true" className="emoji-remate ml-[0.08em] inline-block">
           {frases[wordIndex].emoji}
         </span>
       )}
