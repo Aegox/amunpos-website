@@ -375,7 +375,10 @@ body {
   }
   60%,
   100% {
-    opacity: 0.15;
+    /* A cero: tiene que DESAPARECER y volver. Con un 0,15 se quedaba una raya
+       azul tenue todo el rato y no se leía como un cursor parpadeando sino
+       como una línea que cambia de tono. */
+    opacity: 0;
   }
 }
 .animate-caret {
@@ -614,18 +617,22 @@ body {
    Retirarla —y no desvanecerla— es lo que deja empezar la vuelta siguiente sin
    un parpadeo: el trazo se recoge por donde vino, como quien levanta el lápiz. */
 @keyframes traza-y-recoge {
-  /* NEGATIVO a propósito. Con `stroke-dasharray: 1` sobre un `pathLength` de 1,
-     ir de 1 a 0 revela el trazo desde el FINAL: la flecha aparecía por la punta
-     y crecía hacia atrás, o sea justo al revés de lo que hace una mano. De -1 a
-     0 se revela desde el principio, que es la cola, al lado del conmutador. */
-  0% { stroke-dashoffset: -1; }
+  /* POSITIVO. Con `stroke-dasharray: 1` sobre un `pathLength` de 1, el desfase
+     positivo mete el trazo por el PRINCIPIO del recorrido y el negativo por el
+     final. Como el trazo está escrito de la cola a la punta, positivo es lo que
+     hace que salga del lado del conmutador y suba hacia la frase.
+
+     Se comprobó contando píxeles azules fotograma a fotograma, no leyendo la
+     especificación: a ojo el trazo dura menos de un segundo y las dos
+     direcciones se parecen demasiado. */
+  0% { stroke-dashoffset: 1; }
   16% { stroke-dashoffset: 0; }
   88% { stroke-dashoffset: 0; }
-  100% { stroke-dashoffset: -1; }
+  100% { stroke-dashoffset: 1; }
 }
 .dibuja-flecha {
   stroke-dasharray: 1;
-  stroke-dashoffset: -1;
+  stroke-dashoffset: 1;
   animation: traza-y-recoge 5.4s cubic-bezier(0.65, 0, 0.35, 1) 1.8s infinite;
 }
 /* La punta se dibuja DESPUÉS de que la línea haya llegado.
@@ -635,14 +642,14 @@ body {
    retardo con la línea —para que no se separen con el tiempo— pero su tramo
    empieza donde acaba el de ella. */
 @keyframes punta-tardia {
-  0%, 16% { stroke-dashoffset: -1; }
+  0%, 16% { stroke-dashoffset: 1; }
   23% { stroke-dashoffset: 0; }
   88% { stroke-dashoffset: 0; }
-  100% { stroke-dashoffset: -1; }
+  100% { stroke-dashoffset: 1; }
 }
 .punta-flecha {
   stroke-dasharray: 1;
-  stroke-dashoffset: -1;
+  stroke-dashoffset: 1;
   animation: punta-tardia 5.4s linear 1.8s infinite;
 }
 

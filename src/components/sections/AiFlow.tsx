@@ -324,7 +324,16 @@ export default function AiFlow() {
           </div>
 
           <div
-            className="grid min-h-0 w-full overflow-hidden rounded-[16px] bg-gray-0 md:grid-cols-[minmax(0,1fr)_360px] xl:rounded-[20px]"
+            /* Alto RESERVADO para el paso más largo. Cada instrucción devuelve
+               una lista distinta —cuatro productos, tres, tres— y el panel
+               crecía y encogía al pasar de una a otra: la página entera daba un
+               salto de hasta 64 px cada cuatro segundos, sola, sin que nadie
+               tocara nada. Reservando el alto del peor caso el hueco está ahí
+               siempre y no se mueve nada.
+
+               Dos valores porque la maqueta cambia: apiladas en móvil y a dos
+               columnas de md en adelante. */
+            className="grid min-h-[610px] w-full overflow-hidden rounded-[16px] bg-gray-0 md:min-h-[370px] md:grid-cols-[minmax(0,1fr)_360px] xl:rounded-[20px]"
             style={{ boxShadow: "0 1px 1px .5px rgba(41,41,41,.04), 0 6px 6px -3px rgba(41,41,41,.04), 0 24px 24px -12px rgba(41,41,41,.04)" }}
           >
             {/* Conversación */}
