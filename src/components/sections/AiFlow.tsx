@@ -96,7 +96,67 @@ const pasos: {
   },
 ];
 
-const DURACION = 4200;
+/**
+ * El ritmo de la escena, en milisegundos.
+ *
+ * Todo lo que se ve sale de UNA línea de tiempo: se calcula en qué instante
+ * pasa cada cosa y luego, a cada tic, se deduce el estado a partir del tiempo
+ * transcurrido. La alternativa —una cadena de `setTimeout` encadenados— se
+ * desincroniza en cuanto el navegador se atasca un momento, y deja el panel a
+ * medio montar sin forma de recuperarse.
+ */
+const RITMO = {
+  antesDeTeclear: 450,
+  porLetraPrompt: 34,
+  antesDeEnviar: 380,
+  pensando: 700,
+  porLetraRespuesta: 19,
+  entreLineas: 280,
+  entreFilas: 240,
+  antesDelPie: 320,
+  alFinal: 2000,
+};
+
+type Guion = {
+  tecleaDesde: number;
+  tecleaHasta: number;
+  envia: number;
+  lineas: { desde: number; hasta: number }[];
+  filas: number[];
+  pie: number;
+  total: number;
+};
+
+/** Cuándo pasa cada cosa en un paso concreto. */
+function guionDe(p: (typeof pasos)[number]): Guion {
+  let t = RITMO.antesDeTeclear;
+  const tecleaDesde = t;
+  t += p.prompt.length * RITMO.porLetraPrompt;
+  const tecleaHasta = t;
+  t += RITMO.antesDeEnviar;
+  const envia = t;
+  t += RITMO.pensando;
+
+  const lineas: { desde: number; hasta: number }[] = [];
+  for (const l of p.chat) {
+    const desde = t;
+    const hasta = desde + l.length * RITMO.porLetraRespuesta;
+    lineas.push({ desde, hasta });
+    t = hasta + RITMO.entreLineas;
+  }
+
+  // El resultado se va llenando MIENTRAS el asistente sigue hablando: es lo que
+  // hace que parezca que trabaja y no que primero contesta y luego actúa.
+  const filas = p.filas.map((_, i) => lineas[0].hasta + i * RITMO.entreFilas);
+  const pie = Math.max(t, filas[filas.length - 1] + RITMO.entreFilas) + RITMO.antesDelPie;
+  return { tecleaDesde, tecleaHasta, envia, lineas, filas, pie, total: pie + RITMO.alFinal };
+}
+
+const guiones = pasos.map(guionDe);
+
+/** Cuántos caracteres van escritos de un tramo a estas alturas. */
+const letrasHasta = (t: number, desde: number, porLetra: number, total: number) =>
+  Math.max(0, Math.min(total, Math.floor((t - desde) / porLetra)));
 
 // La cola del haz: 8 trocitos del 3 % del contorno cada uno, encadenados, que
 // suman una línea de un 24 % que se va apagando hacia atrás.
@@ -148,11 +208,10 @@ export default function AiFlow() {
   // puesta cada paso dura más, para dar tiempo a leerlo sin animación que guíe.
   useEffect(() => {
     if (!visible) return;
-    const menosMovimiento = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    const t = setTimeout(
-      () => setPaso((p) => (p + 1) % pasos.length),
-      menosMovimiento ? DURACION * 1.6 : DURACION,
-    );
+    // La duración la manda el guion: cada instrucción tarda lo que tarde en
+    // teclearse y contestarse. Con un valor fijo, la más larga se cortaba a
+    // medias y la más corta se quedaba parada esperando.
+    const t = setTimeout(() => setPaso((p) => (p + 1) % pasos.length), guiones[paso].total);
     return () => clearTimeout(t);
   }, [visible, paso]);
 
@@ -250,11 +309,14 @@ export default function AiFlow() {
                           strokeDasharray={`${LARGO_TRAZO} ${100 - LARGO_TRAZO}`}
                           strokeOpacity={1 - k / TRAZOS}
                           style={{
-                            ["--vuelta" as string]: `${DURACION}ms`,
+                            // La vuelta del haz dura lo que dure este paso,
+                            // que ya no es fijo: cada instrucción tarda lo que
+                            // tarde en teclearse y contestarse.
+                            ["--vuelta" as string]: `${guiones[i].total}ms`,
                             // Retardo negativo = adelantar la fase. El trocito 0
                             // va en cabeza y cada siguiente se queda justo un
                             // largo por detrás, que es lo que forma la cola.
-                            animationDelay: `${-(DURACION - k * LARGO_TRAZO * (DURACION / 100))}ms`,
+                            animationDelay: `${-(guiones[i].total - k * LARGO_TRAZO * (guiones[i].total / 100))}ms`,
                           }}
                         />
                       ))}
@@ -310,101 +372,8 @@ export default function AiFlow() {
           ))}
         </svg>
 
-        {/* ── El panel: conversación a la izquierda, resultado a la derecha ── */}
-        <div className="mt-6 w-full max-w-[1004px] rounded-[24px] bg-gray-50 p-2 ring-1 ring-gray-200 xl:mt-0 xl:rounded-[28px] xl:p-2.5">
-          <div className="grid w-full items-center px-3 py-2.5 md:grid-cols-[minmax(0,1fr)_360px] xl:px-4 xl:py-3">
-            <div className="flex items-center gap-1.5 text-label-sm text-gray-600">
-              <RiSparkling2Fill className="size-4 text-ai-base" />
-              Asistente
-              <span className="ml-1 size-1.5 shrink-0 rounded-full bg-ai-base" />
-            </div>
-            <div className="hidden items-center gap-1.5 pl-5 text-label-sm text-gray-450 md:flex">
-              Resultado
-            </div>
-          </div>
-
-          <div
-            /* Alto RESERVADO para el paso más largo. Cada instrucción devuelve
-               una lista distinta —cuatro productos, tres, tres— y el panel
-               crecía y encogía al pasar de una a otra: la página entera daba un
-               salto de hasta 64 px cada cuatro segundos, sola, sin que nadie
-               tocara nada. Reservando el alto del peor caso el hueco está ahí
-               siempre y no se mueve nada.
-
-               Dos valores porque la maqueta cambia: apiladas en móvil y a dos
-               columnas de md en adelante. */
-            className="grid min-h-[610px] w-full overflow-hidden rounded-[16px] bg-gray-0 md:min-h-[370px] md:grid-cols-[minmax(0,1fr)_360px] xl:rounded-[20px]"
-            style={{ boxShadow: "0 1px 1px .5px rgba(41,41,41,.04), 0 6px 6px -3px rgba(41,41,41,.04), 0 24px 24px -12px rgba(41,41,41,.04)" }}
-          >
-            {/* Conversación */}
-            <div className="relative flex min-h-[240px] flex-col gap-3 p-5 md:min-h-[300px] md:border-r md:border-gray-100 xl:p-7">
-              <div key={`tu-${paso}`} className="fila-entra self-end rounded-2xl rounded-br-md bg-gray-900 px-4 py-2.5 text-label-sm text-gray-0">
-                {actual.prompt}
-              </div>
-
-              {actual.chat.map((linea, i) => (
-                <div
-                  key={`${paso}-${i}`}
-                  className="fila-entra flex max-w-[92%] gap-2.5"
-                  style={{ ["--i" as string]: i + 1 }}
-                >
-                  <span className="mt-0.5 grid size-6 shrink-0 place-items-center rounded-full bg-ai-light">
-                    <RiSparkling2Fill className="size-3.5 text-ai-base" />
-                  </span>
-                  <span className="text-paragraph-sm text-gray-700">
-                    <span className="escribe" style={{ ["--chars" as string]: linea.length }}>
-                      {linea}
-                    </span>
-                  </span>
-                </div>
-              ))}
-
-              {/* La barra de escritura ocupa el hueco de abajo y, sobre todo,
-                  enseña dónde se le habla: sin ella el panel parecía una captura
-                  de resultados, no una conversación. */}
-              <div className="mt-auto flex items-center gap-2 rounded-full bg-gray-25 px-4 py-2.5 ring-1 ring-gray-200">
-                <span className="text-paragraph-sm text-gray-450">Escribe lo que necesitas</span>
-                <span className="animate-caret h-4 w-px bg-ai-base" />
-              </div>
-            </div>
-
-            {/* Resultado */}
-            <div className="flex flex-col border-t border-gray-100 p-5 md:border-t-0 xl:p-6">
-              <div className="text-subheading-xs uppercase tracking-wide text-gray-450">
-                {actual.titulo}
-              </div>
-
-              <div className="mt-3 flex flex-col gap-2">
-                {actual.filas.map((f, i) => (
-                  <div
-                    key={`${paso}-${f.nombre}`}
-                    className="fila-entra flex items-center justify-between gap-3 rounded-xl bg-gray-25 px-3 py-2.5 ring-1 ring-gray-100"
-                    style={{ ["--i" as string]: i + 2 }}
-                  >
-                    <div className="min-w-0">
-                      <div className="truncate text-label-sm text-gray-900">{f.nombre}</div>
-                      <div className="text-paragraph-xs text-gray-500">{f.detalle}</div>
-                    </div>
-                    {f.valor && (
-                      <div className="shrink-0 text-label-sm tabular-nums text-gray-700">{f.valor}</div>
-                    )}
-                  </div>
-                ))}
-              </div>
-
-              {actual.pie && (
-                <div
-                  key={`pie-${paso}`}
-                  className="fila-entra mt-3 flex items-center gap-2 rounded-xl bg-ai-light px-3 py-2.5 text-label-sm text-ai-dark"
-                  style={{ ["--i" as string]: actual.filas.length + 2 }}
-                >
-                  <actual.pie.icono className="size-4 shrink-0" />
-                  {actual.pie.texto}
-                </div>
-              )}
-            </div>
-          </div>
-        </div>
+        {/* ── El panel: la sesion ocurriendo, con su propio reloj ── */}
+        <PanelVivo paso={paso} arrancado={visible} />
 
         {/* ── El remate: qué gana el negocio ──
             En alignui.com el recorrido no termina en el panel: baja otro
@@ -477,5 +446,164 @@ export default function AiFlow() {
         </div>
       </div>
     </section>
+  );
+}
+
+/**
+ * El panel donde se ve la sesión OCURRIENDO: se teclea la instrucción, se
+ * envía, el asistente piensa, contesta escribiendo, y el resultado se va
+ * llenando mientras tanto.
+ *
+ * Todo sale de UNA línea de tiempo: a cada tic se deduce el estado a partir de
+ * los milisegundos transcurridos. La alternativa —una cadena de `setTimeout`
+ * encadenados— se desincroniza en cuanto el navegador se atasca un momento y
+ * deja el panel a medio montar, sin forma de recuperarse. Aquí, si un tic llega
+ * tarde, el siguiente ya pinta lo que toca a esa altura.
+ *
+ * Vive aparte y con su propio reloj para que las veinticinco pasadas por
+ * segundo no arrastren a repintarse también las pastillas, los conectores y el
+ * remate, que no cambian en todo el paso.
+ */
+function PanelVivo({ paso, arrancado }: { paso: number; arrancado: boolean }) {
+  const actual = pasos[paso];
+  const guion = guiones[paso];
+  const [t, setT] = useState(0);
+
+  useEffect(() => {
+    if (!arrancado) return;
+    setT(0);
+    const inicio = performance.now();
+    // 40 ms basta de sobra para que el texto se vea salir letra a letra, y
+    // cuesta la cuarta parte que ir a 60 fotogramas por segundo.
+    const id = setInterval(() => setT(performance.now() - inicio), 40);
+    return () => clearInterval(id);
+  }, [paso, arrancado]);
+
+  const tecleado = actual.prompt.slice(
+    0,
+    letrasHasta(t, guion.tecleaDesde, RITMO.porLetraPrompt, actual.prompt.length),
+  );
+  const enviado = t >= guion.envia;
+  const pensando = enviado && t < guion.lineas[0].desde;
+  const filasVisibles = guion.filas.filter((m) => t >= m).length;
+  const piePuesto = t >= guion.pie;
+
+  return (
+    <div className="mt-6 w-full max-w-[1004px] rounded-[24px] bg-gray-50 p-2 ring-1 ring-gray-200 xl:mt-0 xl:rounded-[28px] xl:p-2.5">
+      <div className="grid w-full items-center px-3 py-2.5 md:grid-cols-[minmax(0,1fr)_360px] xl:px-4 xl:py-3">
+        <div className="flex items-center gap-1.5 text-label-sm text-gray-600">
+          <RiSparkling2Fill className="size-4 text-ai-base" />
+          Asistente
+          <span className="ml-1 size-1.5 shrink-0 rounded-full bg-ai-base" />
+        </div>
+        <div className="hidden items-center gap-1.5 pl-5 text-label-sm text-gray-450 md:flex">
+          Resultado
+        </div>
+      </div>
+
+      <div
+        /* Alto RESERVADO para el paso más largo. Ahora el contenido aparece por
+           partes, así que sin esto el panel estaría creciendo todo el rato y la
+           página entera daría saltos cada pocos segundos. */
+        className="grid min-h-[610px] w-full overflow-hidden rounded-[16px] bg-gray-0 md:min-h-[370px] md:grid-cols-[minmax(0,1fr)_360px] xl:rounded-[20px]"
+        style={{
+          boxShadow:
+            "0 1px 1px .5px rgba(41,41,41,.04), 0 6px 6px -3px rgba(41,41,41,.04), 0 24px 24px -12px rgba(41,41,41,.04)",
+        }}
+      >
+        {/* Conversación */}
+        <div className="relative flex min-h-[240px] flex-col gap-3 p-5 md:min-h-[300px] md:border-r md:border-gray-100 xl:p-7">
+          {enviado && (
+            <div className="fila-entra self-end rounded-2xl rounded-br-md bg-gray-900 px-4 py-2.5 text-label-sm text-gray-0">
+              {actual.prompt}
+            </div>
+          )}
+
+          {pensando && (
+            /* Los tres puntos mientras piensa. Sin esa pausa la respuesta salía
+               pegada al envío y no se leía como algo que alguien escribe, sino
+               como un bloque que aparece de golpe. */
+            <div className="flex items-center gap-2.5">
+              <span className="grid size-6 shrink-0 place-items-center rounded-full bg-ai-light">
+                <RiSparkling2Fill className="size-3.5 text-ai-base" />
+              </span>
+              <span className="flex items-center gap-1 rounded-full bg-gray-25 px-3 py-2 ring-1 ring-gray-100">
+                {[0, 1, 2].map((i) => (
+                  <span
+                    key={i}
+                    className="punto-pensando size-1.5 rounded-full bg-gray-400"
+                    style={{ ["--i" as string]: i }}
+                  />
+                ))}
+              </span>
+            </div>
+          )}
+
+          {actual.chat.map((linea, i) => {
+            const tramo = guion.lineas[i];
+            if (t < tramo.desde) return null;
+            const escrito = linea.slice(
+              0,
+              letrasHasta(t, tramo.desde, RITMO.porLetraRespuesta, linea.length),
+            );
+            return (
+              <div key={String(paso) + "-" + String(i)} className="flex max-w-[92%] gap-2.5">
+                <span className="mt-0.5 grid size-6 shrink-0 place-items-center rounded-full bg-ai-light">
+                  <RiSparkling2Fill className="size-3.5 text-ai-base" />
+                </span>
+                <span className="text-paragraph-sm text-gray-700">
+                  {escrito}
+                  {/* El cursor, solo en la línea que se está escribiendo. */}
+                  {t < tramo.hasta && (
+                    <span className="ml-px inline-block h-[1em] w-px translate-y-[3px] bg-ai-base" />
+                  )}
+                </span>
+              </div>
+            );
+          })}
+
+          {/* La barra de escritura: aquí es donde se ve teclear la instrucción
+              antes de enviarla. Es lo que convierte el panel en una sesión y no
+              en una captura de resultados. */}
+          <div className="mt-auto flex items-center gap-2 rounded-full bg-gray-25 px-4 py-2.5 ring-1 ring-gray-200">
+            <span className="min-w-0 truncate text-paragraph-sm text-gray-800">
+              {enviado ? <span className="text-gray-450">Escribe lo que necesitas</span> : tecleado}
+            </span>
+            {!enviado && <span className="animate-caret h-4 w-px shrink-0 bg-ai-base" />}
+          </div>
+        </div>
+
+        {/* Resultado */}
+        <div className="flex flex-col border-t border-gray-100 p-5 md:border-t-0 xl:p-6">
+          <div className="text-subheading-xs uppercase tracking-wide text-gray-450">
+            {actual.titulo}
+          </div>
+
+          <div className="mt-3 flex flex-col gap-2">
+            {actual.filas.slice(0, filasVisibles).map((f) => (
+              <div
+                key={String(paso) + "-" + f.nombre}
+                className="fila-entra flex items-center justify-between gap-3 rounded-xl bg-gray-25 px-3 py-2.5 ring-1 ring-gray-100"
+              >
+                <div className="min-w-0">
+                  <div className="truncate text-label-sm text-gray-900">{f.nombre}</div>
+                  <div className="text-paragraph-xs text-gray-500">{f.detalle}</div>
+                </div>
+                {f.valor && (
+                  <div className="shrink-0 text-label-sm tabular-nums text-gray-700">{f.valor}</div>
+                )}
+              </div>
+            ))}
+          </div>
+
+          {actual.pie && piePuesto && (
+            <div className="fila-entra mt-3 flex items-center gap-2 rounded-xl bg-ai-light px-3 py-2.5 text-label-sm text-ai-dark">
+              <actual.pie.icono className="size-4 shrink-0" />
+              {actual.pie.texto}
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
   );
 }

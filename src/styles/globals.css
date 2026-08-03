@@ -681,3 +681,24 @@ body {
   animation: resalta-letra 5.4s ease-in-out infinite;
   animation-delay: calc(3s + var(--i, 0) * 0.05s);
 }
+
+/* Los tres puntos de "está pensando". Suben y bajan por turnos, con el retardo
+   que le pone cada uno en --i: es el gesto universal de "espera, que viene". Sin
+   esa pausa la respuesta salía pegada al envío y no se leía como algo que
+   alguien está escribiendo. */
+@keyframes punto-pensando {
+  0%,
+  60%,
+  100% {
+    opacity: 0.35;
+    transform: translateY(0);
+  }
+  30% {
+    opacity: 1;
+    transform: translateY(-3px);
+  }
+}
+.punto-pensando {
+  animation: punto-pensando 1.1s ease-in-out infinite;
+  animation-delay: calc(var(--i, 0) * 0.16s);
+}
