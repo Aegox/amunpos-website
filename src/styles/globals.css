@@ -710,14 +710,9 @@ body {
    desplazamiento de 4 px y la opacidad, con una curva de salida suave.
    `inline-block` y transform, que no recalculan la linea. */
 @keyframes emoji-remate {
-  /* Sale POR LA IZQUIERDA, desde debajo de la ultima letra, y se va
-     desvaneciendo hacia su sitio. Asi parece que lo empuja el propio texto que
-     se acaba de escribir, en vez de aparecer caido de ninguna parte.
-     El recorrido va en `em` para que sea el mismo salto relativo tanto a 32 px
-     de movil como a 120 en un monitor grande. */
-  from { opacity: 0; transform: translateX(-0.5em); }
+  from { opacity: 0; transform: translateY(4px) scale(0.94); }
   to { opacity: 1; transform: none; }
 }
 .emoji-remate {
-  animation: emoji-remate 0.42s cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation: emoji-remate 0.34s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
