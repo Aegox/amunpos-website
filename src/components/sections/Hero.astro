@@ -40,8 +40,16 @@ import { RiSparklingLine, RiArrowRightSLine } from "@remixicon/react";
            antes caía a dos líneas y la segunda quedaba descuadrada. En móvil se
            permite el salto natural —ambas líneas centradas— para no forzar
            scroll horizontal en pantallas angostas. -->
-      <h1 class="hero-title mt-5 text-center text-[32px]/[38px] font-medium -tracking-[0.022em] text-gray-900 md:whitespace-nowrap">
-        Hecho para <TypewriterWord client:load />
+      <!-- `font-bold` (700) y no `font-medium` (500): a 100 px el trazo fino se
+           quedaba desvaído y el titular no pesaba lo que tiene que pesar en un
+           hero. La fuente se carga con 400/500/600/700, así que 700 es un peso
+           REAL — un valor intermedio como 650 lo redondearía el navegador y no
+           se vería lo que se pide. -->
+      <h1
+        class="hero-title mt-5 text-center text-[32px]/[38px] font-bold -tracking-[0.022em] text-gray-900 md:whitespace-nowrap 2xl:whitespace-normal"
+      >
+        <span class="2xl:block">Hecho para</span>
+        <TypewriterWord client:load />
       </h1>
 
       <p class="mt-4 max-w-2xl text-pretty text-center text-paragraph-md text-gray-700 xl:text-paragraph-lg">

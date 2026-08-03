@@ -308,6 +308,29 @@ body {
   }
 }
 
+/* De 1536 px en adelante —monitores de 24" y más— el titular pasa a DOS líneas
+   y crece de verdad.
+
+   En una sola línea no hay forma de que crezca: el contenedor mide 1240 pase lo
+   que pase, y la frase más larga ("Hecho para ahorrar tiempo") ya ocupa 1302 px
+   a 104 px de cuerpo. O sea que el tope de 4,5rem no era un capricho, era el
+   máximo que cabía. Por eso en un monitor del doble de ancho el titular medía
+   LO MISMO que en un portátil y se veía pequeño y perdido en medio de la
+   pantalla.
+
+   Partiéndolo en dos —"Hecho para" arriba y la palabra que se escribe abajo—
+   cada línea tiene sitio de sobra y el cuerpo puede subir a 120 px. Es
+   exactamente lo que hace alignui.com en su hero, y por eso el suyo se ve más
+   grande aunque el cuerpo sea parecido al nuestro.
+
+   Debajo de 1536 no cambia nada: una línea y el mismo tamaño de siempre. */
+@media (min-width: 1536px) {
+  .hero-title {
+    font-size: clamp(5.5rem, 5.6vw, 7.5rem);
+    line-height: 1.05;
+  }
+}
+
 /* Cursor del typewriter del hero */
 @keyframes caret-blink {
   0%,
