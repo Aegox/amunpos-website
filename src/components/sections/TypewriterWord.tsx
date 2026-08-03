@@ -1,6 +1,19 @@
 import React, { useEffect, useState } from "react";
 
-const words = ["vender más", "ahorrar tiempo", "crecer rápido"];
+// Cada frase con su emoji. El emoji NO se teclea: aparece cuando la frase ya
+// está entera y se va en cuanto empieza a borrarse.
+//
+// Se deja fuera del texto que se escribe a propósito. Un emoji saliendo letra a
+// letra no significa nada —es un solo carácter, así que aparecería de golpe a
+// mitad del tecleo— y encima cuenta doble en `slice`, con lo que se veía medio
+// emoji roto en un fotograma. Poniéndolo aparte, remata la frase justo cuando
+// termina de escribirse, que es donde hace gracia.
+const frases = [
+  { texto: "vender más", emoji: "💰" },
+  { texto: "ahorrar tiempo", emoji: "⏰" },
+  { texto: "crecer rápido", emoji: "🚀" },
+];
+const words = frases.map((f) => f.texto);
 
 export default function TypewriterWord() {
   const [wordIndex, setWordIndex] = useState(0);
@@ -26,6 +39,8 @@ export default function TypewriterWord() {
     return () => clearTimeout(t);
   }, [charCount, deleting, wordIndex]);
 
+  const completa = !deleting && charCount === words[wordIndex].length;
+
   // Sin reservar ancho: el <h1> se ajusta al texto real y queda CENTRADO en todo
   // momento (reservar el ancho de la palabra más larga era justo lo que dejaba el
   // título visualmente desplazado a la izquierda). Como el titular va en una sola
@@ -46,6 +61,13 @@ export default function TypewriterWord() {
         aria-hidden="true"
         className="animate-caret absolute -right-[0.06em] top-1/2 h-[0.78em] w-[3px] -translate-y-1/2 rounded-full bg-primary-base"
       />
+      {/* El emoji, solo con la frase entera. Va DESPUÉS del cursor y con margen
+          propio para que no se solapen. */}
+      {completa && (
+        <span aria-hidden="true" className="emoji-remate ml-[0.28em] inline-block">
+          {frases[wordIndex].emoji}
+        </span>
+      )}
       <span className="sr-only">{words[wordIndex]}</span>
     </span>
   );

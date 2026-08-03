@@ -1,10 +1,27 @@
 ---
-import { RiWallet3Line, RiStackLine, RiGitBranchLine, RiTeamLine, RiTruckLine, RiLineChartLine, RiCpuLine } from "@remixicon/react";
+import {
+  RiWallet3Line,
+  RiStackLine,
+  RiGitBranchLine,
+  RiTeamLine,
+  RiTruckLine,
+  RiLineChartLine,
+  RiCpuLine,
+  RiFileList3Line,
+  RiLayoutGrid2Line,
+  RiPlugLine,
+} from "@remixicon/react";
 
+// Nueve, no seis: la rejilla es de tres columnas, así que nueve la deja en tres
+// filas completas. Con siete u ocho quedaría una fila coja y se notaría el
+// hueco justo donde no hay nada que mirar.
 const items = [
   { icon: RiWallet3Line, title: "Ventas y caja", desc: "Cobra con múltiples métodos de pago y tickets claros en segundos." },
   { icon: RiStackLine, title: "Inventario en tiempo real", desc: "Stock por sucursal con alertas antes de que algo se agote." },
   { icon: RiGitBranchLine, title: "Multi-sucursal", desc: "Compara ventas y equipo entre locales sin hojas de cálculo." },
+  { icon: RiFileList3Line, title: "Facturación electrónica", desc: "Emite y envía la factura legal desde la misma venta." },
+  { icon: RiLayoutGrid2Line, title: "Mesas y cuentas en paralelo", desc: "Plano del salón, varias cuentas abiertas a la vez y pago dividido." },
+  { icon: RiPlugLine, title: "Integraciones", desc: "Rappi, DiDi, Bold y los datáfonos que ya usas, dentro del mismo panel." },
   { icon: RiTeamLine, title: "Nómina y equipo", desc: "Fichaje, horarios con IA y pagos por país." },
   { icon: RiTruckLine, title: "Delivery propio", desc: "App de repartidor con estados de pedido en vivo." },
   { icon: RiLineChartLine, title: "Reportes claros", desc: "Cifras del negocio explicadas en lenguaje simple." },
@@ -16,8 +33,8 @@ const items = [
      que puedes señalar — en vez de como un tramo de la página que se puso
      negro. A sangre, además, el negro toca los bordes de la pantalla y pesa el
      doble de lo que debería. -->
-<section class="w-full px-5 py-6 xl:py-10">
-  <div class="relative z-10 mx-auto w-full max-w-[1360px] overflow-hidden rounded-[28px] bg-gray-950 px-5 py-20 ring-1 ring-inset ring-white/10 xl:rounded-[36px] xl:py-28">
+<section class="w-full px-4 py-6 xl:px-6 xl:py-10">
+  <div class="relative z-10 w-full overflow-hidden rounded-[20px] bg-gray-950 px-5 py-20 ring-1 ring-inset ring-white/10 xl:rounded-[24px] xl:py-28">
     <div class="pointer-events-none absolute -top-32 left-1/2 h-[420px] w-[640px] -translate-x-1/2 rounded-full bg-primary-base/15 blur-[130px]"></div>
 
     <!-- Marco decorativo: líneas de borde + "spark" azul cayendo, igual al
@@ -74,19 +91,31 @@ const items = [
         style="left: calc(66.6667% + 4px)"
       >
       </div>
-      <div class="pointer-events-none absolute inset-x-0 top-1/2 hidden h-px bg-linear-to-r from-transparent via-white/[.08] to-transparent xl:block"></div>
+      <!-- DOS horizontales, no una: al pasar de seis funciones a nueve la
+           rejilla dejó de ser de dos filas y pasó a tres. Con una sola raya a
+           media altura quedaba cortando por el medio de la segunda fila. -->
+      {[1, 2].map((fila) => (
+        <div
+          class="pointer-events-none absolute inset-x-0 hidden h-px bg-linear-to-r from-transparent via-white/[.08] to-transparent xl:block"
+          style={`top: ${(fila / 3) * 100}%`}
+        />
+      ))}
 
       <!-- Un punto en cada cruce, como en la sección oscura de alignui.com. El
            anillo es del color del fondo, así que TAPA el cruce: sin él se ve un
            "+" duro; con él parece que las líneas pasan por detrás del punto. Es
            el detalle que hace que esto se lea como una estructura y no como los
-           bordes de una tabla. -->
-      <span
-        class="pointer-events-none absolute top-1/2 hidden size-[7px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-white/[.14] ring-[6px] ring-gray-950 xl:block"
-        style="left: calc(33.3333% - 4px)"></span>
-      <span
-        class="pointer-events-none absolute top-1/2 hidden size-[7px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-white/[.14] ring-[6px] ring-gray-950 xl:block"
-        style="left: calc(66.6667% + 4px)"></span>
+           bordes de una tabla.
+
+           Cuatro puntos: dos verticales por dos horizontales. -->
+      {["calc(33.3333% - 4px)", "calc(66.6667% + 4px)"].map((x) =>
+        [1, 2].map((fila) => (
+          <span
+            class="pointer-events-none absolute hidden size-[7px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-white/[.14] ring-[6px] ring-gray-950 xl:block"
+            style={`left: ${x}; top: ${(fila / 3) * 100}%`}
+          />
+        ))
+      )}
       </div>
     </div>
   </div>
