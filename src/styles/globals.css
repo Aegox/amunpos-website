@@ -300,11 +300,44 @@ body {
 }
 
 /* Titular del hero: escala fluida para que la frase completa entre en una sola
-   línea desde md sin pasarse del contenedor. */
+   línea desde md sin pasarse del contenedor.
+
+   El `min-height` NO es un ajuste fino, arregla un defecto de bulto: la palabra
+   del final se escribe y se borra sola, y al quedarse vacía el titular perdía
+   una línea entera. La página de debajo subía y bajaba en bucle — a 2560 px el
+   botón daba saltos de 126 px, cada pocos segundos, para siempre. Reservando
+   el alto del PEOR caso, el hueco está ahí aunque no haya texto y no se mueve
+   nada.
+
+   Va en `em` a propósito: así se ajusta solo al tamaño que le toque a cada
+   pantalla, sin repetir el número en cada tramo. */
+.hero-title {
+  /* En móvil no hay `nowrap`, así que la frase larga cae a dos renglones. */
+  min-height: 2.375em;
+}
 @media (min-width: 768px) {
   .hero-title {
     font-size: clamp(2.5rem, 5.2vw, 4.5rem);
     line-height: 1.1;
+    /* Aquí entra entera en una línea y no puede partirse. */
+    min-height: 1.1em;
+  }
+}
+
+/* De 1280 en adelante, los valores EXACTOS del titular de alignui.com
+   (`.xl:text-ln-title-h1`): 80/88, -0.035em, peso 550.
+
+   El 550 no se puede pedir tal cual: la fuente se carga con 400/500/600/700 y
+   el navegador redondearía. Se usa 600, que es el real más cercano por arriba
+   — con 500 el trazo se ve desvaído a este tamaño.
+
+   Y el interletrado apretado no es cosmético: a -0.035em la misma frase ocupa
+   unos 25 px menos, que es justo el margen que hace que quepa en una línea. */
+@media (min-width: 1280px) {
+  .hero-title {
+    font-size: 80px;
+    line-height: 88px;
+    min-height: 88px;
   }
 }
 
@@ -328,27 +361,32 @@ body {
   .hero-title {
     font-size: clamp(5.5rem, 5.6vw, 7.5rem);
     line-height: 1.05;
+    /* Dos renglones siempre, aunque la palabra de abajo esté a medio escribir
+       o borrada del todo. */
+    min-height: 2.1em;
   }
 }
 
 /* Cursor del typewriter del hero */
 @keyframes caret-blink {
   0%,
-  45% {
+  40% {
     opacity: 1;
   }
-  55%,
+  60%,
   100% {
-    opacity: 0;
+    opacity: 0.15;
   }
 }
 .animate-caret {
-  animation: caret-blink 1.1s steps(1, end) infinite;
-}
-@media (prefers-reduced-motion: reduce) {
-  .animate-caret {
-    animation: none;
-  }
+  /* Se ATENÚA en vez de encenderse y apagarse de golpe: es como parpadean los
+     cursores de verdad (macOS, VS Code). Con `steps(1)` daba un chasquido duro
+     que a 120 px de titular se notaba mucho más que en un campo de texto.
+
+     No se apaga con "reducir movimiento": un cursor que no parpadea no se lee
+     como cursor, se lee como una raya azul ahí puesta. Ver la nota de excepción
+     al final del archivo. */
+  animation: caret-blink 1.1s ease-in-out infinite;
 }
 
 /* Acordeón FAQ animado con <details> nativo (accesible: focus, teclado, y
@@ -500,7 +538,8 @@ body {
    que recorre el borde de la pastilla activa (.haz-borde), las chispas que
    caen por los lados de la sección oscura (.spark-line) y el deslizamiento del
    navbar al ocultarse y volver (NavBar.tsx, que por eso ya no lleva
-   `motion-reduce:transition-none`) y el trazo de la flecha de precios
+   `motion-reduce:transition-none`), el parpadeo del cursor del titular
+   (.animate-caret) y el trazo de la flecha de precios
    (.dibuja-flecha) con el texto que se escribe y se repasa (.escribe-mano),
    que es EL efecto de esa anotación: sin escribirse ni trazarse es un cartel
    más de los muchos que ya hay.
@@ -546,42 +585,92 @@ body {
   font-weight: 600;
 }
 
-/* ── La nota manuscrita: se escribe, se traza la flecha y se repasa ──
-   Tres tiempos, en el orden en que lo haría una persona: primero escribe la
-   frase, luego dibuja la flecha, y al final REPASA las letras para que
-   resalten. Ese repaso es lo que le da el gesto de anotación hecha a mano
-   encima de algo ya impreso. */
+/* ── La nota manuscrita: se escribe, y luego flecha y resaltado EN BUCLE ──
+   Un adorno que se anima una sola vez lo ve quien llega justo en ese segundo;
+   el resto de la gente ve un dibujo quieto. Por eso las dos animaciones del
+   bucle comparten el mismo ciclo de 5,4 s y se reparten el turno dentro: la
+   flecha ocupa el principio y el resaltado va detrás.
 
-/* 1. Se escribe. `steps()` y no una curva suave: revelar el texto a saltos da
-      el tirón de una mano avanzando letra a letra; en continuo parece una
-      cortina bajando y se lee como efecto de presentación, no como escritura.
+   El reparto se hace con los porcentajes de cada keyframe, no con retardos
+   distintos: si cada una tuviera su propia duración se irían separando poco a
+   poco y a los pocos minutos estarían solapadas. */
 
-      Se recorta con `clip-path` en vez de animar el ancho porque el texto va
-      rotado: animar el ancho recolocaría la caja en cada fotograma y el ángulo
-      la haría bailar. El -10% del final deja respirar a los acentos y a la
-      cola de la "ñ", que con inset(0) quedaban rebanados. */
+/* Entrada, una sola vez: la frase se escribe.
+   `steps()` y no una curva suave: revelar el texto a saltos da el tirón de una
+   mano avanzando letra a letra; en continuo parece una cortina bajando.
+   Se recorta con `clip-path` en vez de animar el ancho porque el texto va
+   rotado: animar el ancho recolocaría la caja en cada fotograma y el ángulo la
+   haría bailar. El -10% del final deja respirar a los acentos y a la cola de la
+   "ñ", que con inset(0) quedaban rebanados. */
 @keyframes escribe-mano {
   from { clip-path: inset(0 100% 0 0); }
   to { clip-path: inset(0 -10% 0 0); }
 }
-
-/* 3. Se repasa. El grosor se hace con `text-shadow` y no con `font-weight`:
-      cambiar el peso recompone la línea entera y el texto daría un salto justo
-      cuando se supone que solo se está engordando el trazo. La sombra a
-      distancia 0 engorda el contorno sin mover un píxel. */
-@keyframes resalta-mano {
-  from {
-    text-shadow: none;
-    color: var(--primary-base);
-  }
-  to {
-    text-shadow: 0 0 0.7px currentColor, 0 0 0.7px currentColor;
-    color: var(--primary-dark);
-  }
+.escribe-mano {
+  animation: escribe-mano 1.4s steps(26, end) 0.3s both;
 }
 
-.escribe-mano {
-  animation:
-    escribe-mano 1.4s steps(26, end) 0.3s both,
-    resalta-mano 0.5s ease-out 3.2s both;
+/* Turno 1: se traza la flecha, se queda un rato y se retira.
+   Retirarla —y no desvanecerla— es lo que deja empezar la vuelta siguiente sin
+   un parpadeo: el trazo se recoge por donde vino, como quien levanta el lápiz. */
+@keyframes traza-y-recoge {
+  /* NEGATIVO a propósito. Con `stroke-dasharray: 1` sobre un `pathLength` de 1,
+     ir de 1 a 0 revela el trazo desde el FINAL: la flecha aparecía por la punta
+     y crecía hacia atrás, o sea justo al revés de lo que hace una mano. De -1 a
+     0 se revela desde el principio, que es la cola, al lado del conmutador. */
+  0% { stroke-dashoffset: -1; }
+  16% { stroke-dashoffset: 0; }
+  88% { stroke-dashoffset: 0; }
+  100% { stroke-dashoffset: -1; }
+}
+.dibuja-flecha {
+  stroke-dasharray: 1;
+  stroke-dashoffset: -1;
+  animation: traza-y-recoge 5.4s cubic-bezier(0.65, 0, 0.35, 1) 1.8s infinite;
+}
+/* La punta se dibuja DESPUÉS de que la línea haya llegado.
+   Antes compartía los mismos porcentajes que la línea, así que las dos se
+   trazaban a la vez: la cabeza de la flecha aparecía arriba mientras el trazo
+   todavía iba subiendo desde abajo, y se veía como un fallo. Comparte ciclo y
+   retardo con la línea —para que no se separen con el tiempo— pero su tramo
+   empieza donde acaba el de ella. */
+@keyframes punta-tardia {
+  0%, 16% { stroke-dashoffset: -1; }
+  23% { stroke-dashoffset: 0; }
+  88% { stroke-dashoffset: 0; }
+  100% { stroke-dashoffset: -1; }
+}
+.punta-flecha {
+  stroke-dasharray: 1;
+  stroke-dashoffset: -1;
+  animation: punta-tardia 5.4s linear 1.8s infinite;
+}
+
+/* Turno 2: el resaltado recorre la frase letra a letra.
+   Todas las letras comparten duración y solo cambia el retardo —de ahí la onda
+   que avanza—, así que el ciclo entero se repite igual cada 5,4 s en vez de
+   irse desfasando. El destello ocupa un 4 % del ciclo: lo justo para que se vea
+   pasar y no para que la frase esté siempre moviéndose.
+
+   El grosor se hace con `text-shadow` a distancia 0 y no con `font-weight`:
+   cambiar el peso recompone la línea entera y las letras darían un salto justo
+   cuando se supone que solo engordan. */
+@keyframes resalta-letra {
+  0%, 8%, 100% {
+    color: var(--primary-base);
+    text-shadow: none;
+    transform: translateY(0) scale(1);
+  }
+  3% {
+    color: var(--primary-darker);
+    text-shadow: 0 0 1.1px currentColor, 0 0 1.1px currentColor;
+    transform: translateY(-2px) scale(1.24);
+  }
+}
+.letra-mano {
+  display: inline-block;
+  /* Sin esto, `scale` sobre una letra no hace nada: los `span` en línea no
+     aceptan transformaciones. */
+  animation: resalta-letra 5.4s ease-in-out infinite;
+  animation-delay: calc(3s + var(--i, 0) * 0.05s);
 }

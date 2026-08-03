@@ -35,6 +35,13 @@ export default function TypewriterWord() {
   return (
     <span className="relative whitespace-nowrap">
       {words[wordIndex].slice(0, charCount)}
+      {/* Ancla invisible. El cursor se coloca respecto a esta caja (`top-1/2`),
+          y al borrarse la última letra la caja se quedaba SIN ALTO: el cursor
+          pegaba un salto arriba y abajo cada vez que se acababa una palabra.
+          Un espacio de ancho cero no suma ni un píxel de ancho —así el titular
+          sigue centrándose solo por las letras de verdad— pero sí le da a la
+          caja el alto de la línea. */}
+      <span aria-hidden="true">&#8203;</span>
       <span
         aria-hidden="true"
         className="animate-caret absolute -right-[0.06em] top-1/2 h-[0.78em] w-[3px] -translate-y-1/2 rounded-full bg-primary-base"

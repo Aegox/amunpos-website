@@ -93,6 +93,9 @@ const planes: {
 
 /** Un 20 % menos pagando por año, redondeado a entero. */
 const DESCUENTO_ANUAL = 0.2;
+
+/** La nota al margen. Se parte en letras para poder resaltarlas una a una. */
+const NOTA = "¡Ahórrate un 20 % pagando al año!";
 const precioDe = (mes: number, anual: boolean) =>
   anual ? Math.round(mes * (1 - DESCUENTO_ANUAL)) : mes;
 
@@ -244,41 +247,68 @@ export default function PricingTable() {
 
   return (
     <div className="relative w-full">
-      {/* La nota manuscrita, ARRIBA A LA IZQUIERDA y apuntando al
-          conmutador, que ahora vive en la primera celda de la tabla. Estaba a
-          la derecha del conmutador con la flecha curvándose hacia la derecha,
-          o sea señalando al vacío: la anotación apuntaba en dirección contraria
-          a lo que anotaba.
+      {/* La nota manuscrita. La flecha sale de al lado del conmutador y sube
+          a señalar el texto: quien mira el precio ya está en el conmutador, y
+          lo que hay que llevarle es la frase, no al revés.
 
-          Se escribe sola —el texto se revela con `steps()`, que da el tirón de
-          una mano, no un desvanecido— y después se traza la flecha. Es lo único
-          del sitio que se sale de la retícula a propósito; por eso funciona
-          como anotación al margen y no como otro cartel. */}
-      <div className="pointer-events-none absolute bottom-full left-4 hidden pb-1 xl:block">
+          Todo va EN BUCLE y por turnos: primero se traza la flecha, después el
+          resaltado recorre la frase letra a letra, y vuelta a empezar. Un
+          adorno que se anima una sola vez lo ve quien llega justo en ese
+          segundo; el resto de la gente ve un dibujo quieto.
+
+          El texto se parte en letras porque el resaltado tiene que ir una a
+          una: cada `span` lleva su índice en `--i` y de ahí sale el retardo, así
+          que la onda avanza sin escribir 26 reglas. */}
+      {/* `left-[104px]`: la nota arranca justo a la derecha del conmutador. Con
+          `left-4` la parte que baja de la flecha caía ENCIMA del interruptor y
+          lo tachaba; corrida a la derecha, baja por el hueco de al lado y la
+          cola queda pegada al botón sin taparlo. */}
+      <div className="pointer-events-none absolute bottom-full left-[104px] z-10 hidden xl:block">
         <span className="nota-mano escribe-mano block -rotate-3 whitespace-nowrap text-[17px] leading-5 text-primary-base">
-          ¡Ahórrate un 20 % pagando al año!
+          {[...NOTA].map((c, i) => (
+            <span
+              key={i}
+              className="letra-mano"
+              style={{ ["--i" as string]: i }}
+              // El espacio en blanco no se resalta, pero tiene que seguir
+              // ocupando su sitio: `inline-block` con nada dentro lo colapsa.
+              aria-hidden={c === " " ? "true" : undefined}
+            >
+              {c === " " ? " " : c}
+            </span>
+          ))}
         </span>
+
+        {/* El trazo va escrito de la COLA a la PUNTA, así que se dibuja en ese
+            orden sin más: arranca abajo a la derecha, al lado del conmutador,
+            da el rizo y sube a señalar la frase. El rizo es lo que hace que
+            parezca hecho a mano y no una flecha de plantilla. */}
         <svg
-          viewBox="0 0 96 54"
+          viewBox="0 0 96 168"
           fill="none"
           aria-hidden="true"
-          className="ml-6 mt-1 h-[54px] w-24 -scale-x-100"
+          // El margen negativo mete la cola DENTRO de la tarjeta, hasta la
+          // altura del conmutador. Sin esto la línea se quedaba a 55 px, arriba
+          // y a la derecha, señalando el borde de la tarjeta en vez del botón.
+          // Reflejada: así la cola —que es por donde empieza a dibujarse— cae a
+          // la izquierda, al lado del conmutador, y la punta sube por la
+          // derecha a señalar la frase.
+          className="-mb-[76px] ml-1 h-[168px] w-24 -scale-x-100"
         >
           <path
-            d="M92 4C74 6 44 12 26 26c-9 7-13 15-9 19 4 4 12-1 11-9-1-9-13-14-24-14"
+            d="M94 158C68 156 28 132 22 92c-3-10 9-14 13-6 3 7-5 12-13 6-8-6-8-30-6-52"
             className="dibuja-flecha stroke-primary-base"
             strokeWidth="1.5"
             strokeLinecap="round"
             pathLength={1}
           />
           <path
-            d="M4 22l0 0 8-3M4 22l7 6"
-            className="dibuja-flecha stroke-primary-base"
+            d="M16 40l-4 11M16 40l9 6"
+            className="punta-flecha stroke-primary-base"
             strokeWidth="1.5"
             strokeLinecap="round"
             strokeLinejoin="round"
             pathLength={1}
-            style={{ animationDelay: "2.8s" }}
           />
         </svg>
       </div>
