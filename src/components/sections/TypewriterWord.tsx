@@ -10,7 +10,7 @@ import React, { useEffect, useState } from "react";
 // termina de escribirse, que es donde hace gracia.
 const frases = [
   { texto: "vender más", emoji: "💰" },
-  { texto: "ahorrar tiempo", emoji: "⏰" },
+  { texto: "ahorrar tiempo", emoji: "⏳" },
   { texto: "crecer rápido", emoji: "🚀" },
 ];
 const words = frases.map((f) => f.texto);
@@ -64,7 +64,7 @@ export default function TypewriterWord() {
       {/* El emoji, solo con la frase entera. Va DESPUÉS del cursor y con margen
           propio para que no se solapen. */}
       {completa && (
-        <span aria-hidden="true" className="emoji-remate ml-[0.28em] inline-block">
+        <span aria-hidden="true" className="emoji-remate ml-[0.16em] inline-block">
           {frases[wordIndex].emoji}
         </span>
       )}
