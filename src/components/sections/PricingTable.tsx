@@ -209,68 +209,78 @@ function Cabecera({
   );
 }
 
+function Conmutador({ anual, alCambiar }: { anual: boolean; alCambiar: (v: boolean) => void }) {
+  return (
+    <>
+      <button
+        type="button"
+        role="switch"
+        aria-checked={anual}
+        onClick={() => alCambiar(!anual)}
+        className="relative h-6 w-11 shrink-0 rounded-full transition-colors duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-alpha-16"
+        style={{ background: anual ? "var(--primary-base)" : "var(--gray-200)" }}
+      >
+        <span
+          className={cn(
+            // `left-0` explícito: sin él la posición de partida es la
+            // "estática" del span dentro del botón, que no es 0 y dejaba la
+            // bolita medio fuera del carril.
+            "absolute left-0 top-0.5 size-5 rounded-full bg-gray-0 shadow-badge-gray transition-transform duration-300 ease-out",
+            anual ? "translate-x-[22px]" : "translate-x-0.5",
+          )}
+        />
+      </button>
+      <div className="mt-4 text-label-sm text-gray-900">Pagar por año</div>
+      <p className="mt-1 text-paragraph-sm text-gray-600">
+        Un 20 % menos en los tres planes. Sin permanencia: te vas cuando
+        quieras.
+      </p>
+    </>
+  );
+}
+
 export default function PricingTable() {
   const [anual, setAnual] = useState(true);
 
   return (
-    <div className="w-full">
-      {/* ── Conmutador mes/año, con la nota dibujada a mano ── */}
-      <div className="relative mx-auto mb-10 flex w-fit items-center gap-3">
-        <button
-          type="button"
-          role="switch"
-          aria-checked={anual}
-          onClick={() => setAnual((v) => !v)}
-          className="relative h-6 w-11 shrink-0 rounded-full transition-colors duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-alpha-16"
-          style={{
-            background: anual ? "var(--primary-base)" : "var(--gray-200)",
-          }}
-        >
-          <span
-            className={cn(
-              // `left-0` explícito: sin él la posición de partida es la
-              // "estática" del span dentro del botón, que no es 0 y dejaba la
-              // bolita medio fuera del carril, tapando la primera letra de la
-              // etiqueta.
-              "absolute left-0 top-0.5 size-5 rounded-full bg-gray-0 shadow-badge-gray transition-transform duration-300 ease-out",
-              anual ? "translate-x-[22px]" : "translate-x-0.5",
-            )}
-          />
-        </button>
-        <span className="text-label-sm text-gray-900">Pagar por año</span>
+    <div className="relative w-full">
+      {/* La nota manuscrita, ARRIBA A LA IZQUIERDA y apuntando al
+          conmutador, que ahora vive en la primera celda de la tabla. Estaba a
+          la derecha del conmutador con la flecha curvándose hacia la derecha,
+          o sea señalando al vacío: la anotación apuntaba en dirección contraria
+          a lo que anotaba.
 
-        {/* La nota manuscrita: la flecha se DIBUJA sola, como si alguien la
-            hubiera trazado a lápiz sobre la página. Es el único elemento del
-            sitio que se sale de la retícula a propósito — por eso funciona
-            como anotación y no como otro cartel más. */}
-        <div className="pointer-events-none absolute bottom-full left-full mb-2 hidden w-[210px] pl-3 xl:block">
-          <span className="nota-mano block -rotate-3 pl-8 text-[17px] leading-5 text-primary-base">
-            ¡Ahórrate un 20 % al año!
-          </span>
-          <svg
-            viewBox="0 0 96 54"
-            fill="none"
-            aria-hidden="true"
-            className="mt-1 h-[54px] w-24 -scale-x-100"
-          >
-            <path
-              d="M92 4C74 6 44 12 26 26c-9 7-13 15-9 19 4 4 12-1 11-9-1-9-13-14-24-14"
-              className="dibuja-flecha stroke-primary-base"
-              strokeWidth="1.5"
-              strokeLinecap="round"
-              pathLength={1}
-            />
-            <path
-              d="M4 22l0 0 8-3M4 22l7 6"
-              className="dibuja-flecha stroke-primary-base"
-              strokeWidth="1.5"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              pathLength={1}
-              style={{ animationDelay: "0.9s" }}
-            />
-          </svg>
-        </div>
+          Se escribe sola —el texto se revela con `steps()`, que da el tirón de
+          una mano, no un desvanecido— y después se traza la flecha. Es lo único
+          del sitio que se sale de la retícula a propósito; por eso funciona
+          como anotación al margen y no como otro cartel. */}
+      <div className="pointer-events-none absolute bottom-full left-4 hidden pb-1 xl:block">
+        <span className="nota-mano escribe-mano block -rotate-3 whitespace-nowrap text-[17px] leading-5 text-primary-base">
+          ¡Ahórrate un 20 % pagando al año!
+        </span>
+        <svg
+          viewBox="0 0 96 54"
+          fill="none"
+          aria-hidden="true"
+          className="ml-6 mt-1 h-[54px] w-24 -scale-x-100"
+        >
+          <path
+            d="M92 4C74 6 44 12 26 26c-9 7-13 15-9 19 4 4 12-1 11-9-1-9-13-14-24-14"
+            className="dibuja-flecha stroke-primary-base"
+            strokeWidth="1.5"
+            strokeLinecap="round"
+            pathLength={1}
+          />
+          <path
+            d="M4 22l0 0 8-3M4 22l7 6"
+            className="dibuja-flecha stroke-primary-base"
+            strokeWidth="1.5"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            pathLength={1}
+            style={{ animationDelay: "2.8s" }}
+          />
+        </svg>
       </div>
 
       {/* ── La caja gris que envuelve la tabla Y su letra pequeña ──
@@ -292,14 +302,16 @@ export default function PricingTable() {
               conceptos acababan repartidos en diagonal. Pintando el fondo en
               cada celda no hay nada que esquivar, y la columna crece sola con
               las filas sin medir nada. */}
+            {/* Aquí decía "Todos los planes incluyen" encabezando la columna
+              de conceptos, y era FALSO: debajo hay filas que solo tiene el plan
+              caro (delivery, nómina). El que leía eso y luego veía una raya en
+              su plan se quedaba sin saber a qué atenerse.
+
+              En su lugar va el conmutador, que es donde lo pone alignui y donde
+              tiene sentido: manda sobre las tres columnas de la derecha, así
+              que su sitio es la esquina donde se cruzan. */}
             <div className="p-5">
-              <div className="text-label-sm text-gray-900">
-                Todos los planes incluyen
-              </div>
-              <p className="mt-1 text-paragraph-sm text-gray-600">
-                La app completa y las actualizaciones. Sin permanencia: te vas
-                cuando quieras.
-              </p>
+              <Conmutador anual={anual} alCambiar={setAnual} />
             </div>
             {planes.map((plan) => (
               <div
@@ -347,9 +359,16 @@ export default function PricingTable() {
           {/* Móvil y tableta: la rejilla no cabe, así que cada plan se lee entero
             por separado. Los datos son los mismos, no hay dos verdades. */}
           <div data-tarjetas className="flex flex-col gap-3 xl:hidden">
+            {/* En móvil no hay esquina donde se crucen filas y columnas, así
+              que el conmutador va encima de las tarjetas: sigue mandando sobre
+              las tres, que es lo único que importa. */}
+            <div className="px-3 py-2">
+              <Conmutador anual={anual} alCambiar={setAnual} />
+            </div>
             {planes.map((plan) => (
               <div
                 key={plan.id}
+                data-plan
                 className={cn(
                   "flex flex-col rounded-[18px] p-5",
                   plan.destacado ? "bg-gray-950" : "bg-gray-25",
