@@ -18,12 +18,14 @@ import Footer from "../components/sections/Footer.astro";
 <Layout>
   <NavBar client:load />
   <Hero />
-  <!-- El problema va ANTES del producto: sin dolor nombrado, una lista de
-       funciones es solo una lista de funciones. -->
-  <Problema />
   <Highlights />
-  <!-- Y las integraciones justo despues de ver el producto, que es cuando
-       aparece la duda de "?y lo que ya uso?". -->
+  <!-- El problema DESPUES de ver el producto. Se probaron los dos ordenes: con
+       el problema delante, la pagina abre en tono de queja y tarda en ensenar
+       nada; detras, el visitante ya ha visto el producto y la lista de trastos
+       funciona como "y esto es lo que te quita de encima". -->
+  <Problema />
+  <!-- Y las integraciones a continuacion, que es cuando aparece la duda de
+       "?y lo que ya uso?". -->
   <Integraciones />
   <SectionDivider />
   <AiFlow client:visible />

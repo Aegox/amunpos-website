@@ -1,5 +1,20 @@
 ---
-import { RiPlugLine } from "@remixicon/react";
+import {
+  RiPlugLine,
+  RiMotorbikeLine,
+  RiEBike2Line,
+  RiTakeawayLine,
+  RiHandbagLine,
+  RiRestaurantLine,
+  RiBankCardLine,
+  RiSmartphoneLine,
+  RiQrCodeLine,
+  RiWallet3Line,
+  RiFileExcel2Line,
+  RiStore2Line,
+  RiTerminalBoxLine,
+  RiBook2Line,
+} from "@remixicon/react";
 import Regla from "./Regla.astro";
 
 /**
@@ -9,25 +24,50 @@ import Regla from "./Regla.astro";
  * andando: "¿tengo que dejar de usar Rappi?". La respuesta es no, y decirlo
  * pronto vale más que cualquier función.
  *
- * SIN LOGOS, a propósito. En el repo del POS hay imágenes con nombre de marca
- * (didi-food-orange-logo.jpg y compañía) pero NO son las marcas: son
- * ilustraciones genéricas generadas. Ponerlas aquí daría a entender que son los
- * logos oficiales, y eso es engañar al que mira. Los nombres en texto dicen lo
- * mismo, no se pueden confundir con un aval y no hay que pedirle permiso a
- * nadie.
+ * SIN LOGOS DE MARCA, a propósito, y esto conviene entenderlo antes de
+ * cambiarlo. En el repo del POS hay imágenes con nombre de marca
+ * (didi-food-orange-logo.jpg y compañía) que NO son las marcas: son
+ * ilustraciones genéricas generadas. Y ninguna librería de iconos trae los
+ * logos de Rappi, DiDi, Bold o Nequi — son marcas latinoamericanas. Dibujarlos
+ * a mano sería inventar un logo ajeno, que es exactamente el problema que se
+ * evitó al descartar aquellas imágenes.
+ *
+ * Así que cada marca lleva un icono GENÉRICO —de qué tipo de cosa es— más su
+ * nombre. El icono da el golpe de vista y hace la fila mucho más fácil de
+ * barrer; el nombre es lo que de verdad identifica. Un icono suelto de una moto
+ * no dice "Rappi", dice "domicilios", y entonces la sección deja de responder a
+ * la pregunta que venía a responder.
  */
 const grupos = [
   {
     titulo: "Domicilios",
-    marcas: ["Rappi", "DiDi Food", "Uber Eats", "Glovo", "PedidosYa"],
+    marcas: [
+      { nombre: "Rappi", icon: RiMotorbikeLine },
+      { nombre: "DiDi Food", icon: RiEBike2Line },
+      { nombre: "Uber Eats", icon: RiTakeawayLine },
+      { nombre: "Glovo", icon: RiHandbagLine },
+      { nombre: "PedidosYa", icon: RiRestaurantLine },
+    ],
   },
   {
     titulo: "Cobros y datáfonos",
-    marcas: ["Bold", "Nequi", "Daviplata", "Wompi", "Mercado Pago"],
+    marcas: [
+      { nombre: "Bold", icon: RiBankCardLine },
+      { nombre: "Nequi", icon: RiSmartphoneLine },
+      { nombre: "Daviplata", icon: RiSmartphoneLine },
+      { nombre: "Wompi", icon: RiQrCodeLine },
+      { nombre: "Mercado Pago", icon: RiWallet3Line },
+    ],
   },
   {
     titulo: "De dónde vienes",
-    marcas: ["Excel", "Loyverse", "Square", "Clover", "Cuaderno"],
+    marcas: [
+      { nombre: "Excel", icon: RiFileExcel2Line },
+      { nombre: "Loyverse", icon: RiStore2Line },
+      { nombre: "Square", icon: RiTerminalBoxLine },
+      { nombre: "Clover", icon: RiStore2Line },
+      { nombre: "Cuaderno", icon: RiBook2Line },
+    ],
   },
 ];
 ---
@@ -69,9 +109,10 @@ const grupos = [
               <li
                 data-reveal
                 style={`--reveal-delay: ${i * 90 + j * 60}ms`}
-                class="flex h-8 items-center rounded-9 bg-gray-0 px-3 text-label-sm text-gray-700 shadow-button-white transition duration-200 hover:text-gray-900"
+                class="group flex h-9 items-center gap-2 rounded-9 bg-gray-0 pl-2.5 pr-3 text-label-sm text-gray-700 shadow-button-white transition duration-200 hover:text-gray-900"
               >
-                {m}
+                <m.icon className="size-4 shrink-0 text-gray-400 transition-colors duration-200 group-hover:text-primary-base" />
+                {m.nombre}
               </li>
             ))}
           </ul>
@@ -84,8 +125,9 @@ const grupos = [
 
   <div class="mx-auto flex w-full max-w-[1240px] justify-center px-5">
     <p class="mt-6 max-w-xl text-pretty text-center text-paragraph-xs text-gray-450">
-      Marcas de sus respectivos dueños, citadas solo para describir
-      compatibilidad. ¿Usas algo que no está? Escríbenos y lo miramos.
+      Los iconos son ilustrativos, no logotipos. Marcas de sus respectivos
+      dueños, citadas solo para describir compatibilidad. ¿Usas algo que no
+      está? Escríbenos y lo miramos.
     </p>
   </div>
 </section>
