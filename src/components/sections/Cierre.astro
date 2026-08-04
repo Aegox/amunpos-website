@@ -1,0 +1,93 @@
+---
+import { RiArrowRightSLine } from "@remixicon/react";
+
+/**
+ * El cierre. La página terminaba en el boletín y el pie: quien bajaba hasta el
+ * final se encontraba un formulario de correo y nada más. Esto es la última
+ * llamada, y la ve todo el que llega abajo.
+ *
+ * El botón lleva el mismo haz que recorre el borde de la pastilla activa del
+ * asistente. No es un adorno reciclado por pereza: cierra el círculo con la
+ * sección donde se presentó ese recurso, y es lo único en movimiento del
+ * bloque, así que el ojo va justo donde tiene que ir.
+ */
+const TRAZOS = 8;
+const LARGO = 3;
+const VUELTA = 3600;
+---
+
+<section id="Empezar" class="w-full px-4 py-6 xl:px-6 xl:py-10">
+  <div
+    class="relative overflow-hidden rounded-[20px] bg-gray-950 px-5 py-16 ring-1 ring-inset ring-white/10 xl:rounded-[24px] xl:py-20"
+  >
+    <div
+      class="pointer-events-none absolute -bottom-40 left-1/2 h-[420px] w-[720px] -translate-x-1/2 rounded-full bg-primary-base/20 blur-[130px]"
+    >
+    </div>
+
+    <!-- Los mismos raíles y chispas de la sección oscura, para que las dos se
+         lean como la misma pieza abriendo y cerrando. -->
+    <div class="pointer-events-none absolute inset-x-0 top-0 hidden h-full justify-center overflow-hidden lg:flex">
+      <div class="relative h-full w-full max-w-[1240px]">
+        <div class="absolute inset-y-0 left-0 w-px bg-linear-to-b from-transparent via-white/[.08] to-transparent"></div>
+        <div class="absolute inset-y-0 right-0 w-px bg-linear-to-b from-transparent via-white/[.08] to-transparent"></div>
+        <span class="spark-line left-0" style="animation-delay: 0.8s;"></span>
+        <span class="spark-line right-0"></span>
+      </div>
+    </div>
+
+    <div class="relative mx-auto flex w-full max-w-[1240px] flex-col items-center text-center">
+      <h2 data-reveal class="text-balance text-title-h4 text-gray-0 xl:text-title-h3">
+        Deja de saltar entre seis herramientas.
+      </h2>
+      <p data-reveal style="--reveal-delay: 80ms" class="mt-4 max-w-lg text-pretty text-paragraph-md text-gray-450">
+        Se empieza gratis, sin tarjeta y sin permanencia. Si no te sirve, te vas
+        y ya está.
+      </p>
+
+      <a
+        href="#Planes"
+        data-reveal
+        style="--reveal-delay: 160ms"
+        class="group relative mt-9 inline-flex h-12 items-center gap-3 rounded-13 bg-gray-0 px-6 text-label-md text-gray-900 transition duration-200 ease-out hover:bg-gray-25"
+      >
+        <!-- El haz recorriendo el borde del botón. Mismo recurso que la pastilla
+             activa del asistente: un trozo de trazo con la cola apagándose, que
+             avanza por la longitud real del contorno. -->
+        <svg
+          aria-hidden="true"
+          class="pointer-events-none absolute inset-0 size-full overflow-visible"
+          fill="none"
+        >
+          {
+            Array.from({ length: TRAZOS }).map((_, k) => (
+              <rect
+                class="haz-borde"
+                x="0"
+                y="0"
+                width="100%"
+                height="100%"
+                rx="13"
+                ry="13"
+                pathLength={100}
+                stroke="var(--ai-base)"
+                stroke-width="1.5"
+                stroke-dasharray={`${LARGO} ${100 - LARGO}`}
+                stroke-opacity={1 - k / TRAZOS}
+                style={`--vuelta: ${VUELTA}ms; animation-delay: ${-(VUELTA - k * LARGO * (VUELTA / 100))}ms`}
+              />
+            ))
+          }
+        </svg>
+
+        <span class="relative">Empieza gratis</span>
+        <RiArrowRightSLine className="relative -mx-1.5 size-5 shrink-0 text-gray-400" />
+      </a>
+
+      <p data-reveal style="--reveal-delay: 220ms" class="mt-5 text-paragraph-sm text-gray-500">
+        ¿Prefieres que te lo enseñemos?
+        <a href="#Contacto" class="text-gray-300 underline underline-offset-4 hover:text-gray-0">Pide una demo</a>
+      </p>
+    </div>
+  </div>
+</section>

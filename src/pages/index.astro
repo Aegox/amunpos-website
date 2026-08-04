@@ -9,13 +9,22 @@ import SectionDivider from "../components/sections/SectionDivider.astro";
 import Pricing from "../components/sections/Pricing.astro";
 import Testimonials from "../components/sections/Testimonials.astro";
 import Faq from "../components/sections/Faq.astro";
+import Problema from "../components/sections/Problema.astro";
+import Integraciones from "../components/sections/Integraciones.astro";
+import Cierre from "../components/sections/Cierre.astro";
 import Footer from "../components/sections/Footer.astro";
 ---
 
 <Layout>
   <NavBar client:load />
   <Hero />
+  <!-- El problema va ANTES del producto: sin dolor nombrado, una lista de
+       funciones es solo una lista de funciones. -->
+  <Problema />
   <Highlights />
+  <!-- Y las integraciones justo despues de ver el producto, que es cuando
+       aparece la duda de "?y lo que ya uso?". -->
+  <Integraciones />
   <SectionDivider />
   <AiFlow client:visible />
   <WhatsInside />
@@ -31,5 +40,7 @@ import Footer from "../components/sections/Footer.astro";
        enmarcado por arriba y por abajo, y es lo que lo separa del pie sin
        necesidad de meterle un fondo distinto. -->
   <SectionDivider />
+  <!-- El cierre antes del pie: es lo ultimo que ve todo el que baja del todo. -->
+  <Cierre />
   <Footer />
 </Layout>

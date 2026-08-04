@@ -1,0 +1,91 @@
+---
+import { RiPlugLine } from "@remixicon/react";
+import Regla from "./Regla.astro";
+
+/**
+ * "Se lleva con lo que ya usas".
+ *
+ * Quita de un plumazo la objeción más común de quien ya tiene el negocio
+ * andando: "¿tengo que dejar de usar Rappi?". La respuesta es no, y decirlo
+ * pronto vale más que cualquier función.
+ *
+ * SIN LOGOS, a propósito. En el repo del POS hay imágenes con nombre de marca
+ * (didi-food-orange-logo.jpg y compañía) pero NO son las marcas: son
+ * ilustraciones genéricas generadas. Ponerlas aquí daría a entender que son los
+ * logos oficiales, y eso es engañar al que mira. Los nombres en texto dicen lo
+ * mismo, no se pueden confundir con un aval y no hay que pedirle permiso a
+ * nadie.
+ */
+const grupos = [
+  {
+    titulo: "Domicilios",
+    marcas: ["Rappi", "DiDi Food", "Uber Eats", "Glovo", "PedidosYa"],
+  },
+  {
+    titulo: "Cobros y datáfonos",
+    marcas: ["Bold", "Nequi", "Daviplata", "Wompi", "Mercado Pago"],
+  },
+  {
+    titulo: "De dónde vienes",
+    marcas: ["Excel", "Loyverse", "Square", "Clover", "Cuaderno"],
+  },
+];
+---
+
+<section id="Integraciones" class="w-full py-16 xl:py-20">
+  <div class="mx-auto flex w-full max-w-[1240px] flex-col items-center px-5">
+    <span
+      data-reveal
+      class="flex h-8 items-center gap-1.5 rounded-9 bg-gray-0 pl-2 pr-3 text-label-sm text-gray-700 shadow-button-white"
+    >
+      <RiPlugLine className="size-4 text-gray-400" />
+      Integraciones
+    </span>
+    <h2 data-reveal style="--reveal-delay: 60ms" class="mt-4 text-balance text-center text-title-h4 text-gray-900">
+      No tienes que dejar nada.
+    </h2>
+    <p
+      data-reveal
+      style="--reveal-delay: 120ms"
+      class="mt-3 max-w-xl text-pretty text-center text-paragraph-md text-gray-600"
+    >
+      amunpos se lleva con lo que ya tienes montado. Sigues cobrando y
+      repartiendo igual; lo que cambia es que todo entra al mismo sitio.
+    </p>
+  </div>
+
+  <Regla class="mt-12" />
+
+  <div class="mx-auto grid w-full max-w-[1240px] grid-cols-1 px-5 md:grid-cols-3">
+    {
+      grupos.map((g, i) => (
+        <div class="relative flex flex-col py-8 md:px-8 md:py-10">
+          {i > 0 && <span aria-hidden="true" class="absolute inset-y-0 left-0 hidden w-px bg-gray-200 md:block" />}
+          <div class="text-label-sm text-gray-900">{g.titulo}</div>
+          {/* Cada nombre entra con su retardo: la fila se va llenando en vez de
+              aparecer de golpe, que es lo que la hace agradable de mirar. */}
+          <ul class="mt-4 flex flex-wrap gap-2">
+            {g.marcas.map((m, j) => (
+              <li
+                data-reveal
+                style={`--reveal-delay: ${i * 90 + j * 60}ms`}
+                class="flex h-8 items-center rounded-9 bg-gray-0 px-3 text-label-sm text-gray-700 shadow-button-white transition duration-200 hover:text-gray-900"
+              >
+                {m}
+              </li>
+            ))}
+          </ul>
+        </div>
+      ))
+    }
+  </div>
+
+  <Regla />
+
+  <div class="mx-auto flex w-full max-w-[1240px] justify-center px-5">
+    <p class="mt-6 max-w-xl text-pretty text-center text-paragraph-xs text-gray-450">
+      Marcas de sus respectivos dueños, citadas solo para describir
+      compatibilidad. ¿Usas algo que no está? Escríbenos y lo miramos.
+    </p>
+  </div>
+</section>

@@ -542,7 +542,8 @@ body {
    caen por los lados de la sección oscura (.spark-line) y el deslizamiento del
    navbar al ocultarse y volver (NavBar.tsx, que por eso ya no lleva
    `motion-reduce:transition-none`), el parpadeo del cursor del titular
-   (.animate-caret) y el trazo de la flecha de precios
+   (.animate-caret), la tachadura de "El problema" (.tacha, con observador
+   propio en el propio componente) y el trazo de la flecha de precios
    (.dibuja-flecha) con el texto que se escribe y se repasa (.escribe-mano),
    que es EL efecto de esa anotación: sin escribirse ni trazarse es un cartel
    más de los muchos que ya hay.
@@ -715,4 +716,36 @@ body {
 }
 .emoji-remate {
   animation: emoji-remate 0.34s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+/* ── La tachadura de "El problema" ──────────────────────────────
+   Cada trasto de la lista se tacha a mano, uno detrás de otro, cuando la
+   sección entra en pantalla. Es lo que cuenta la historia —se van cayendo de la
+   lista— y por eso no es un adorno: sin el trazo, la sección es una lista de
+   quejas; con él, es una lista que se va resolviendo.
+
+   Va con `pathLength=1` para que el mismo par dasharray/offset valga para
+   cualquier curva sin medirla, igual que la flecha de precios. */
+/* Se recorta de izquierda a derecha en vez de usar `stroke-dashoffset`.
+   Con dasharray el trazo se quedaba a media palabra: `vector-effect:
+   non-scaling-stroke` calcula el patron de guiones en el espacio RENDERIZADO,
+   no en el normalizado por `pathLength`, y como el SVG va estirado con
+   `preserveAspectRatio=none` la longitud real no se parecia en nada a 1. El
+   recorte no depende de cuanto mida el trazo, asi que da igual como se estire. */
+@keyframes tacha {
+  from { clip-path: inset(0 100% 0 0); }
+  to { clip-path: inset(0 -2% 0 0); }
+}
+.tacha {
+  /* Sin JS se ve el trazo ya hecho: la seccion se entiende igual y no se queda
+     a medias esperando un observador que nunca va a llegar. */
+  clip-path: inset(0 -2% 0 0);
+}
+[data-tachar] .tacha {
+  clip-path: inset(0 100% 0 0);
+}
+/* El retardo lo pone cada trasto con --i, asi que se tachan en cascada. */
+[data-tachar][data-tachado] .tacha {
+  animation: tacha 0.5s cubic-bezier(0.65, 0, 0.35, 1) both;
+  animation-delay: calc(var(--i, 0) * 0.16s);
 }

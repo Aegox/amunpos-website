@@ -1,0 +1,150 @@
+---
+import {
+  RiCalculatorLine,
+  RiFileExcel2Line,
+  RiWhatsappLine,
+  RiMotorbikeLine,
+  RiCalendar2Line,
+  RiArchiveDrawerLine,
+  RiErrorWarningLine,
+} from "@remixicon/react";
+import Regla from "./Regla.astro";
+
+/**
+ * El problema, ANTES de la solución.
+ *
+ * Es la lámina 2 del deck y lo primero que dice el guion del pitch: "media
+ * docena de herramientas que no se hablan entre sí". La web entraba directa al
+ * producto, así que quien llegaba en frío no sabía todavía que tenía un
+ * problema con nombre — y sin problema nombrado, una lista de funciones es solo
+ * una lista de funciones.
+ *
+ * Se construye con la misma retícula que "Lo que tu negocio va a lograr": esta
+ * sección es su reverso —el antes— y conviene que se parezcan.
+ */
+const trastos = [
+  { icon: RiCalculatorLine, nombre: "El POS o el cuaderno", pega: "La venta queda anotada y ahí se acaba." },
+  { icon: RiFileExcel2Line, nombre: "El Excel del inventario", pega: "Nunca cuadra con lo que hay en la bodega." },
+  { icon: RiWhatsappLine, nombre: "Los pedidos por WhatsApp", pega: "Se pierden entre mensajes y fotos." },
+  { icon: RiMotorbikeLine, nombre: "La app de domicilios", pega: "Hasta un 30 % de comisión por cada pedido." },
+  { icon: RiCalendar2Line, nombre: "La nómina a mano", pega: "Horas contadas de memoria a fin de mes." },
+  { icon: RiArchiveDrawerLine, nombre: "La caja en papel", pega: "El arqueo no cuadra y nadie sabe por qué." },
+];
+---
+
+<section id="Problema" class="w-full py-20 xl:py-28">
+  <div class="mx-auto flex w-full max-w-[1240px] flex-col items-center px-5">
+    <span
+      data-reveal
+      class="flex h-8 items-center gap-1.5 rounded-9 bg-gray-0 pl-2 pr-3 text-label-sm text-gray-700 shadow-button-white"
+    >
+      <RiErrorWarningLine className="size-4 text-gray-400" />
+      El problema
+    </span>
+
+    <h2
+      data-reveal
+      style="--reveal-delay: 60ms"
+      class="mt-4 text-balance text-center text-title-h4 text-gray-900 xl:text-title-h3"
+    >
+      Tu negocio vive en seis sitios a la vez.
+    </h2>
+    <p
+      data-reveal
+      style="--reveal-delay: 120ms"
+      class="mt-3 max-w-xl text-pretty text-center text-paragraph-md text-gray-600"
+    >
+      Y ninguno se habla con el de al lado. Cada uno con su clave, su factura y
+      su manera de fallar.
+    </p>
+  </div>
+
+  <Regla class="mt-14" />
+
+  <!-- `data-tachado` lo activa el script del final: cada trasto se tacha a mano,
+       uno detrás de otro, cuando la sección entra en pantalla. Es la parte
+       divertida y también la que cuenta la historia — se van cayendo de la
+       lista uno a uno. -->
+  <div data-tachar class="relative mx-auto grid w-full max-w-[1240px] grid-cols-1 px-5 md:grid-cols-2 xl:grid-cols-3">
+    <!-- Las lineas de la reticula van absolutas sobre la rejilla entera, no
+         como borde de cada celda: puestas por celda, la primera columna se
+         quedaba con una raya suelta a la izquierda. Sin `gap`, las columnas
+         caen exactamente en los tercios, asi que aqui no hace falta el
+         desfase de 4 px que si necesita la seccion oscura. -->
+    <div aria-hidden="true" class="pointer-events-none absolute inset-y-0 left-1/2 hidden w-px bg-gray-200 md:block xl:hidden"></div>
+    {[1, 2].map((n) => (
+      <div
+        aria-hidden="true"
+        class="pointer-events-none absolute inset-y-0 hidden w-px bg-gray-200 xl:block"
+        style={`left: ${(n / 3) * 100}%`}
+      />
+    ))}
+    <div aria-hidden="true" class="pointer-events-none absolute inset-x-5 top-1/2 hidden h-px bg-gray-200 md:block"></div>
+    {
+      trastos.map((t, i) => {
+        const Icon = t.icon;
+        return (
+          <div class="flex flex-col py-7 md:px-8 xl:py-9" style={`--i: ${i}`}>
+            <Icon className="size-6 shrink-0 text-gray-400" />
+
+            <h3 class="relative mt-5 w-fit text-label-lg text-gray-900">
+              {t.nombre}
+              {/* La tachadura. Va como SVG por encima del texto para poder
+                  dibujarla; una `line-through` de CSS no se puede animar. */}
+              <svg
+                aria-hidden="true"
+                viewBox="0 0 100 8"
+                preserveAspectRatio="none"
+                class="tacha pointer-events-none absolute inset-x-0 top-1/2 h-2 w-full -translate-y-1/2 overflow-visible"
+                fill="none"
+              >
+                <path
+                  d="M1 4.2C24 3.6 48 4.8 70 4c11-0.4 20 0.4 29 0.6"
+                  class="stroke-gray-900"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  vector-effect="non-scaling-stroke"></path>
+              </svg>
+            </h3>
+
+            <p class="mt-2 max-w-[42ch] text-pretty text-paragraph-sm text-gray-600">{t.pega}</p>
+          </div>
+        );
+      })
+    }
+  </div>
+
+  <Regla />
+
+  <div class="mx-auto flex w-full max-w-[1240px] justify-center px-5">
+    <p data-reveal class="mt-10 max-w-xl text-balance text-center text-title-h6 text-gray-900 md:text-title-h5">
+      amunpos los reemplaza a todos. Uno solo, y todo cuadra.
+    </p>
+  </div>
+</section>
+
+<script is:inline>
+  (function () {
+    const zona = document.querySelector("[data-tachar]");
+    if (!zona || !("IntersectionObserver" in window)) return;
+
+    // Observador propio y NO atado a `prefers-reduced-motion`: tachar la lista
+    // es lo que cuenta la historia —los trastos se van cayendo uno a uno—, no
+    // un adorno. Ver la nota de excepción al final de globals.css.
+    //
+    // Engancha una sola vez: si siguiera el ir y venir de la visibilidad, la
+    // lista se volvería a tachar cada vez que se pasa por delante, y lo que la
+    // primera vez es una gracia a la tercera es un tic.
+    const io = new IntersectionObserver(
+      (entradas) => {
+        for (const e of entradas) {
+          if (!e.isIntersecting) continue;
+          zona.setAttribute("data-tachado", "");
+          io.disconnect();
+        }
+      },
+      { threshold: 0.3 },
+    );
+    io.observe(zona);
+  })();
+</script>
