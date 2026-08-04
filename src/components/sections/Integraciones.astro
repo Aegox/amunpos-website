@@ -24,28 +24,31 @@ import Regla from "./Regla.astro";
  * andando: "¿tengo que dejar de usar Rappi?". La respuesta es no, y decirlo
  * pronto vale más que cualquier función.
  *
- * SIN LOGOS DE MARCA, a propósito, y esto conviene entenderlo antes de
- * cambiarlo. En el repo del POS hay imágenes con nombre de marca
- * (didi-food-orange-logo.jpg y compañía) que NO son las marcas: son
- * ilustraciones genéricas generadas. Y ninguna librería de iconos trae los
- * logos de Rappi, DiDi, Bold o Nequi — son marcas latinoamericanas. Dibujarlos
- * a mano sería inventar un logo ajeno, que es exactamente el problema que se
- * evitó al descartar aquellas imágenes.
+ * LOS LOGOS: se usa la marca REAL donde la hay, y un icono genérico donde no.
  *
- * Así que cada marca lleva un icono GENÉRICO —de qué tipo de cosa es— más su
- * nombre. El icono da el golpe de vista y hace la fila mucho más fácil de
- * barrer; el nombre es lo que de verdad identifica. Un icono suelto de una moto
- * no dice "Rappi", dice "domicilios", y entonces la sección deja de responder a
- * la pregunta que venía a responder.
+ * Las de `public/marcas/` salen de `simple-icons`, que publica los trazos
+ * oficiales. Pero esa librería solo trae 6 de las 15 de aquí: las
+ * latinoamericanas —Rappi, DiDi Food, PedidosYa, Nequi, Bold, Wompi,
+ * Daviplata— no están en ninguna, y Microsoft y Clover retiraron los suyos por
+ * política de marca.
+ *
+ * Para esas se usa un icono genérico, NO un logo dibujado a ojo: inventar el
+ * logotipo de otro es exactamente el problema que se evitó al descartar las
+ * imágenes generadas que había en el repo del POS.
+ *
+ * PARA COMPLETARLAS: basta dejar el SVG en `public/marcas/<slug>.svg` y poner
+ * ese slug en `logo`. Casi todas las publican en su sala de prensa. El logo se
+ * pinta con `currentColor`, así que da igual de qué color venga el archivo: la
+ * fila entera comparte tono y no se convierte en un arcoíris.
  */
 const grupos = [
   {
     titulo: "Domicilios",
     marcas: [
-      { nombre: "Rappi", icon: RiMotorbikeLine },
+      { nombre: "Rappi", icon: RiMotorbikeLine },  // sin logo publico en simple-icons
       { nombre: "DiDi Food", icon: RiEBike2Line },
-      { nombre: "Uber Eats", icon: RiTakeawayLine },
-      { nombre: "Glovo", icon: RiHandbagLine },
+      { nombre: "Uber Eats", icon: RiTakeawayLine, logo: "uber-eats" },
+      { nombre: "Glovo", icon: RiHandbagLine, logo: "glovo" },
       { nombre: "PedidosYa", icon: RiRestaurantLine },
     ],
   },
@@ -56,7 +59,7 @@ const grupos = [
       { nombre: "Nequi", icon: RiSmartphoneLine },
       { nombre: "Daviplata", icon: RiSmartphoneLine },
       { nombre: "Wompi", icon: RiQrCodeLine },
-      { nombre: "Mercado Pago", icon: RiWallet3Line },
+      { nombre: "Mercado Pago", icon: RiWallet3Line, logo: "mercado-pago" },
     ],
   },
   {
@@ -64,7 +67,7 @@ const grupos = [
     marcas: [
       { nombre: "Excel", icon: RiFileExcel2Line },
       { nombre: "Loyverse", icon: RiStore2Line },
-      { nombre: "Square", icon: RiTerminalBoxLine },
+      { nombre: "Square", icon: RiTerminalBoxLine, logo: "square" },
       { nombre: "Clover", icon: RiStore2Line },
       { nombre: "Cuaderno", icon: RiBook2Line },
     ],
@@ -111,7 +114,19 @@ const grupos = [
                 style={`--reveal-delay: ${i * 90 + j * 60}ms`}
                 class="group flex h-9 items-center gap-2 rounded-9 bg-gray-0 pl-2.5 pr-3 text-label-sm text-gray-700 shadow-button-white transition duration-200 hover:text-gray-900"
               >
-                <m.icon className="size-4 shrink-0 text-gray-400 transition-colors duration-200 group-hover:text-primary-base" />
+                {m.logo ? (
+                  <img
+                    src={`/marcas/${m.logo}.svg`}
+                    alt=""
+                    width="16"
+                    height="16"
+                    class="size-4 shrink-0 opacity-45 transition-opacity duration-200 group-hover:opacity-100"
+                    loading="lazy"
+                    decoding="async"
+                  />
+                ) : (
+                  <m.icon className="size-4 shrink-0 text-gray-400 transition-colors duration-200 group-hover:text-primary-base" />
+                )}
                 {m.nombre}
               </li>
             ))}
@@ -125,9 +140,9 @@ const grupos = [
 
   <div class="mx-auto flex w-full max-w-[1240px] justify-center px-5">
     <p class="mt-6 max-w-xl text-pretty text-center text-paragraph-xs text-gray-450">
-      Los iconos son ilustrativos, no logotipos. Marcas de sus respectivos
-      dueños, citadas solo para describir compatibilidad. ¿Usas algo que no
-      está? Escríbenos y lo miramos.
+      Marcas de sus respectivos dueños, citadas solo para describir
+      compatibilidad. Donde no aparece el logotipo va un icono ilustrativo.
+      ¿Usas algo que no está? Escríbenos y lo miramos.
     </p>
   </div>
 </section>

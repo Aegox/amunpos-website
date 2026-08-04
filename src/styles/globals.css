@@ -749,3 +749,20 @@ body {
   animation: tacha 0.5s cubic-bezier(0.65, 0, 0.35, 1) both;
   animation-delay: calc(var(--i, 0) * 0.16s);
 }
+
+/* Los seis iconos de "El problema" viajan al centro y se convierten en el logo.
+   El destino lo calcula el script en el momento —depende de cuantas columnas
+   haya— y lo deja en --dx/--dy; aqui solo se anima.
+
+   Se usa `translate` y `scale`, que van en la capa de composicion y no obligan
+   al navegador a recalcular la maqueta en cada fotograma: seis elementos
+   moviendose a la vez con `top`/`left` se notarian. */
+@keyframes junta-iconos {
+  from { transform: translate(0, 0) scale(1); opacity: 1; }
+  70% { opacity: 1; }
+  to { transform: translate(var(--dx, 0), var(--dy, 0)) scale(0.45); opacity: 0; }
+}
+[data-trasto][data-junta] {
+  animation: junta-iconos 0.75s cubic-bezier(0.65, 0, 0.35, 1) both;
+  animation-delay: var(--retraso, 0ms);
+}

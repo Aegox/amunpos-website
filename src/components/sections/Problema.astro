@@ -26,7 +26,7 @@ import Regla from "./Regla.astro";
 const trastos = [
   { icon: RiCalculatorLine, nombre: "El POS o el cuaderno", pega: "La venta queda anotada y ahí se acaba." },
   { icon: RiFileExcel2Line, nombre: "El Excel del inventario", pega: "Nunca cuadra con lo que hay en la bodega." },
-  { icon: RiWhatsappLine, nombre: "Los pedidos por WhatsApp", pega: "Se pierden entre mensajes y fotos." },
+  { icon: RiWhatsappLine, logo: "whatsapp", nombre: "Los pedidos por WhatsApp", pega: "Se pierden entre mensajes y fotos." },
   { icon: RiMotorbikeLine, nombre: "La app de domicilios", pega: "Hasta un 30 % de comisión por cada pedido." },
   { icon: RiCalendar2Line, nombre: "La nómina a mano", pega: "Horas contadas de memoria a fin de mes." },
   { icon: RiArchiveDrawerLine, nombre: "La caja en papel", pega: "El arqueo no cuadra y nadie sabe por qué." },
@@ -86,7 +86,14 @@ const trastos = [
         const Icon = t.icon;
         return (
           <div class="flex flex-col py-7 md:px-8 xl:py-9" style={`--i: ${i}`}>
-            <Icon className="size-6 shrink-0 text-gray-400" />
+            {/* `data-trasto` lo busca el script para llevárselo al centro. */}
+            <span data-trasto class="flex size-6 shrink-0 items-center justify-center text-gray-400">
+              {t.logo ? (
+                <img src={`/marcas/${t.logo}.svg`} alt="" width="24" height="24" class="size-6 opacity-60" loading="lazy" />
+              ) : (
+                <Icon className="size-6" />
+              )}
+            </span>
 
             <h3 class="relative mt-5 w-fit text-label-lg text-gray-900">
               {t.nombre}
@@ -117,9 +124,22 @@ const trastos = [
 
   <Regla />
 
-  <div class="mx-auto flex w-full max-w-[1240px] justify-center px-5">
-    <p data-reveal class="mt-10 max-w-xl text-balance text-center text-title-h6 text-gray-900 md:text-title-h5">
-      amunpos los reemplaza a todos. Uno solo, y todo cuadra.
+  <!-- El remate: los seis iconos se despegan de su sitio, viajan al centro y
+       ahí aparece el logo. Es la idea entera de la sección en un gesto — seis
+       cosas sueltas que se vuelven una — y dicha así se entiende antes de
+       leerla. -->
+  <div class="mx-auto flex w-full max-w-[1240px] flex-col items-center px-5">
+    <div data-destino class="relative mt-12 flex h-12 items-center justify-center">
+      <img
+        data-logo
+        src="/logo.png"
+        alt="amunpos"
+        class="h-8 w-auto opacity-0 transition-all duration-500 ease-out"
+        style="transform: scale(0.8)"
+      />
+    </div>
+    <p data-reveal class="mt-6 max-w-xl text-balance text-center text-title-h6 text-gray-900 md:text-title-h5">
+      Uno solo, y todo cuadra.
     </p>
   </div>
 </section>
@@ -136,12 +156,43 @@ const trastos = [
     // Engancha una sola vez: si siguiera el ir y venir de la visibilidad, la
     // lista se volvería a tachar cada vez que se pasa por delante, y lo que la
     // primera vez es una gracia a la tercera es un tic.
+    const juntar = () => {
+      const destino = document.querySelector("[data-destino]");
+      const logo = document.querySelector("[data-logo]");
+      if (!destino || !logo) return;
+      const centro = destino.getBoundingClientRect();
+      const iconos = [...zona.querySelectorAll("[data-trasto]")];
+
+      iconos.forEach((icono, i) => {
+        const caja = icono.getBoundingClientRect();
+        // El viaje se calcula EN EL MOMENTO, no se deja escrito: la distancia
+        // depende de cuántas columnas haya (una, dos o tres según el ancho) y
+        // de dónde caiga cada icono. Escrita a mano, en móvil apuntaría a
+        // cualquier sitio.
+        const dx = centro.left + centro.width / 2 - (caja.left + caja.width / 2);
+        const dy = centro.top + centro.height / 2 - (caja.top + caja.height / 2);
+        icono.style.setProperty("--dx", dx + "px");
+        icono.style.setProperty("--dy", dy + "px");
+        icono.style.setProperty("--retraso", i * 55 + "ms");
+        icono.setAttribute("data-junta", "");
+      });
+
+      // El logo entra cuando los iconos ya han llegado.
+      setTimeout(() => {
+        logo.style.opacity = "1";
+        logo.style.transform = "scale(1)";
+      }, 780);
+    };
+
     const io = new IntersectionObserver(
       (entradas) => {
         for (const e of entradas) {
           if (!e.isIntersecting) continue;
           zona.setAttribute("data-tachado", "");
           io.disconnect();
+          // Primero se tachan los seis, y solo entonces se van al centro: si
+          // salieran a la vez, no se vería ninguna de las dos cosas.
+          setTimeout(juntar, 6 * 160 + 500);
         }
       },
       { threshold: 0.3 },
