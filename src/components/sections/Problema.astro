@@ -62,10 +62,10 @@ const trastos = [
 
   <Regla class="mt-14" />
 
-  <!-- `data-tachado` lo activa el script del final: cada trasto se tacha a mano,
-       uno detrás de otro, cuando la sección entra en pantalla. Es la parte
-       divertida y también la que cuenta la historia — se van cayendo de la
-       lista uno a uno. -->
+  <!-- `data-ciclo` lo pone el script cuando la sección entra en pantalla, y lo
+       quita cuando sale. A partir de ahí TODO va en bucle y lo lleva el CSS:
+       se tachan los seis, los iconos se van al centro, sale el logo, y vuelta a
+       empezar. -->
   <div data-tachar class="relative mx-auto grid w-full max-w-[1240px] grid-cols-1 px-5 md:grid-cols-2 xl:grid-cols-3">
     <!-- Las lineas de la reticula van absolutas sobre la rejilla entera, no
          como borde de cada celda: puestas por celda, la primera columna se
@@ -130,13 +130,7 @@ const trastos = [
        leerla. -->
   <div class="mx-auto flex w-full max-w-[1240px] flex-col items-center px-5">
     <div data-destino class="relative mt-12 flex h-12 items-center justify-center">
-      <img
-        data-logo
-        src="/logo.png"
-        alt="amunpos"
-        class="h-8 w-auto opacity-0 transition-all duration-500 ease-out"
-        style="transform: scale(0.8)"
-      />
+      <img data-logo src="/logo.png" alt="amunpos" class="h-8 w-auto" />
     </div>
     <p data-reveal class="mt-6 max-w-xl text-balance text-center text-title-h6 text-gray-900 md:text-title-h5">
       Uno solo, y todo cuadra.
@@ -146,57 +140,57 @@ const trastos = [
 
 <script is:inline>
   (function () {
-    const zona = document.querySelector("[data-tachar]");
-    if (!zona || !("IntersectionObserver" in window)) return;
+    const seccion = document.querySelector("#Problema");
+    const zona = seccion && seccion.querySelector("[data-tachar]");
+    const destino = document.querySelector("[data-destino]");
+    if (!seccion || !zona || !destino || !("IntersectionObserver" in window)) return;
 
-    // Observador propio y NO atado a `prefers-reduced-motion`: tachar la lista
-    // es lo que cuenta la historia —los trastos se van cayendo uno a uno—, no
-    // un adorno. Ver la nota de excepción al final de globals.css.
+    const iconos = [...zona.querySelectorAll("[data-trasto]")];
+
+    // Lo ÚNICO que hace falta medir: a dónde tiene que viajar cada icono. La
+    // distancia depende de cuántas columnas haya —una, dos o tres según el
+    // ancho— y de dónde caiga cada uno, así que escrita a mano en móvil
+    // apuntaría a cualquier sitio.
     //
-    // Engancha una sola vez: si siguiera el ir y venir de la visibilidad, la
-    // lista se volvería a tachar cada vez que se pasa por delante, y lo que la
-    // primera vez es una gracia a la tercera es un tic.
-    const juntar = () => {
-      const destino = document.querySelector("[data-destino]");
-      const logo = document.querySelector("[data-logo]");
-      if (!destino || !logo) return;
+    // Se mide con el ciclo APAGADO: si se midiera con los iconos a medio viaje,
+    // saldría la posición de ese fotograma y el destino se iría desplazando en
+    // cada vuelta.
+    const medir = () => {
+      const encendido = seccion.hasAttribute("data-ciclo");
+      seccion.removeAttribute("data-ciclo");
       const centro = destino.getBoundingClientRect();
-      const iconos = [...zona.querySelectorAll("[data-trasto]")];
-
-      iconos.forEach((icono, i) => {
+      for (const icono of iconos) {
         const caja = icono.getBoundingClientRect();
-        // El viaje se calcula EN EL MOMENTO, no se deja escrito: la distancia
-        // depende de cuántas columnas haya (una, dos o tres según el ancho) y
-        // de dónde caiga cada icono. Escrita a mano, en móvil apuntaría a
-        // cualquier sitio.
-        const dx = centro.left + centro.width / 2 - (caja.left + caja.width / 2);
-        const dy = centro.top + centro.height / 2 - (caja.top + caja.height / 2);
-        icono.style.setProperty("--dx", dx + "px");
-        icono.style.setProperty("--dy", dy + "px");
-        icono.style.setProperty("--retraso", i * 55 + "ms");
-        icono.setAttribute("data-junta", "");
-      });
-
-      // El logo entra cuando los iconos ya han llegado.
-      setTimeout(() => {
-        logo.style.opacity = "1";
-        logo.style.transform = "scale(1)";
-      }, 780);
+        icono.style.setProperty("--dx", centro.left + centro.width / 2 - (caja.left + caja.width / 2) + "px");
+        icono.style.setProperty("--dy", centro.top + centro.height / 2 - (caja.top + caja.height / 2) + "px");
+      }
+      if (encendido) seccion.setAttribute("data-ciclo", "");
     };
 
+    // Se enciende al entrar y se APAGA al salir, a diferencia del resto de
+    // animaciones del sitio, que enganchan una sola vez. Aquí sí conviene: va en
+    // bucle para siempre, y dejarla corriendo para nadie es gastar batería a
+    // cambio de nada.
     const io = new IntersectionObserver(
       (entradas) => {
         for (const e of entradas) {
-          if (!e.isIntersecting) continue;
-          zona.setAttribute("data-tachado", "");
-          io.disconnect();
-          // Primero se tachan los seis, y solo entonces se van al centro: si
-          // salieran a la vez, no se vería ninguna de las dos cosas.
-          setTimeout(juntar, 6 * 160 + 500);
+          if (e.isIntersecting) {
+            medir();
+            seccion.setAttribute("data-ciclo", "");
+          } else {
+            seccion.removeAttribute("data-ciclo");
+          }
         }
       },
-      { threshold: 0.3 },
+      { threshold: 0.25 },
     );
     io.observe(zona);
+
+    // Al cambiar de ancho cambian las columnas y con ellas el recorrido.
+    let t;
+    addEventListener("resize", () => {
+      clearTimeout(t);
+      t = setTimeout(medir, 150);
+    });
   })();
 </script>

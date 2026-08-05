@@ -718,51 +718,69 @@ body {
   animation: emoji-remate 0.34s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
-/* ── La tachadura de "El problema" ──────────────────────────────
-   Cada trasto de la lista se tacha a mano, uno detrás de otro, cuando la
-   sección entra en pantalla. Es lo que cuenta la historia —se van cayendo de la
-   lista— y por eso no es un adorno: sin el trazo, la sección es una lista de
-   quejas; con él, es una lista que se va resolviendo.
+/* ── "El problema": tachado, viaje al centro y logo, EN BUCLE ───
+   Las tres cosas comparten UN MISMO ciclo y se reparten el turno con los
+   porcentajes de sus keyframes. Podrian ser tres animaciones con duraciones
+   distintas encadenadas por temporizadores, pero entonces se irian separando
+   poco a poco y a los pocos minutos el logo apareceria con los iconos todavia
+   volando. Con un ciclo unico eso no puede pasar.
 
-   Va con `pathLength=1` para que el mismo par dasharray/offset valga para
-   cualquier curva sin medirla, igual que la flecha de precios. */
-/* Se recorta de izquierda a derecha en vez de usar `stroke-dashoffset`.
-   Con dasharray el trazo se quedaba a media palabra: `vector-effect:
-   non-scaling-stroke` calcula el patron de guiones en el espacio RENDERIZADO,
-   no en el normalizado por `pathLength`, y como el SVG va estirado con
-   `preserveAspectRatio=none` la longitud real no se parecia en nada a 1. El
-   recorte no depende de cuanto mida el trazo, asi que da igual como se estire. */
-@keyframes tacha {
-  from { clip-path: inset(0 100% 0 0); }
-  to { clip-path: inset(0 -2% 0 0); }
+   El ciclo entero solo corre mientras la seccion se ve: lo enciende y lo apaga
+   el observador del propio componente. */
+:root {
+  --ciclo-problema: 7000ms;
+}
+
+/* 1. Se tachan los seis, uno detras de otro (0 %-8 %), se quedan tachados un
+      buen rato y se destachan al final para poder empezar otra vuelta.
+
+      Se recorta de izquierda a derecha en vez de usar `stroke-dashoffset`: con
+      dasharray el trazo se quedaba a media palabra porque `vector-effect:
+      non-scaling-stroke` calcula el patron de guiones en el espacio RENDERIZADO,
+      no en el normalizado por `pathLength`, y el SVG va estirado con
+      `preserveAspectRatio=none`. El recorte no depende de cuanto mida el trazo. */
+@keyframes ciclo-tacha {
+  0% { clip-path: inset(0 100% 0 0); }
+  8%, 62% { clip-path: inset(0 -2% 0 0); }
+  70%, 100% { clip-path: inset(0 100% 0 0); }
 }
 .tacha {
   /* Sin JS se ve el trazo ya hecho: la seccion se entiende igual y no se queda
      a medias esperando un observador que nunca va a llegar. */
   clip-path: inset(0 -2% 0 0);
 }
-[data-tachar] .tacha {
-  clip-path: inset(0 100% 0 0);
-}
-/* El retardo lo pone cada trasto con --i, asi que se tachan en cascada. */
-[data-tachar][data-tachado] .tacha {
-  animation: tacha 0.5s cubic-bezier(0.65, 0, 0.35, 1) both;
+[data-ciclo] .tacha {
+  animation: ciclo-tacha var(--ciclo-problema) cubic-bezier(0.65, 0, 0.35, 1) infinite;
   animation-delay: calc(var(--i, 0) * 0.16s);
 }
 
-/* Los seis iconos de "El problema" viajan al centro y se convierten en el logo.
-   El destino lo calcula el script en el momento —depende de cuantas columnas
-   haya— y lo deja en --dx/--dy; aqui solo se anima.
+/* 2. Los iconos esperan a que termine el tachado (22 %), viajan al centro
+      encogiendo, se quedan fuera mientras el logo esta puesto, y vuelven a su
+      sitio para la siguiente vuelta.
 
-   Se usa `translate` y `scale`, que van en la capa de composicion y no obligan
-   al navegador a recalcular la maqueta en cada fotograma: seis elementos
-   moviendose a la vez con `top`/`left` se notarian. */
-@keyframes junta-iconos {
-  from { transform: translate(0, 0) scale(1); opacity: 1; }
-  70% { opacity: 1; }
-  to { transform: translate(var(--dx, 0), var(--dy, 0)) scale(0.45); opacity: 0; }
+      `translate` y `scale` van en la capa de composicion y no obligan a
+      recalcular la maqueta en cada fotograma: seis elementos moviendose a la vez
+      con `top`/`left` se notarian. */
+@keyframes ciclo-icono {
+  0%, 22% { transform: none; opacity: 1; }
+  34%, 62% { transform: translate(var(--dx, 0), var(--dy, 0)) scale(0.4); opacity: 0; }
+  76%, 100% { transform: none; opacity: 1; }
 }
-[data-trasto][data-junta] {
-  animation: junta-iconos 0.75s cubic-bezier(0.65, 0, 0.35, 1) both;
-  animation-delay: var(--retraso, 0ms);
+[data-ciclo] [data-trasto] {
+  animation: ciclo-icono var(--ciclo-problema) cubic-bezier(0.65, 0, 0.35, 1) infinite;
+  animation-delay: calc(var(--i, 0) * 0.055s);
+}
+
+/* 3. El logo aparece cuando los iconos ya han llegado y se va antes de que
+      vuelvan, para que no se crucen. */
+@keyframes ciclo-logo {
+  0%, 34% { opacity: 0; transform: scale(0.8); }
+  42%, 60% { opacity: 1; transform: none; }
+  68%, 100% { opacity: 0; transform: scale(0.8); }
+}
+[data-logo] {
+  opacity: 0;
+}
+[data-ciclo] [data-logo] {
+  animation: ciclo-logo var(--ciclo-problema) cubic-bezier(0.65, 0, 0.35, 1) infinite;
 }
