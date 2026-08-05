@@ -13,10 +13,21 @@ import Problema from "../components/sections/Problema.astro";
 import Integraciones from "../components/sections/Integraciones.astro";
 import Cierre from "../components/sections/Cierre.astro";
 import Footer from "../components/sections/Footer.astro";
+
+// Los .env vienen de la version anterior en Next y usan el prefijo
+// NEXT_PUBLIC_. En Astro solo se exponen al navegador las que empiezan por
+// PUBLIC_, asi que se leen AQUI —en el servidor, durante el build— y se pasan
+// como props a la isla. Asi no hay que duplicar variables en el .env ni
+// arriesgarse a que una quede desincronizada de la otra.
+const config = {
+  api: import.meta.env.NEXT_PUBLIC_API_URL ?? "",
+  app: import.meta.env.NEXT_PUBLIC_APP_URL ?? "",
+  googleClientId: import.meta.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID ?? "",
+};
 ---
 
 <Layout>
-  <NavBar client:load />
+  <NavBar client:load config={config} />
   <Hero />
   <Highlights />
   <!-- El problema DESPUES de ver el producto. Se probaron los dos ordenes: con

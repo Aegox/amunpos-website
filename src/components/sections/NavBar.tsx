@@ -13,6 +13,8 @@ import {
   RiMailLine,
 } from "@remixicon/react";
 import { cn } from "@/lib/utils";
+import { AuthModal, type Pestana } from "../auth/AuthModal";
+import type { Config } from "@/lib/auth";
 
 type MenuItem = {
   icon: React.ComponentType<{ className?: string }>;
@@ -79,9 +81,28 @@ function NavDropdown({ label, items }: { label: string; items: MenuItem[] }) {
   );
 }
 
-export default function NavBar() {
+export default function NavBar({ config }: { config: Config }) {
   const [menuOpen, setMenuOpen] = useState(false);
+  // El modal vive DENTRO del navbar y no como isla aparte: dos islas de Astro
+  // no comparten estado, asi que desde una no se puede abrir la otra. Los
+  // botones repartidos por la pagina avisan con un clic delegado, ver abajo.
+  const [auth, setAuth] = useState<Pestana | null>(null);
   const [hidden, setHidden] = useState(false);
+
+  // Cualquier `[data-auth="entrar|crear"]` de la pagina abre el modal. Se
+  // escucha en el documento en vez de cablear cada boton: los CTA estan en
+  // cuatro secciones distintas, todas en .astro, y pasarles una funcion desde
+  // aqui obligaria a convertirlas en islas de React por nada.
+  useEffect(() => {
+    const alHacerClic = (e: MouseEvent) => {
+      const destino = (e.target as HTMLElement | null)?.closest?.("[data-auth]");
+      if (!destino) return;
+      e.preventDefault();
+      setAuth(destino.getAttribute("data-auth") === "crear" ? "crear" : "entrar");
+    };
+    document.addEventListener("click", alHacerClic);
+    return () => document.removeEventListener("click", alHacerClic);
+  }, []);
 
   useEffect(() => {
     document.body.style.overflow = menuOpen ? "hidden" : "";
@@ -151,10 +172,15 @@ export default function NavBar() {
         </nav>
 
         <div className="ml-8 hidden items-center gap-2 lg:flex">
-          <a href="#" className="flex h-9 items-center rounded-9 px-3.5 text-label-sm text-gray-700 transition duration-200 ease-linear hover:bg-gray-50">
+          <button
+            type="button"
+            data-auth="entrar"
+            className="flex h-9 items-center rounded-9 px-3.5 text-label-sm text-gray-700 transition duration-200 ease-linear hover:bg-gray-50"
+          >
             Iniciar sesión
-          </a>
+          </button>
           <a
+            data-auth="crear"
             href="#Planes"
             className="flex h-9 items-center gap-1.5 rounded-13 bg-gray-900 px-3.5 text-label-sm text-gray-0 shadow-button-gray transition duration-200 ease-linear hover:bg-gray-800"
           >
@@ -195,10 +221,15 @@ export default function NavBar() {
           </div>
           <div className="my-2 h-px bg-gray-100" />
           <div className="flex flex-col gap-2 p-1">
-            <a href="#" className="flex h-10 items-center justify-center rounded-9 border border-gray-200 text-label-sm text-gray-700">
+            <button
+              type="button"
+              data-auth="entrar"
+              className="flex h-10 items-center justify-center rounded-9 border border-gray-200 text-label-sm text-gray-700"
+            >
               Iniciar sesión
-            </a>
+            </button>
             <a
+              data-auth="crear"
               href="#Planes"
               onClick={() => setMenuOpen(false)}
               className="flex h-10 items-center justify-center gap-1.5 rounded-13 bg-gray-900 text-label-sm text-gray-0 shadow-button-gray"
@@ -209,6 +240,13 @@ export default function NavBar() {
           </div>
         </div>
       )}
+
+      <AuthModal
+        abierto={auth !== null}
+        pestanaInicial={auth ?? "entrar"}
+        onCerrar={() => setAuth(null)}
+        config={config}
+      />
     </div>
   );
 }

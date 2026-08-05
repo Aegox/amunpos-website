@@ -38,6 +38,13 @@
   --primary-alpha-10: hsl(204 88% 40% / 10%);
   --primary-alpha-16: hsl(204 88% 40% / 16%);
 
+  /* Rojo de error. Semantico, como el verde: un mensaje de fallo no puede ir
+     en el azul de marca, porque entonces se lee como informacion y no como
+     "esto no ha salido bien". */
+  --error-base: hsl(0 72% 51%);
+  --error-dark: hsl(0 70% 40%);
+  --error-alpha-10: hsl(0 72% 51% / 10%);
+
   /* Verde de "esto lo tienes incluido". Es color SEMÁNTICO, no de marca: un
      visto bueno en verde no compite con el azul, lo confirma. Por eso no sale
      de la escala --primary ni de la --ai. */
@@ -74,6 +81,9 @@
   --color-primary-alpha-10: var(--primary-alpha-10);
   --color-primary-alpha-16: var(--primary-alpha-16);
 
+  --color-error-base: var(--error-base);
+  --color-error-dark: var(--error-dark);
+  --color-error-alpha-10: var(--error-alpha-10);
   --color-success-base: var(--success-base);
   --color-ai-base: var(--ai-base);
   --color-ai-dark: var(--ai-dark);
@@ -783,4 +793,15 @@ body {
 }
 [data-ciclo] [data-logo] {
   animation: ciclo-logo var(--ciclo-problema) cubic-bezier(0.65, 0, 0.35, 1) infinite;
+}
+
+/* La entrada del modal de auth: sube un poco y aparece. Nada de rebotes — es
+   una ventana de formulario, no un adorno; lo que tiene que hacer es aparecer
+   deprisa y quitarse de en medio. */
+@keyframes modal-entra {
+  from { opacity: 0; transform: translateY(12px) scale(0.98); }
+  to { opacity: 1; transform: none; }
+}
+.modal-entra {
+  animation: modal-entra 0.22s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
