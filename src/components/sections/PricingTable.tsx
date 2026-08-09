@@ -1,4 +1,13 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import {
+  DESCUENTO_ANUAL,
+  formatearPrecio,
+  monedaDelVisitante,
+  monedas,
+  precioMensual,
+  guardarMoneda,
+  type CodigoMoneda,
+} from "@/data/precios";
 import {
   RiCheckLine,
   RiSubtractLine,
@@ -51,7 +60,6 @@ const planes: {
   nombre: string;
   para: string;
   icono: React.ComponentType<{ className?: string }>;
-  mes: number;
   destacado?: boolean;
   valores: Valor[];
 }[] = [
@@ -60,7 +68,6 @@ const planes: {
     nombre: "Básico",
     para: "Para el negocio que empieza.",
     icono: RiUser3Line,
-    mes: 29,
     valores: ["1", "3", true, true, true, false, false, "Correo"],
   },
   {
@@ -68,7 +75,6 @@ const planes: {
     nombre: "Estándar",
     para: "Para el que ya va creciendo.",
     icono: RiRocket2Line,
-    mes: 49,
     destacado: true,
     valores: ["Hasta 3", "10", true, true, true, true, false, "Chat"],
   },
@@ -77,7 +83,6 @@ const planes: {
     nombre: "Profesional",
     para: "Para cadenas con varios locales.",
     icono: RiBuilding2Line,
-    mes: 79,
     valores: [
       "Ilimitadas",
       "Ilimitados",
@@ -91,13 +96,8 @@ const planes: {
   },
 ];
 
-/** Un 20 % menos pagando por año, redondeado a entero. */
-const DESCUENTO_ANUAL = 0.2;
-
 /** La nota al margen. Se parte en letras para poder resaltarlas una a una. */
 const NOTA = "¡Ahórrate un 20 % pagando al año!";
-const precioDe = (mes: number, anual: boolean) =>
-  anual ? Math.round(mes * (1 - DESCUENTO_ANUAL)) : mes;
 
 function Marca({ valor, oscuro }: { valor: Valor; oscuro?: boolean }) {
   // Un texto donde lo hay ("Hasta 3"), un tic donde solo es sí, y una raya
@@ -137,10 +137,12 @@ function Cabecera({
   plan,
   anual,
   oscuro,
+  moneda,
 }: {
   plan: (typeof planes)[number];
   anual: boolean;
   oscuro?: boolean;
+  moneda: CodigoMoneda;
 }) {
   const Icono = plan.icono;
   return (
@@ -173,14 +175,17 @@ function Cabecera({
       </p>
 
       <div className="mt-5 flex items-end gap-2">
-        {/* `tabular-nums` para que al pasar de 49 a 39 no baile el ancho. */}
+        {/* `tabular-nums` para que al pasar de 130.000 a 104.000 no baile el
+            ancho. Y el cuerpo baja en COP porque "$130.000" ocupa el doble que
+            "$41": con el tamaño de dólares se sale de la tarjeta. */}
         <span
           className={cn(
-            "text-title-h4 tabular-nums",
+            "tabular-nums",
+            moneda === "COP" ? "text-title-h5" : "text-title-h4",
             oscuro ? "text-gray-0" : "text-gray-900",
           )}
         >
-          ${precioDe(plan.mes, anual)}
+          {formatearPrecio(precioMensual(plan.id, moneda, anual), moneda)}
         </span>
         <span
           className={cn(
@@ -217,7 +222,17 @@ function Cabecera({
   );
 }
 
-function Conmutador({ anual, alCambiar }: { anual: boolean; alCambiar: (v: boolean) => void }) {
+function Conmutador({
+  anual,
+  alCambiar,
+  moneda,
+  alCambiarMoneda,
+}: {
+  anual: boolean;
+  alCambiar: (v: boolean) => void;
+  moneda: CodigoMoneda;
+  alCambiarMoneda: (m: CodigoMoneda) => void;
+}) {
   return (
     <>
       <button
@@ -243,12 +258,72 @@ function Conmutador({ anual, alCambiar }: { anual: boolean; alCambiar: (v: boole
         Un 20 % menos en los tres planes. Sin permanencia: te vas cuando
         quieras.
       </p>
+      <SelectorMoneda moneda={moneda} alCambiar={alCambiarMoneda} />
     </>
   );
 }
 
+/**
+ * El selector de moneda, y la frase que dice en qué se factura.
+ *
+ * La frase no es un detalle legal: sin ella el visitante no sabe si el precio
+ * es una conversión orientativa o lo que le van a cobrar de verdad, y esa duda
+ * frena la compra más que el propio importe.
+ */
+function SelectorMoneda({
+  moneda,
+  alCambiar,
+}: {
+  moneda: CodigoMoneda;
+  alCambiar: (m: CodigoMoneda) => void;
+}) {
+  const codigos = Object.keys(monedas) as CodigoMoneda[];
+  return (
+    <div className="mt-4">
+      <div role="group" aria-label="Moneda" className="inline-flex rounded-9 bg-gray-100 p-0.5">
+        {codigos.map((c) => (
+          <button
+            key={c}
+            type="button"
+            onClick={() => alCambiar(c)}
+            aria-pressed={moneda === c}
+            className={cn(
+              "rounded-[7px] px-2.5 py-1 text-label-xs transition",
+              moneda === c
+                ? "bg-gray-0 text-gray-900 shadow-badge-gray"
+                : "text-gray-600 hover:text-gray-900",
+            )}
+          >
+            {monedas[c].etiqueta}
+          </button>
+        ))}
+      </div>
+      <p className="mt-2 text-paragraph-xs text-gray-450">{monedas[moneda].nota}</p>
+    </div>
+  );
+}
+
+
 export default function PricingTable() {
   const [anual, setAnual] = useState(true);
+
+  // El sitio es estático: el HTML sale del build con USD para todo el mundo y
+  // esta isla corrige al montar. Es lo que permite seguir siendo estático —la
+  // alternativa es activar SSR y pagarlo en velocidad en TODAS las visitas para
+  // arreglar un parpadeo de 100 ms en la primera.
+  //
+  // El precio NO se esconde hasta que se resuelva la moneda, aunque eso evitaría
+  // ese parpadeo: si el visitante entra sin JavaScript la isla no llega a
+  // montar nunca, y una tabla de precios sin precios es peor que una con la
+  // moneda equivocada. Los dólares del HTML son una respuesta correcta para
+  // todo el mundo menos Colombia, y Colombia la ve corregida en un fotograma.
+  const [moneda, setMoneda] = useState<CodigoMoneda>("USD");
+  useEffect(() => setMoneda(monedaDelVisitante()), []);
+
+  const cambiarMoneda = (nueva: CodigoMoneda) => {
+    setMoneda(nueva);
+    guardarMoneda(nueva);
+  };
 
   return (
     <div className="relative w-full">
@@ -346,7 +421,7 @@ export default function PricingTable() {
               tiene sentido: manda sobre las tres columnas de la derecha, así
               que su sitio es la esquina donde se cruzan. */}
             <div className="p-5">
-              <Conmutador anual={anual} alCambiar={setAnual} />
+              <Conmutador anual={anual} alCambiar={setAnual} moneda={moneda} alCambiarMoneda={cambiarMoneda} />
             </div>
             {planes.map((plan) => (
               <div
@@ -356,7 +431,7 @@ export default function PricingTable() {
                   plan.destacado && "rounded-t-[18px] bg-gray-950 px-6",
                 )}
               >
-                <Cabecera plan={plan} anual={anual} oscuro={plan.destacado} />
+                <Cabecera plan={plan} anual={anual} oscuro={plan.destacado} moneda={moneda} />
               </div>
             ))}
 
@@ -398,7 +473,7 @@ export default function PricingTable() {
               que el conmutador va encima de las tarjetas: sigue mandando sobre
               las tres, que es lo único que importa. */}
             <div className="px-3 py-2">
-              <Conmutador anual={anual} alCambiar={setAnual} />
+              <Conmutador anual={anual} alCambiar={setAnual} moneda={moneda} alCambiarMoneda={cambiarMoneda} />
             </div>
             {planes.map((plan) => (
               <div
@@ -409,7 +484,7 @@ export default function PricingTable() {
                   plan.destacado ? "bg-gray-950" : "bg-gray-25",
                 )}
               >
-                <Cabecera plan={plan} anual={anual} oscuro={plan.destacado} />
+                <Cabecera plan={plan} anual={anual} oscuro={plan.destacado} moneda={moneda} />
                 <ul className="mt-5 flex flex-col gap-2.5">
                   {caracteristicas.map((c, i) => (
                     <li key={c.nombre} className="flex items-center gap-2.5">
