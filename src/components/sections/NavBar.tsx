@@ -87,6 +87,8 @@ export default function NavBar({ config }: { config: Config }) {
   // no comparten estado, asi que desde una no se puede abrir la otra. Los
   // botones repartidos por la pagina avisan con un clic delegado, ver abajo.
   const [auth, setAuth] = useState<Pestana | null>(null);
+  // El plan que venía en el botón pulsado, para que la prueba arranque con él.
+  const [planElegido, setPlanElegido] = useState<string | null>(null);
   const [hidden, setHidden] = useState(false);
 
   // Cualquier `[data-auth="entrar|crear"]` de la pagina abre el modal. Se
@@ -98,6 +100,9 @@ export default function NavBar({ config }: { config: Config }) {
       const destino = (e.target as HTMLElement | null)?.closest?.("[data-auth]");
       if (!destino) return;
       e.preventDefault();
+      // `data-plan` lo ponen los botones de la tabla de precios. Los demás CTA
+      // no lo llevan y el registro cae al plan por defecto.
+      setPlanElegido(destino.getAttribute("data-plan"));
       setAuth(destino.getAttribute("data-auth") === "crear" ? "crear" : "entrar");
     };
     document.addEventListener("click", alHacerClic);
@@ -244,8 +249,12 @@ export default function NavBar({ config }: { config: Config }) {
       <AuthModal
         abierto={auth !== null}
         pestanaInicial={auth ?? "entrar"}
-        onCerrar={() => setAuth(null)}
+        onCerrar={() => {
+          setAuth(null);
+          setPlanElegido(null);
+        }}
         config={config}
+        plan={planElegido}
       />
     </div>
   );

@@ -33,11 +33,21 @@ export function AuthModal({
   pestanaInicial,
   onCerrar,
   config,
+  plan,
 }: {
   abierto: boolean;
   pestanaInicial: Pestana;
   onCerrar: () => void;
   config: Config;
+  /**
+   * El plan que pulsó en la tabla de precios. Viaja hasta el registro para que
+   * la prueba de 14 días arranque con ESE plan y no con el más pequeño: quien
+   * viene por los domicilios tiene que poder probarlos.
+   *
+   * Es una preferencia, no una autorización — el servidor descarta cualquier
+   * valor que no reconozca.
+   */
+  plan?: string | null;
 }) {
   const [pestana, setPestana] = useState<Pestana>(pestanaInicial);
   const [verClave, setVerClave] = useState(false);
@@ -120,7 +130,7 @@ export function AuthModal({
       setError("Las dos contraseñas no coinciden.");
       return;
     }
-    return conSesion(() => registrar(config, { name, email, password }));
+    return conSesion(() => registrar(config, { name, email, password, plan: plan || undefined }));
   };
 
   const campo =

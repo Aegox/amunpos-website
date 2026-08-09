@@ -194,8 +194,13 @@ function Cabecera({
         </span>
       </div>
 
+      {/* Abre el registro YA con este plan, en vez de mandar a un formulario de
+          contacto: el visitante acaba de decidir cuál quiere, y hacerle
+          elegirlo otra vez es la forma más barata de perderlo. */}
       <a
         href="#Contacto"
+        data-auth="crear"
+        data-plan={plan.id}
         className={cn(
           "mt-5 flex h-10 items-center justify-center gap-1.5 rounded-9 text-label-sm transition duration-200",
           plan.destacado

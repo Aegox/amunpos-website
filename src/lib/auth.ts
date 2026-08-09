@@ -94,7 +94,11 @@ export const guardarSesion = ({ user, token }: { user: Usuario; token: string })
 export const entrar = (cfg: Config, email: string, password: string) =>
   pedir(`${cfg.api}/auth/login`, { email, password });
 
-export const registrar = (cfg: Config, datos: { name: string; email: string; password: string }) =>
+export const registrar = (
+  cfg: Config,
+  /** `plan` sale del enlace de la tabla de precios (?plan=estandar). */
+  datos: { name: string; email: string; password: string; plan?: string },
+) =>
   pedir(`${cfg.api}/auth/register`, datos);
 
 export const entrarConGoogle = (cfg: Config, idToken: string) =>
