@@ -14,22 +14,28 @@
  * unificada de amunpos; ver los tokens --ai-* más abajo.
  */
 :root {
-  /* Escala neutra real (gray-0 a gray-950), extraída de las clases bg-ln-gray-N y text-ln-gray-N */
+  /* Escala de grises con punto FRÍO, la misma temperatura que el POS (2026-11).
+     Antes era la escala neutra de alignui.com (#f7f7f7…#1c1c1c). Se conserva la
+     LUMINOSIDAD de cada paso —los contrastes medidos no cambian— y solo cambia
+     el tono: azul pizarra en superficies y textos, índigo en los oscuros, como
+     los roles del POS (sub-600 #565e6c, strong-950 #0d0c17). No se copian los
+     valores exactos del POS porque su escala tiene otros pasos y forzarlos
+     desordenaba esta. */
   --gray-0: #ffffff;
-  --gray-25: #f7f7f7;
-  --gray-50: #f2f2f2;
-  --gray-100: #ebebeb;
-  --gray-200: #e0e0e0;
-  --gray-300: #cccccc;
-  --gray-400: #b8b8b8;
-  --gray-450: #a3a3a3;
-  --gray-500: #8f8f8f;
-  --gray-600: #707070;
-  --gray-700: #525252;
-  --gray-800: #3d3d3d;
-  --gray-900: #2e2e2e;
-  --gray-925: #262626;
-  --gray-950: #1c1c1c;
+  --gray-25: #f5f7f9;
+  --gray-50: #eff2f5;
+  --gray-100: #e7eaef;
+  --gray-200: #d9dfe7;
+  --gray-300: #c1cbd7;
+  --gray-400: #b0b6c0;
+  --gray-450: #99a0ad;
+  --gray-500: #838c9b;
+  --gray-600: #646d7c;
+  --gray-700: #49505b;
+  --gray-800: #343746;
+  --gray-900: #282934;
+  --gray-925: #21222b;
+  --gray-950: #181920;
 
   /* Marca amunpos (no de AlignUI) */
   --primary-base: hsl(204 88% 40%);

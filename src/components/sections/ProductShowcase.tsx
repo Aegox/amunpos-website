@@ -282,7 +282,11 @@ export default function ProductShowcase() {
               width="1440"
               height="900"
               alt={current.alt}
-              className="h-full w-full object-cover object-top"
+              /* En móvil, una captura de 1440 encogida a 390 px no se lee: ahí
+                 se muestra a ~0,62 de escala (560 px de alto) y desplazada para
+                 que se vea el contenido y no solo el menú lateral. Desde `sm`
+                 vuelve a verse entera. */
+              className="h-[560px] w-auto max-w-none -translate-x-[150px] sm:h-full sm:w-full sm:max-w-full sm:translate-x-0 sm:object-cover sm:object-top"
               /* La primera no va diferida: es lo que se ve al abrir la página y
                  con `lazy` aparecía en blanco un instante. */
               loading={active === "panel" ? "eager" : "lazy"}

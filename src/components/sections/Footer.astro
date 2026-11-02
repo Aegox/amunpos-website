@@ -53,12 +53,15 @@ const columnas = [
   },
 ];
 
+// Perfiles de AmunPOS. Se rellena `href` cuando cada perfil exista: los que
+// están vacíos no se pintan. Antes apuntaban a facebook.com, twitter.com…
+// en genérico, y un icono que lleva a la portada de Facebook parece un error.
 const socials = [
-  { href: "https://www.facebook.com/", label: "Facebook", Icon: RiFacebookFill },
-  { href: "https://twitter.com/", label: "Twitter", Icon: RiTwitterXFill },
-  { href: "https://www.linkedin.com/", label: "LinkedIn", Icon: RiLinkedinFill },
-  { href: "https://www.instagram.com/", label: "Instagram", Icon: RiInstagramLine },
-];
+  { href: "", label: "Facebook", Icon: RiFacebookFill },
+  { href: "", label: "Twitter", Icon: RiTwitterXFill },
+  { href: "", label: "LinkedIn", Icon: RiLinkedinFill },
+  { href: "", label: "Instagram", Icon: RiInstagramLine },
+].filter((s) => s.href);
 ---
 
 <section id="Contacto" class="relative w-full scroll-mt-16 px-5 pb-16 pt-4 xl:pb-24">
@@ -140,7 +143,7 @@ const socials = [
         El sistema operativo del comercio
         <span class="block text-gray-450">en Latinoamérica.</span>
       </p>
-      <div class="mt-6 flex gap-2">
+      {socials.length > 0 && <div class="mt-6 flex gap-2">
         {
           socials.map(({ href, label, Icon }) => (
             <a
@@ -154,7 +157,7 @@ const socials = [
             </a>
           ))
         }
-      </div>
+      </div>}
     </div>
 
   <Regla />

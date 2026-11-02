@@ -187,6 +187,19 @@ function Cabecera({
           por sucursal
         </span>
       </div>
+      {/* Con el conmutador anual encendido el precio grande es el mensual
+          EQUIVALENTE: sin esta línea, quien paga mes a mes espera pagar ese
+          número y se encuentra con otro al registrarse. */}
+      <p
+        className={cn(
+          "mt-1.5 text-paragraph-xs tabular-nums",
+          oscuro ? "text-gray-450" : "text-gray-500",
+        )}
+      >
+        {anual
+          ? `Facturado al año: ${formatearPrecio(precioMensual(plan.id, true) * 12)}`
+          : "Facturado mes a mes"}
+      </p>
 
       {/* Abre el registro YA con este plan, en vez de mandar a un formulario de
           contacto: el visitante acaba de decidir cuál quiere, y hacerle
