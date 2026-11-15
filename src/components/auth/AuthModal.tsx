@@ -133,12 +133,27 @@ export function AuthModal({
     return conSesion(() => registrar(config, { name, email, password, plan: plan || undefined }));
   };
 
+  // Piel del sistema bento (lienzo "Acceso"): campos grises con etiqueta arriba, el
+  // botón azul con la flecha en un círculo blanco, y Google en blanco con borde.
   const campo =
-    "h-11 w-full rounded-13 bg-gray-0 pl-10 pr-3 text-paragraph-sm text-gray-900 shadow-button-white outline-none transition placeholder:text-gray-450 focus:ring-2 focus:ring-primary-alpha-16 disabled:opacity-60";
+    "h-12 w-full rounded-[14px] border-0 bg-[#F1F2F4] pl-10 pr-3 text-[15px] text-[#0D0C17] outline-none transition placeholder:text-[#7B818C] focus:bg-white focus:ring-2 focus:ring-[#0C78C0] disabled:opacity-60";
+  const etiqueta = "mb-1.5 block text-[13px] text-[#4A4F59]";
+  const icono = "pointer-events-none absolute left-3.5 top-1/2 size-[18px] -translate-y-1/2 text-[#7B818C]";
+  const base = (config.app || "").replace(/\/$/, "");
+  const ojo = (
+    <button
+      type="button"
+      onClick={() => setVerClave((v) => !v)}
+      aria-label={verClave ? "Ocultar contraseña" : "Ver contraseña"}
+      className="absolute right-1.5 top-1/2 flex size-9 -translate-y-1/2 items-center justify-center rounded-full text-[#7B818C] transition duration-200 hover:text-[#0D0C17]"
+    >
+      {verClave ? <RiEyeOffLine className="size-[18px]" /> : <RiEyeLine className="size-[18px]" />}
+    </button>
+  );
 
   const contenido = (
     <div
-      className="fixed inset-0 z-[100] flex items-end justify-center bg-gray-950/40 p-4 backdrop-blur-[2px] sm:items-center"
+      className="fixed inset-0 z-[100] flex items-end justify-center bg-[#0D0C17]/45 p-3 backdrop-blur-[2px] sm:items-center sm:p-4"
       onMouseDown={(e) => e.target === e.currentTarget && onCerrar()}
     >
       <div
@@ -146,32 +161,11 @@ export function AuthModal({
         role="dialog"
         aria-modal="true"
         aria-labelledby={`${idBase}-titulo`}
-        className="modal-entra w-full max-w-[420px] rounded-[20px] bg-gray-50 p-2 shadow-button-white"
+        className="modal-entra max-h-[calc(100dvh-24px)] w-full max-w-[460px] overflow-y-auto rounded-[28px] bg-white p-6 text-[#0D0C17] shadow-[0_30px_60px_-20px_rgba(13,12,23,.45)] sm:p-8"
       >
-        <div className="rounded-[16px] bg-gray-0 p-6 ring-1 ring-gray-200 xl:p-7">
-          <div className="flex items-start justify-between gap-4">
-            <div>
-              <h2 id={`${idBase}-titulo`} className="text-title-h6 text-gray-900">
-                {pestana === "entrar" ? "Entra a tu negocio" : "Crea tu cuenta"}
-              </h2>
-              <p className="mt-1 text-paragraph-sm text-gray-600">
-                {pestana === "entrar"
-                  ? "Con la cuenta que ya tienes."
-                  : "Gratis, y sin tarjeta para empezar."}
-              </p>
-            </div>
-            <button
-              type="button"
-              onClick={onCerrar}
-              aria-label="Cerrar"
-              className="-mr-1.5 -mt-1.5 flex size-9 shrink-0 items-center justify-center rounded-9 text-gray-400 transition duration-200 hover:bg-gray-50 hover:text-gray-700"
-            >
-              <RiCloseLine className="size-5" />
-            </button>
-          </div>
-
-          {/* Las dos pestañas, con la misma pastilla que el resto del sitio. */}
-          <div className="mt-5 flex rounded-9 bg-gray-50 p-1" role="tablist">
+        <div className="flex items-center justify-between gap-3">
+          {/* Las dos pestañas en píldora gris, como en el acceso del POS. */}
+          <div className="flex flex-1 rounded-full bg-[#F1F2F4] p-1" role="tablist">
             {(["entrar", "crear"] as const).map((p) => (
               <button
                 key={p}
@@ -180,123 +174,132 @@ export function AuthModal({
                 aria-selected={pestana === p}
                 onClick={() => setPestana(p)}
                 className={cn(
-                  "h-8 flex-1 rounded-[7px] text-label-sm transition duration-200",
-                  pestana === p ? "bg-gray-0 text-gray-900 shadow-button-white" : "text-gray-600 hover:text-gray-900",
+                  "h-9 flex-1 rounded-full text-[14px] transition duration-200",
+                  pestana === p ? "bg-white font-medium text-[#0D0C17] shadow-[0_1px_2px_rgba(13,12,23,.12)]" : "text-[#4A4F59] hover:text-[#0D0C17]",
                 )}
               >
                 {p === "entrar" ? "Iniciar sesión" : "Crear cuenta"}
               </button>
             ))}
           </div>
+          <button
+            type="button"
+            onClick={onCerrar}
+            aria-label="Cerrar"
+            className="flex size-10 shrink-0 items-center justify-center rounded-full bg-[#F1F2F4] text-[#4A4F59] transition duration-200 hover:text-[#0D0C17]"
+          >
+            <RiCloseLine className="size-5" />
+          </button>
+        </div>
 
-          <form onSubmit={enviar} className="mt-5 flex flex-col gap-3">
-            {pestana === "crear" && (
+        <h2 id={`${idBase}-titulo`} className="mt-6 text-[32px] font-medium leading-tight tracking-[-0.04em]">
+          {pestana === "entrar" ? "Entra a tu negocio" : "Crea tu negocio"}
+        </h2>
+        <p className="mt-1 text-[15px] text-[#7B818C]">
+          {pestana === "entrar" ? "Con la cuenta que ya tienes." : "Gratis para empezar. Sin tarjeta."}
+        </p>
+
+        <form onSubmit={enviar} className="mt-5 flex flex-col gap-3.5">
+          {pestana === "crear" && (
+            <div>
+              <label htmlFor={`${idBase}-nombre`} className={etiqueta}>Nombre del negocio</label>
               <div className="relative">
-                <RiUser3Line className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-gray-400" />
-                <input
-                  ref={pestana === "crear" ? primerCampo : undefined}
-                  name="name"
-                  required
-                  autoComplete="name"
-                  placeholder="Nombre del negocio"
-                  disabled={cargando}
-                  className={campo}
-                />
+                <RiUser3Line className={icono} />
+                <input id={`${idBase}-nombre`} ref={pestana === "crear" ? primerCampo : undefined} name="name" required autoComplete="organization" placeholder="La Esquina" disabled={cargando} className={campo} />
               </div>
-            )}
-
-            <div className="relative">
-              <RiMailLine className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-gray-400" />
-              <input
-                ref={pestana === "entrar" ? primerCampo : undefined}
-                name="email"
-                type="email"
-                required
-                autoComplete="email"
-                placeholder="Correo electrónico"
-                disabled={cargando}
-                className={campo}
-              />
             </div>
-
-            <div className="relative">
-              <RiLockLine className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-gray-400" />
-              <input
-                name="password"
-                type={verClave ? "text" : "password"}
-                required
-                minLength={8}
-                autoComplete={pestana === "entrar" ? "current-password" : "new-password"}
-                placeholder="Contraseña"
-                disabled={cargando}
-                className={cn(campo, "pr-10")}
-              />
-              <button
-                type="button"
-                onClick={() => setVerClave((v) => !v)}
-                aria-label={verClave ? "Ocultar contraseña" : "Ver contraseña"}
-                className="absolute right-1.5 top-1/2 flex size-8 -translate-y-1/2 items-center justify-center rounded-9 text-gray-400 transition duration-200 hover:text-gray-700"
-              >
-                {verClave ? <RiEyeOffLine className="size-4" /> : <RiEyeLine className="size-4" />}
-              </button>
-            </div>
-
-            {pestana === "crear" && (
-              <div className="relative">
-                <RiLockLine className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-gray-400" />
-                <input
-                  name="password2"
-                  type={verClave ? "text" : "password"}
-                  required
-                  minLength={8}
-                  autoComplete="new-password"
-                  placeholder="Repite la contraseña"
-                  disabled={cargando}
-                  className={campo}
-                />
-              </div>
-            )}
-
-            {error && (
-              <div className="flex items-start gap-2 rounded-13 bg-error-alpha-10 px-3 py-2.5 text-paragraph-sm text-error-dark">
-                <RiErrorWarningLine className="mt-0.5 size-4 shrink-0" />
-                <span>{error}</span>
-              </div>
-            )}
-
-            <button
-              type="submit"
-              disabled={cargando}
-              className="mt-1 flex h-11 items-center justify-center gap-2 rounded-13 bg-gray-900 text-label-sm text-gray-0 shadow-button-gray transition duration-200 hover:bg-gray-800 disabled:opacity-60"
-            >
-              {cargando && <RiLoader4Line className="size-4 animate-spin" />}
-              {pestana === "entrar" ? "Entrar" : "Crear cuenta"}
-            </button>
-          </form>
-
-          {config.googleClientId && (
-            <>
-              <div className="relative my-4">
-                <div className="absolute inset-0 flex items-center">
-                  <span className="w-full border-t border-gray-200" />
-                </div>
-                <div className="relative flex justify-center">
-                  <span className="bg-gray-0 px-2 text-paragraph-xs text-gray-450">o</span>
-                </div>
-              </div>
-              <BotonGoogle
-                texto={pestana === "entrar" ? "Entrar con Google" : "Crear cuenta con Google"}
-                deshabilitado={cargando}
-                onCredencial={(idToken) => conSesion(() => entrarConGoogle(config, idToken))}
-                onFallo={() => setError("No pudimos conectar con Google. Inténtalo otra vez.")}
-              />
-            </>
           )}
 
-          <p className="mt-5 text-center text-paragraph-xs text-gray-450">
-            Al continuar aceptas nuestros términos y la política de privacidad.
-          </p>
-        </div>
+          <div>
+            <label htmlFor={`${idBase}-correo`} className={etiqueta}>Correo electrónico</label>
+            <div className="relative">
+              <RiMailLine className={icono} />
+              <input id={`${idBase}-correo`} ref={pestana === "entrar" ? primerCampo : undefined} name="email" type="email" required autoComplete="email" placeholder="tu@negocio.co" disabled={cargando} className={campo} />
+            </div>
+          </div>
+
+          {pestana === "entrar" ? (
+            <div>
+              <div className="mb-1.5 flex items-baseline justify-between gap-2">
+                <label htmlFor={`${idBase}-clave`} className="text-[13px] text-[#4A4F59]">Contraseña</label>
+                {base && <a href={`${base}/auth/forgot-password`} className="text-[13px] font-medium !text-[#0C78C0] hover:!text-[#0A68A8]">¿Olvidaste tu contraseña?</a>}
+              </div>
+              <div className="relative">
+                <RiLockLine className={icono} />
+                <input id={`${idBase}-clave`} name="password" type={verClave ? "text" : "password"} required minLength={8} autoComplete="current-password" placeholder="Tu contraseña" disabled={cargando} className={cn(campo, "pr-11")} />
+                {ojo}
+              </div>
+            </div>
+          ) : (
+            <div>
+              <div className="grid gap-3 sm:grid-cols-2">
+                <div>
+                  <label htmlFor={`${idBase}-clave`} className={etiqueta}>Contraseña</label>
+                  <div className="relative">
+                    <RiLockLine className={icono} />
+                    <input id={`${idBase}-clave`} name="password" type={verClave ? "text" : "password"} required minLength={8} autoComplete="new-password" disabled={cargando} className={cn(campo, "pr-11")} />
+                    {ojo}
+                  </div>
+                </div>
+                <div>
+                  <label htmlFor={`${idBase}-clave2`} className={etiqueta}>Confirmar contraseña</label>
+                  <div className="relative">
+                    <RiLockLine className={icono} />
+                    <input id={`${idBase}-clave2`} name="password2" type={verClave ? "text" : "password"} required minLength={8} autoComplete="new-password" disabled={cargando} className={campo} />
+                  </div>
+                </div>
+              </div>
+              <p className="mt-1.5 text-[12px] text-[#7B818C]">Mínimo 8 caracteres</p>
+            </div>
+          )}
+
+          {error && (
+            <div role="alert" className="flex items-start gap-2 rounded-[14px] bg-[#FDECEC] px-3.5 py-3 text-[14px] text-[#B4232A]">
+              <RiErrorWarningLine className="mt-0.5 size-4 shrink-0" />
+              <span>{error}</span>
+            </div>
+          )}
+
+          {/* El botón de las acciones principales: píldora azul con la flecha en un círculo blanco. */}
+          <button
+            type="submit"
+            disabled={cargando}
+            className="mt-1 flex h-[52px] items-center justify-between rounded-full bg-[#0C78C0] pl-5 pr-1.5 text-[16px] font-semibold text-white transition duration-200 hover:bg-[#0A68A8] disabled:opacity-60"
+          >
+            <span>{pestana === "entrar" ? "Iniciar sesión" : "Crear cuenta"}</span>
+            <span aria-hidden="true" className="flex size-10 items-center justify-center rounded-full bg-white text-[19px] font-bold text-[#0C78C0]">
+              {cargando ? <RiLoader4Line className="size-5 animate-spin" /> : "»"}
+            </span>
+          </button>
+        </form>
+
+        {config.googleClientId && (
+          <>
+            <div className="my-4 flex items-center gap-3 text-[12px] text-[#7B818C]">
+              <span className="h-px flex-1 bg-[#E6E8EB]" />o<span className="h-px flex-1 bg-[#E6E8EB]" />
+            </div>
+            <BotonGoogle
+              texto={pestana === "entrar" ? "Continuar con Google" : "Crear cuenta con Google"}
+              deshabilitado={cargando}
+              onCredencial={(idToken) => conSesion(() => entrarConGoogle(config, idToken))}
+              onFallo={() => setError("No pudimos conectar con Google. Inténtalo otra vez.")}
+            />
+          </>
+        )}
+
+        <p className="mt-5 text-center text-[14px] text-[#4A4F59]">
+          {pestana === "entrar" ? (
+            <>
+              ¿No tienes cuenta?{" "}
+              <button type="button" onClick={() => setPestana("crear")} className="font-medium text-[#0C78C0] hover:text-[#0A68A8]">Crear cuenta</button>
+            </>
+          ) : base ? (
+            <a href={`${base}/invite`} className="font-medium !text-[#0C78C0] hover:!text-[#0A68A8]">¿Te invitaron a un negocio? Ingresa tu código →</a>
+          ) : null}
+        </p>
+        <p className="mt-3 text-center text-[12px] text-[#7B818C]">
+          Al continuar aceptas nuestros términos y la política de privacidad.
+        </p>
       </div>
     </div>
   );

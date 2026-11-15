@@ -50,8 +50,8 @@ export function BotonGoogle({
       <div
         aria-hidden="true"
         className={
-          "flex h-11 w-full items-center justify-center gap-2.5 rounded-13 bg-gray-0 text-label-sm text-gray-900 shadow-button-white transition duration-200 " +
-          (deshabilitado ? "opacity-50" : "hover:bg-gray-25")
+          "flex h-[52px] w-full items-center justify-center gap-2.5 rounded-full bg-white text-[15px] font-medium text-[#0D0C17] ring-1 ring-inset ring-[#E6E8EB] transition duration-200 " +
+          (deshabilitado ? "opacity-50" : "hover:bg-[#F1F2F4]")
         }
       >
         <svg viewBox="0 0 24 24" className="size-[18px] shrink-0" aria-hidden="true">
