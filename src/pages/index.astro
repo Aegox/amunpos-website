@@ -3,6 +3,7 @@ import LayoutBento from "../layouts/LayoutBento.astro";
 import NavAuth from "../components/bento/NavAuth";
 import PanelPos from "../components/bento/PanelPos.astro";
 import { precioMensual, formatearPrecio, DESCUENTO_ANUAL } from "@/data/precios";
+import { datosEstructurados } from "@/data/seo";
 import {
   RiArrowRightUpLine, RiArrowRightSLine, RiCheckLine, RiArrowRightDoubleLine,
   RiSearchLine, RiAddLine, RiFileChartLine, RiShoppingBasket2Line, RiWhatsappLine, RiArchiveDrawerLine,
@@ -79,9 +80,11 @@ const preguntas = [
     { q: "¿Cómo pido ayuda?", a: "Por correo, en hola@amunpos.com." },
   ],
 ];
+// Lo que Google lee de esta página: organización, sitio, app con precios, preguntas y secciones.
+const jsonld = datosEstructurados(preguntas.flat());
 ---
 
-<LayoutBento>
+<LayoutBento ruta="/" jsonld={jsonld}>
   <NavAuth client:load config={config} />
 
   <header id="Inicio" class="bloque-oscuro hero-marco">
