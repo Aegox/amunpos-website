@@ -1,4 +1,4 @@
-# amunpos.com
+# www.amunpos.com
 User-agent: *
 Allow: /
 # Diseños de prueba y referencia: no son páginas para el público.
@@ -6,4 +6,4 @@ Disallow: /anterior
 Disallow: /planes-tiques
 Disallow: /planes-variantes
 
-Sitemap: https://amunpos.com/sitemap.xml
+Sitemap: https://www.amunpos.com/sitemap.xml

@@ -11,7 +11,7 @@
  */
 import { precios } from "./precios";
 
-export const SITIO = "https://amunpos.com";
+export const SITIO = "https://www.amunpos.com";
 
 /** Secciones de la página, en el orden del menú. */
 export const SECCIONES = [
