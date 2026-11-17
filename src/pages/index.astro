@@ -9,7 +9,7 @@ import {
   RiSearchLine, RiAddLine, RiFileChartLine, RiShoppingBasket2Line, RiWhatsappLine, RiArchiveDrawerLine,
   RiCameraLine, RiSparkling2Line, RiMotorbikeLine, RiCalendarCheckLine, RiLayoutGridLine, RiHeart3Line,
   RiUser3Line, RiRocket2Line, RiBuilding2Line, RiBarChart2Line, RiWallet3Line, RiLineChartLine,
-  RiStore2Line, RiStackLine, RiBook2Line, RiFileExcel2Line, RiCalculatorLine, RiTimeLine,
+  RiStore2Line, RiStackLine, RiMoneyDollarCircleLine, RiRocketLine, RiBook2Line, RiFileExcel2Line, RiCalculatorLine, RiTimeLine,
 } from "@remixicon/react";
 
 const config = {
@@ -35,13 +35,13 @@ const beneficios = [
   ],
 ];
 
-// Lo que el hero va rotando después de "Mañana ya sabes". Solo promesas en verde
-// de amunpos-marca/00-empresa/verdad-comercial.md.
+// Lo que el hero va rotando después de "El punto de venta hecho para", como en la web anterior
+// (Diego, 2026-11-17).
+// Cada frase lleva su ícono, que entra con ella y luego se mueve a su manera.
 const frasesHero = [
-  "qué pedirle al proveedor.",
-  "si cuadró la caja.",
-  "qué se está acabando.",
-  "cuánto vendió cada local.",
+  { t: "ganar más", i: RiMoneyDollarCircleLine, mov: "moneda" },
+  { t: "crecer rápido", i: RiRocketLine, mov: "cohete" },
+  { t: "ahorrar tiempo", i: RiTimeLine, mov: "reloj" },
 ];
 
 // Lo que reemplaza (lámina "El problema" del deck). Solo lo que hoy se cumple:
@@ -89,7 +89,7 @@ const jsonld = datosEstructurados(preguntas.flat());
 
   <header id="Inicio" class="bloque-oscuro hero-marco">
     <div class="barra">
-      <a class="marca" href="#Inicio" aria-label="amunpos, inicio"><img src="/logos/amunpos-oscuro-tique-grande.svg" alt="" width="437" height="98" /></a>
+      <a class="marca" href="#Inicio" aria-label="amunpos, inicio"><img src="/logos/amunpos-oscuro-tique-blanco.svg" alt="" width="437" height="98" /></a>
       <nav aria-label="Principal">
         <a href="#Producto">Producto</a>
         <a href="#Compras">Compras</a>
@@ -113,11 +113,14 @@ const jsonld = datosEstructurados(preguntas.flat());
 
     <div class="hero-centro">
       <h1 class="h1">
-        {"Vende hoy. Mañana ya sabes".split(" ").map((p, k) => <><span class="palabra" style={`--i:${k}`}>{p}</span>{" "}</>)}
-        <span class="sr-only">{frasesHero[0]}</span>
+        {"El punto de venta hecho para".split(" ").map((p, k) => <><span class="palabra" style={`--i:${k}`}>{p}</span>{" "}</>)}
+        <span class="sr-only">{frasesHero[0].t}</span>
         <span class="rotador" aria-hidden="true">
           {frasesHero.map((f, n) => (
-            <span class:list={["frase", { activa: n === 0 }]}>{f.split(" ").map((w, j) => <><span class="w" style={`--j:${j}`}>{w}</span>{" "}</>)}</span>
+            <span class:list={["frase", { activa: n === 0 }]}>
+              {f.t.split(" ").map((w, j) => <><span class="w" style={`--j:${j}`}>{w}</span>{" "}</>)}
+              <span class:list={["w", "frase-icono", f.mov]} style={`--j:${f.t.split(" ").length}`}><f.i /></span>
+            </span>
           ))}
         </span>
       </h1>
@@ -313,7 +316,7 @@ const jsonld = datosEstructurados(preguntas.flat());
   <footer class="bloque-oscuro pie">
     <div class="pie-arriba">
       <div class="pie-marca">
-        <img src="/logos/amunpos-oscuro-tique-grande.svg" alt="amunpos" width="437" height="98" />
+        <img src="/logos/amunpos-oscuro-tique-blanco.svg" alt="amunpos" width="437" height="98" />
         <nav aria-label="Pie de página">
           <a href="#Producto">Producto</a>
           <a href="#Compras">Compras</a>

@@ -115,6 +115,9 @@
 .h1 .frase { grid-area: 1 / 1; }
 .h1 .frase:not(.activa, .sale) { visibility: hidden; }
 .h1 .frase .w { display: inline-block; }
+/* Ícono de cada frase: al final, del tamaño y color de las letras, sin cuadro. */
+.h1 .frase-icono { vertical-align: -.1em; }
+.h1 .frase-icono svg { display: block; width: .9em; height: .9em; }
 .hero-centro .parrafo { max-width: 560px; margin: 20px auto 32px; font-size: 17px; }
 .hero-cta { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; }
 .hero-nota { margin-top: 16px; font-size: 13px; color: #8d919a; }
@@ -133,7 +136,7 @@
 .panel-envoltura { position: relative; z-index: 2; margin-top: -300px; }
 .panel { width: min(1010px, 100% - 40px); margin-inline: auto; background: var(--gris-100); border-radius: 30px; padding: 14px 20px 20px; box-shadow: 0 40px 80px -30px rgba(13, 12, 23, .45), 0 0 0 1px rgba(255,255,255,.7) inset; }
 .panel-barra { display: flex; align-items: center; gap: 8px; margin-bottom: 18px; }
-.panel-barra img.logo { height: 24px; width: auto; margin: 0 14px 0 4px; flex: none; }
+.panel-barra img.logo { height: 28px; width: auto; margin: 0 14px 0 4px; flex: none; }
 .pest { display: inline-flex; align-items: center; height: 36px; padding-inline: 15px; border-radius: 999px; background: #fff; font-size: 13px; font-weight: 500; color: var(--gris-700); white-space: nowrap; }
 .pest.activa { background: var(--negro); color: #fff; }
 .panel-buscar { margin-left: auto; display: flex; align-items: center; gap: 6px; height: 36px; padding-inline: 12px; width: 150px; border-radius: 999px; background: #fff; font-size: 13px; color: var(--gris-500); }

@@ -126,9 +126,11 @@ if (carrusel && tarjetas.length > 1) {
   }, 4500);
 }
 
-// Hero: la frase después de "Mañana ya sabes" va rotando entre lo que amunpos resuelve.
-const frases = Array.from(document.querySelectorAll<HTMLElement>(".rotador .frase"));
-if (frases.length > 1) {
+// Hero: la segunda línea del título va rotando entre lo que amunpos resuelve.
+// Cada .rotador rota por su cuenta (la página de variantes tiene varios).
+document.querySelectorAll<HTMLElement>(".rotador").forEach((rotador, r) => {
+  const frases = Array.from(rotador.querySelectorAll<HTMLElement>(".frase"));
+  if (frases.length < 2) return;
   let n = 0;
   setTimeout(() => {
     setInterval(() => {
@@ -140,5 +142,5 @@ if (frases.length > 1) {
       n = (n + 1) % frases.length;
       frases[n].classList.add("activa");
     }, 3200);
-  }, 1800);
-}
+  }, 1800 + r * 400);
+});
