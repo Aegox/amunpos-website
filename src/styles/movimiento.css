@@ -1,0 +1,202 @@
+/* Movimiento de la web bento. Premium, no saturado: solo transform y opacity,
+   curvas suaves (--curva) y nada que parpadee.
+   Se muestra siempre, aunque el sistema pida menos movimiento (decisión de Diego,
+   2026-11-16). Los estados ocultos iniciales dependen de .js-revela, que solo existe
+   si hay IntersectionObserver. */
+
+/* Íconos del hero en pantallas medianas y celular: dos, pequeños y en las esquinas. */
+@media (max-width: 1100px) {
+  .hero-marco .flotante-1, .hero-marco .flotante-2 { display: grid; width: 46px; height: 46px; border-radius: 14px; }
+  .hero-marco .flotante-1 svg, .hero-marco .flotante-2 svg { width: 19px; height: 19px; }
+  .hero-marco .flotante-1 { left: 22px; top: 112px; }
+  .hero-marco .flotante-2 { right: 22px; top: 104px; left: auto; }
+}
+@media (max-width: 640px) {
+  .hero-marco .flotante-1 { left: 14px; top: 98px; width: 40px; height: 40px; border-radius: 12px; }
+  .hero-marco .flotante-2 { right: 14px; top: 92px; width: 40px; height: 40px; border-radius: 12px; }
+}
+
+@media screen {
+  /* ---------- Hero: entrada escalonada al cargar ---------- */
+  @keyframes m-baja { from { opacity: 0; transform: translateY(-14px); } }
+  @keyframes m-sube { from { opacity: 0; transform: translateY(22px); } }
+  @keyframes m-palabra { from { opacity: 0; transform: translateY(.42em); filter: blur(10px); } }
+  @keyframes m-pop { from { opacity: 0; scale: .55; } }
+  @keyframes m-flota { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-11px); } }
+  @keyframes m-flota-giro { 0%, 100% { transform: translateY(0) rotate(0); } 50% { transform: translateY(-9px) rotate(-5deg); } }
+  @keyframes m-crece-y { from { transform: scaleY(0); } }
+  @keyframes m-respira { 0%, 100% { transform: scaleY(1); } 50% { transform: scaleY(.62); } }
+  @keyframes m-anillo { from { stroke-dashoffset: 157; } }
+  @keyframes m-luz { 0% { translate: -6% -4%; } 100% { translate: 6% 5%; } }
+  @keyframes m-empuja { 0%, 70%, 100% { transform: translateX(0); } 80% { transform: translateX(4px); } 90% { transform: translateX(-1px); } }
+  @keyframes m-panel { from { opacity: 0; transform: perspective(1600px) translateY(70px) rotateX(16deg) scale(.96); } }
+
+  .hero-marco .barra > * { animation: m-baja .8s var(--curva) backwards; }
+  .hero-marco .barra > nav { animation-delay: .08s; }
+  .hero-marco .barra > .acciones { animation-delay: .16s; }
+
+  .hero-centro .h1 .palabra { display: inline-block; animation: m-palabra 1s var(--curva) backwards; animation-delay: calc(.15s + var(--i, 0) * 70ms); }
+  .h1 .frase .w { opacity: 0; transform: translateY(.45em); filter: blur(8px); transition: opacity .55s var(--curva), transform .75s var(--curva), filter .55s var(--curva); transition-delay: calc(var(--j, 0) * 55ms); }
+  .h1 .frase.activa .w { opacity: 1; transform: none; filter: none; transition-delay: calc(.3s + var(--j, 0) * 60ms); }
+  .h1 .frase.sale .w { opacity: 0; transform: translateY(-.45em); filter: blur(8px); }
+  .hero-centro .h1 .frase:first-child .w { animation: m-palabra 1s var(--curva) backwards; animation-delay: calc(.5s + var(--j, 0) * 70ms); }
+  .hero-centro .parrafo { animation: m-sube .9s var(--curva) .75s backwards; }
+  .hero-centro .hero-cta { animation: m-sube .9s var(--curva) .9s backwards; }
+  .hero-centro .hero-nota { animation: m-sube .9s var(--curva) 1.05s backwards; }
+  .panel-envoltura > .panel { animation: m-panel 1.4s var(--curva) .55s backwards; transform-origin: 50% 0; }
+
+  /* Luz azul de fondo que deriva despacio; con mouse, además, sigue al puntero. */
+  .hero-marco { isolation: isolate; }
+  .hero-marco::before, .hero-marco::after { content: ""; position: absolute; z-index: -1; pointer-events: none; }
+  .hero-marco::before { inset: -20% 10% 30%; background: radial-gradient(closest-side, rgba(12, 120, 192, .22), transparent 70%); animation: m-luz 16s ease-in-out infinite alternate; }
+  .hero-marco::after { inset: 0; background: radial-gradient(420px circle at var(--gx, 50%) var(--gy, 30%), rgba(47, 155, 227, .12), transparent 70%); opacity: 0; transition: opacity .6s; }
+  .hero-marco.con-luz::after { opacity: 1; }
+
+  /* Íconos flotantes: aparecen, flotan cada uno a su ritmo y siguen al mouse. */
+  .flotante {
+    --prof: 14px;
+    animation: m-pop .9s var(--curva) backwards, m-flota 6s ease-in-out infinite;
+    translate: calc(var(--px, 0) * var(--prof)) calc(var(--py, 0) * var(--prof));
+    transition: translate .9s var(--curva), border-color .3s, background-color .3s, box-shadow .3s;
+  }
+  .flotante-1 { --prof: 22px; animation-delay: .5s, 1.4s; animation-name: m-pop, m-flota-giro; animation-duration: .9s, 7s; }
+  .flotante-2 { --prof: -18px; animation-delay: .62s, .2s; animation-duration: .9s, 6.4s; }
+  .flotante-3 { --prof: 26px; animation-delay: .74s, 2.1s; animation-duration: .9s, 7.6s; }
+  .flotante-4 { --prof: -12px; animation-delay: .86s, .8s; animation-name: m-pop, m-flota-giro; animation-duration: .9s, 5.6s; }
+  .flotante-5 { --prof: 16px; animation-delay: .98s, 3s; animation-duration: .9s, 8s; }
+  @media (pointer: fine) {
+    .hero-marco .flotante:hover { border-color: rgba(47, 155, 227, .55); background-color: #15151a; box-shadow: 0 0 0 6px rgba(47, 155, 227, .08), 0 18px 40px -12px rgba(12, 120, 192, .45); }
+    .flotante svg { transition: transform .5s var(--curva); }
+    .flotante:not(.flotante-3):hover > svg { transform: scale(1.18) rotate(-8deg); }
+  }
+  .flotante-3 svg circle:last-child { animation: m-anillo 1.6s var(--curva) 1s backwards; }
+  .flotante-5 i { transform-origin: 50% 100%; animation: m-crece-y .9s var(--curva) backwards, m-respira 3.6s ease-in-out infinite; animation-delay: calc(1.1s + var(--i, 0) * 60ms), calc(2.2s + var(--i, 0) * 240ms); }
+
+  /* La flecha del botón principal da un empujoncito cada tanto. */
+  .hero-cta .btn-chevron .caja svg { animation: m-empuja 3.6s var(--curva) 2.4s infinite; }
+
+  /* ---------- Botones y enlaces ---------- */
+  .btn-chevron { position: relative; overflow: hidden; transition: background .2s, transform .35s var(--curva), box-shadow .35s; }
+  .btn-chevron::after { content: ""; position: absolute; inset: 0; background: linear-gradient(105deg, transparent 35%, rgba(255, 255, 255, .28) 50%, transparent 65%); translate: -110% 0; transition: translate .8s var(--curva); pointer-events: none; }
+  .btn-chevron:hover::after { translate: 110% 0; }
+  .btn-chevron:hover { transform: translateY(-2px); box-shadow: 0 0 0 1.5px rgba(255, 255, 255, .28) inset, 0 14px 30px -12px rgba(12, 120, 192, .7); }
+  .btn-chevron.negro:hover { box-shadow: 0 14px 30px -12px rgba(9, 9, 11, .6); }
+  .btn-chevron:active, .btn-borde:active, .btn-chico:active, .btn-plan:active { transform: translateY(0) scale(.98); }
+  .btn-borde { transition: background .2s, border-color .3s, transform .35s var(--curva); }
+  .btn-borde:hover { border-color: rgba(255, 255, 255, .4); transform: translateY(-2px); }
+  .btn-chico { transition: background .2s, transform .35s var(--curva), box-shadow .35s; }
+  .btn-chico:hover { transform: translateY(-1px); }
+  .btn-chico.azul:hover { background: var(--azul-hover); box-shadow: 0 10px 22px -10px rgba(12, 120, 192, .8); }
+  .marca { transition: border-color .3s, background-color .3s; }
+  .marca:hover { border-color: #3d3d46; background-color: rgba(255, 255, 255, .04); }
+  .barra nav a, .pie nav a { background: linear-gradient(currentColor, currentColor) no-repeat 0 100% / 0 1.5px; padding-bottom: 3px; transition: opacity .2s, background-size .4s var(--curva); }
+  .barra nav a:hover, .pie nav a:hover { background-size: 100% 1.5px; }
+  .pie .correo { transition: color .3s, border-color .3s; }
+  .pie .correo:hover { color: #2f9be3; border-color: #2f9be3; }
+
+  /* ---------- Aparición al hacer scroll ---------- */
+  .js-revela [data-revela] {
+    transform: translateY(32px) scale(.985);
+    transition: opacity .9s var(--curva) calc(var(--i, 0) * 90ms), transform .9s var(--curva) calc(var(--i, 0) * 90ms),
+      translate .45s var(--curva), box-shadow .45s var(--curva), border-color .3s, background-color .3s;
+  }
+  .js-revela [data-revela].visible { transform: none; }
+
+  /* Tarjetas: se levantan un poco al pasar el mouse. */
+  .funcion, .plan, .beneficio, .lista-reemplazo li, .pregunta, .situacion { transition: translate .45s var(--curva), box-shadow .45s var(--curva), border-color .3s, background-color .3s; }
+  .funcion:hover, .plan:hover { translate: 0 -6px; box-shadow: 0 28px 50px -28px rgba(13, 12, 23, .35); }
+  .plan.dest:hover { box-shadow: 0 28px 60px -24px rgba(12, 120, 192, .75); }
+  .beneficio:hover { translate: 0 -4px; border-color: rgba(47, 155, 227, .45); background-color: #0f0f13; }
+  .lista-reemplazo li:hover { translate: 6px 0; box-shadow: 0 16px 30px -22px rgba(13, 12, 23, .35); }
+  .pregunta:hover { box-shadow: 0 12px 26px -20px rgba(13, 12, 23, .35); }
+  .situacion:hover { translate: 0 -4px; }
+  .tile, .tile svg { transition: transform .5s var(--curva), background-color .3s, color .3s; }
+  :is(.funcion, .plan, .beneficio, .lista-reemplazo li):hover .tile { transform: translateY(-2px) rotate(-8deg); }
+  :is(.funcion, .plan, .beneficio, .lista-reemplazo li):hover .tile svg { transform: scale(1.1); }
+  .lista-reemplazo li > svg { transition: transform .45s var(--curva), color .3s; }
+  .lista-reemplazo li:hover > svg { transform: rotate(45deg); color: var(--azul); }
+  .pregunta .mas { transition: transform .35s var(--curva), background-color .3s; }
+  .pregunta summary:hover .mas { background-color: var(--azul-100); }
+
+  /* Lo que reemplaza: el tachón se dibuja cuando aparece la fila. */
+  .js-revela .lista-reemplazo s { display: inline; text-decoration: none; -webkit-box-decoration-break: clone; box-decoration-break: clone; background: linear-gradient(currentColor, currentColor) no-repeat 0 58% / 0 1.5px; transition: background-size .8s var(--curva) calc(.35s + var(--i, 0) * 90ms); }
+  .js-revela .lista-reemplazo li.visible s { background-size: 100% 1.5px; }
+
+  /* Panel del POS: barras que crecen, medidor que se llena, pagos y anillos. */
+  .js-revela .panel .dia b { transform-origin: 50% 100%; transform: scaleY(0); transition: transform 1.1s var(--curva) calc(.9s + var(--i, 0) * 70ms); }
+  .js-revela .panel .dia .etq, .js-revela .panel .barras .burbuja { opacity: 0; translate: 0 8px; transition: opacity .6s var(--curva) 1.7s, translate .6s var(--curva) 1.7s; }
+  .js-revela .panel .medidor line { opacity: .12; transition: opacity .4s var(--curva) calc(1s + var(--i, 0) * 45ms); }
+  .js-revela .panel .seg .lleno { clip-path: inset(0 100% 0 0 round 10px); transition: clip-path 1.1s var(--curva) 1.1s; }
+  .js-revela .panel .seg + .seg .lleno { transition-delay: 1.25s; }
+  .js-revela .panel .seg + .seg + .seg .lleno { transition-delay: 1.4s; }
+  .js-revela .panel .item { opacity: 0; translate: 14px 0; transition: opacity .6s var(--curva) calc(1.2s + var(--i, 0) * 110ms), translate .6s var(--curva) calc(1.2s + var(--i, 0) * 110ms); }
+  .js-revela .panel .item .anillo circle:last-child { stroke-dashoffset: 63; transition: stroke-dashoffset 1.2s var(--curva) calc(1.4s + var(--i, 0) * 110ms); }
+  .js-revela .panel.visible .dia b { transform: none; }
+  .js-revela .panel.visible :is(.dia .etq, .barras .burbuja) { opacity: 1; translate: 0 0; }
+  .js-revela .panel.visible .medidor line { opacity: 1; }
+  .js-revela .panel.visible .seg .lleno { clip-path: inset(0 0 0 0 round 10px); }
+  .js-revela .panel.visible .item { opacity: 1; translate: 0 0; }
+  .js-revela .panel.visible .item .anillo circle:last-child { stroke-dashoffset: var(--fin); }
+  .panel .tarjeta, .panel .t-oscura { transition: translate .45s var(--curva), box-shadow .45s var(--curva); }
+  @media (pointer: fine) {
+    .panel .tarjeta:hover, .panel .t-oscura:hover { translate: 0 -3px; box-shadow: 0 18px 34px -22px rgba(13, 12, 23, .4); }
+  }
+
+  /* Tarjetas de compras: lo que hay dentro entra cuando la tarjeta aparece. */
+  .js-revela .funcion .dia:nth-child(1) b { --i: 0; }
+  .js-revela .funcion .dia b { transform-origin: 50% 100%; transform: scaleY(0); transition: transform 1s var(--curva) calc(.45s + var(--i, 0) * 80ms); }
+  .js-revela .funcion .dia:nth-child(2) b { --i: 1; }
+  .js-revela .funcion .dia:nth-child(3) b { --i: 2; }
+  .js-revela .funcion .dia:nth-child(4) b { --i: 3; }
+  .js-revela .funcion .burbuja, .js-revela .funcion .mov, .js-revela .funcion .mensaje { opacity: 0; translate: 0 18px; transition: opacity .7s var(--curva) .9s, translate .7s var(--curva) .9s; }
+  .js-revela .funcion .mov { translate: 26px 0; }
+  .js-revela .funcion .mov:nth-child(1) { transition-delay: .55s; }
+  .js-revela .funcion .mov:nth-child(2) { transition-delay: .7s; translate: -26px 0; }
+  .js-revela .funcion .mov:nth-child(3) { transition-delay: .85s; }
+  .js-revela .funcion .mensaje { transition-delay: .6s; }
+  .js-revela .funcion.visible .dia b { transform: none; }
+  .js-revela .funcion.visible :is(.burbuja, .mov, .mensaje) { opacity: 1; translate: 0 0; }
+
+  /* Ilustraciones que se mueven sutilmente. */
+  @keyframes m-mece { 0%, 100% { transform: translateY(0) rotate(0); } 50% { transform: translateY(-8px) rotate(-1deg); } }
+  @keyframes m-busca { 0%, 100% { transform: rotate(0) translate(0, 0); } 30% { transform: rotate(-10deg) translate(-1px, -1px); } 60% { transform: rotate(8deg) translate(1px, 0); } }
+  @keyframes m-diagonal { 0%, 70%, 100% { transform: translate(0, 0); } 82% { transform: translate(3px, -3px); } }
+  .tarjeta-azul img { animation: m-mece 7s ease-in-out infinite; transition: scale .6s var(--curva); }
+  .tarjeta-azul:hover img { scale: 1.03; }
+  .escena img.peep { animation: m-mece 9s ease-in-out infinite; transform-origin: 50% 100%; }
+  .escena .ficha { animation: m-flota 6.5s ease-in-out infinite; }
+  .escena .ficha:last-of-type { animation-delay: -3.2s; }
+  .js-revela .escena .ficha { opacity: 0; scale: .85; transition: opacity .7s var(--curva), scale .7s var(--curva); }
+  .js-revela .escena .ficha { transition-delay: .55s; }
+  .js-revela .escena .ficha:last-child { transition-delay: .75s; }
+  .js-revela .escena.visible .ficha { opacity: 1; scale: 1; }
+  .descubre .titulo-icono svg { animation: m-busca 5s ease-in-out infinite; }
+  .cierre .titulo-icono svg { animation: m-diagonal 3.6s var(--curva) 1s infinite; }
+  .cierre .peep-lado { animation: m-mece 8s ease-in-out infinite; transform-origin: 50% 100%; }
+  .cierre .peep-der { animation-delay: -4s; }
+
+  /* Situaciones: la frase, el dibujo y la respuesta entran por turnos. */
+  .js-revela .situacion :is(.hora, .dicho, img, .respuesta) { opacity: 0; translate: 0 20px; transition: opacity .8s var(--curva), translate .8s var(--curva), scale .6s var(--curva) 0s; }
+  .js-revela .situacion .dicho { transition-delay: .1s; }
+  .js-revela .situacion img { translate: 30px 10px; transition-delay: .25s, .25s, 0s; }
+  .js-revela .situacion .respuesta { transition-delay: .45s; }
+  .js-revela .situacion.visible :is(.hora, .dicho, img, .respuesta) { opacity: 1; translate: 0 0; }
+  .situacion:hover img { scale: 1.03; }
+  .situacion img { transition: scale .6s var(--curva); }
+
+  /* Beneficios: las dos filas se desplazan muy despacio en sentidos opuestos. */
+  @keyframes m-deriva { from { translate: -28px 0; } to { translate: 28px 0; } }
+  @media (min-width: 901px) {
+    .fila-beneficios { animation: m-deriva 22s ease-in-out infinite alternate; }
+    .fila-beneficios:nth-child(2) { animation-direction: alternate-reverse; }
+    .grupo-beneficios:hover .fila-beneficios { animation-play-state: paused; }
+  }
+
+  /* Precios y preguntas. */
+  @keyframes m-cambia { from { opacity: 0; transform: translateY(-10px); filter: blur(4px); } }
+  :is(.precio, .monto) .cambia { display: inline-block; animation: m-cambia .5s var(--curva); }
+  .interruptor button { transition: background-color .3s, color .3s; }
+  @keyframes m-abre { from { opacity: 0; transform: translateY(-6px); } }
+  .pregunta[open] p { animation: m-abre .45s var(--curva); }
+}
+

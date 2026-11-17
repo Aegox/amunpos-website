@@ -195,6 +195,15 @@ export default function AiFlow() {
     return () => observador.disconnect();
   }, []);
 
+  const [enMovil, setEnMovil] = useState(false);
+  useEffect(() => {
+    const consulta = window.matchMedia("(max-width: 767px)");
+    const alCambiar = () => setEnMovil(consulta.matches);
+    alCambiar();
+    consulta.addEventListener("change", alCambiar);
+    return () => consulta.removeEventListener("change", alCambiar);
+  }, []);
+
   // Depende de `paso` a propósito: así el temporizador se REINICIA cada vez que
   // cambia el paso, incluido cuando lo cambia el usuario pinchando. Con un
   // intervalo fijo, pinchar una pastilla podía saltar a la siguiente a los
@@ -207,18 +216,20 @@ export default function AiFlow() {
   // los apaga el CSS —, no que el contenido se quede congelado. Con la opción
   // puesta cada paso dura más, para dar tiempo a leerlo sin animación que guíe.
   useEffect(() => {
-    if (!visible) return;
+    // En móvil cambia quien lee, tocando una pastilla: que la tarjeta se reemplace sola
+    // mientras se lee, moviendo lo de abajo, es peor que no tener animación.
+    if (!visible || enMovil) return;
     // La duración la manda el guion: cada instrucción tarda lo que tarde en
     // teclearse y contestarse. Con un valor fijo, la más larga se cortaba a
     // medias y la más corta se quedaba parada esperando.
     const t = setTimeout(() => setPaso((p) => (p + 1) % pasos.length), guiones[paso].total);
     return () => clearTimeout(t);
-  }, [visible, paso]);
+  }, [visible, paso, enMovil]);
 
   const actual = pasos[paso];
 
   return (
-    <section ref={seccionRef} className="w-full px-5 py-16 xl:py-24">
+    <section ref={seccionRef} className="w-full px-5 py-12 xl:py-24">
       <div className="mx-auto flex w-full max-w-[1240px] flex-col items-center">
         {/* ── Encabezado ── */}
         <span className="flex h-8 items-center gap-1.5 rounded-9 bg-gray-0 pl-2 pr-3 text-label-sm text-gray-700 shadow-button-white">
@@ -235,7 +246,7 @@ export default function AiFlow() {
         </p>
 
         {/* ── Las tres instrucciones ── */}
-        <div className="mt-9 flex w-full items-center justify-start gap-2 overflow-x-auto px-1 py-2 md:justify-center md:gap-1 md:overflow-visible xl:mt-12">
+        <div className="mt-9 flex w-full items-center justify-start gap-2 overflow-x-auto px-1 py-2 xl:justify-center md:gap-1 xl:overflow-visible xl:mt-12">
           {pasos.map((p, i) => {
             const hecho = i < paso;
             const trabajando = i === paso;
@@ -373,7 +384,7 @@ export default function AiFlow() {
         </svg>
 
         {/* ── El panel: la sesion ocurriendo, con su propio reloj ── */}
-        <PanelVivo paso={paso} arrancado={visible} />
+        <PanelVivo paso={paso} arrancado={visible} entero={enMovil} />
 
         {/* ── El remate: qué gana el negocio ──
             En alignui.com el recorrido no termina en el panel: baja otro
@@ -464,20 +475,22 @@ export default function AiFlow() {
  * segundo no arrastren a repintarse también las pastillas, los conectores y el
  * remate, que no cambian en todo el paso.
  */
-function PanelVivo({ paso, arrancado }: { paso: number; arrancado: boolean }) {
+function PanelVivo({ paso, arrancado, entero }: { paso: number; arrancado: boolean; entero: boolean }) {
   const actual = pasos[paso];
   const guion = guiones[paso];
-  const [t, setT] = useState(0);
+  const [reloj, setT] = useState(0);
+  // Entero: todo el guion ya ocurrido, sin reloj.
+  const t = entero ? Number.MAX_SAFE_INTEGER : reloj;
 
   useEffect(() => {
-    if (!arrancado) return;
+    if (!arrancado || entero) return;
     setT(0);
     const inicio = performance.now();
     // 40 ms basta de sobra para que el texto se vea salir letra a letra, y
     // cuesta la cuarta parte que ir a 60 fotogramas por segundo.
     const id = setInterval(() => setT(performance.now() - inicio), 40);
     return () => clearInterval(id);
-  }, [paso, arrancado]);
+  }, [paso, arrancado, entero]);
 
   const tecleado = actual.prompt.slice(
     0,
@@ -505,14 +518,14 @@ function PanelVivo({ paso, arrancado }: { paso: number; arrancado: boolean }) {
         /* Alto RESERVADO para el paso más largo. Ahora el contenido aparece por
            partes, así que sin esto el panel estaría creciendo todo el rato y la
            página entera daría saltos cada pocos segundos. */
-        className="grid min-h-[610px] w-full overflow-hidden rounded-[16px] bg-gray-0 md:min-h-[370px] md:grid-cols-[minmax(0,1fr)_360px] xl:rounded-[20px]"
+        className="grid w-full overflow-hidden rounded-[16px] bg-gray-0 md:min-h-[370px] md:grid-cols-[minmax(0,1fr)_360px] xl:rounded-[20px]"
         style={{
           boxShadow:
             "0 1px 1px .5px rgba(41,41,41,.04), 0 6px 6px -3px rgba(41,41,41,.04), 0 24px 24px -12px rgba(41,41,41,.04)",
         }}
       >
         {/* Conversación */}
-        <div className="relative flex min-h-[240px] flex-col gap-3 p-5 md:min-h-[300px] md:border-r md:border-gray-100 xl:p-7">
+        <div className="relative flex flex-col gap-3 p-5 md:min-h-[300px] md:border-r md:border-gray-100 xl:p-7">
           {enviado && (
             <div className="fila-entra self-end rounded-2xl rounded-br-md bg-gray-900 px-4 py-2.5 text-label-sm text-gray-0">
               {actual.prompt}

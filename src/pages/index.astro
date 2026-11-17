@@ -1,59 +1,356 @@
 ---
-import Layout from "../layouts/Layout.astro";
-import NavBar from "../components/sections/NavBar";
-import Hero from "../components/sections/Hero.astro";
-import Highlights from "../components/sections/Highlights.astro";
-import AiFlow from "../components/sections/AiFlow";
-import WhatsInside from "../components/sections/WhatsInside.astro";
-import SectionDivider from "../components/sections/SectionDivider.astro";
-import Pricing from "../components/sections/Pricing.astro";
-import Testimonials from "../components/sections/Testimonials.astro";
-import Faq from "../components/sections/Faq.astro";
-import Problema from "../components/sections/Problema.astro";
-import Integraciones from "../components/sections/Integraciones.astro";
-import Cierre from "../components/sections/Cierre.astro";
-import Footer from "../components/sections/Footer.astro";
+import LayoutBento from "../layouts/LayoutBento.astro";
+import NavAuth from "../components/bento/NavAuth";
+import PanelPos from "../components/bento/PanelPos.astro";
+import { precioMensual, formatearPrecio, DESCUENTO_ANUAL } from "@/data/precios";
+import {
+  RiArrowRightUpLine, RiArrowRightSLine, RiCheckLine, RiArrowRightDoubleLine,
+  RiSearchLine, RiAddLine, RiFileChartLine, RiShoppingBasket2Line, RiWhatsappLine, RiArchiveDrawerLine,
+  RiCameraLine, RiSparkling2Line, RiMotorbikeLine, RiCalendarCheckLine, RiLayoutGridLine, RiHeart3Line,
+  RiUser3Line, RiRocket2Line, RiBuilding2Line, RiBarChart2Line, RiWallet3Line, RiLineChartLine,
+  RiStore2Line, RiStackLine, RiBook2Line, RiFileExcel2Line, RiCalculatorLine, RiTimeLine,
+} from "@remixicon/react";
 
-// Los .env vienen de la version anterior en Next y usan el prefijo
-// NEXT_PUBLIC_. En Astro solo se exponen al navegador las que empiezan por
-// PUBLIC_, asi que se leen AQUI —en el servidor, durante el build— y se pasan
-// como props a la isla. Asi no hay que duplicar variables en el .env ni
-// arriesgarse a que una quede desincronizada de la otra.
 const config = {
   api: import.meta.env.NEXT_PUBLIC_API_URL ?? "",
   app: import.meta.env.NEXT_PUBLIC_APP_URL ?? "",
   googleClientId: import.meta.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID ?? "",
 };
+
+// Cada promesa de esta página está en amunpos-marca/00-empresa/verdad-comercial.md.
+const beneficios = [
+  [
+    { i: RiLayoutGridLine, t: "Ventas", d: "Carrito, descuentos, cortesías, pago dividido y mesas con plano." },
+    { i: RiStore2Line, t: "Multisucursal", d: "Stock, cajas y accesos por local, con los reportes de todo el negocio." },
+    { i: RiStackLine, t: "Inventario", d: "Stock por sucursal, proveedores, movimientos y compras con IA." },
+    { i: RiArchiveDrawerLine, t: "Caja y arqueo", d: "Cuenta el efectivo y mira la diferencia antes de cerrar." },
+  ],
+  [
+    { i: RiMotorbikeLine, t: "Domicilios", d: "App de repartidor sin comisión de amunpos, en Estándar y Profesional. El reparto va con tu equipo." },
+    { i: RiCalendarCheckLine, t: "Equipo", d: "Horarios con IA y fichaje con PIN, en el plan Profesional." },
+    { i: RiHeart3Line, t: "Fidelización", d: "Premia a los clientes que vuelven y no olvides sus cumpleaños." },
+    { i: RiCameraLine, t: "Foto de la factura", d: "Sube hasta 5 fotos y se crean los productos. Tú los revisas antes de guardar." },
+    { i: RiSparkling2Line, t: "Asistente y reportes", d: "Pregunta por tu negocio y mira tu utilidad. La IA actúa con tu confirmación." },
+  ],
+];
+
+// Lo que el hero va rotando después de "Mañana ya sabes". Solo promesas en verde
+// de amunpos-marca/00-empresa/verdad-comercial.md.
+const frasesHero = [
+  "qué pedirle al proveedor.",
+  "si cuadró la caja.",
+  "qué se está acabando.",
+  "cuánto vendió cada local.",
+];
+
+// Lo que reemplaza (lámina "El problema" del deck). Solo lo que hoy se cumple:
+// los pedidos por WhatsApp no están porque el sistema todavía no los recibe.
+const reemplaza = [
+  { i: RiBook2Line, t: "El cuaderno", q: "Cada venta mueve caja e inventario" },
+  { i: RiFileExcel2Line, t: "El Excel del inventario", q: "Stock al día con cada venta" },
+  { i: RiCalculatorLine, t: "La caja que no cuadra", q: "Esperado, contado y diferencia" },
+  { i: RiMotorbikeLine, t: "La comisión por domicilio", q: "App de repartidor sin comisión de amunpos" },
+  { i: RiTimeLine, t: "La nómina a mano", q: "Horarios y fichaje con PIN" },
+];
+
+const situaciones = [
+  { clase: "azul", img: "se-acabo", hora: "Viernes, 7:15 p. m.", dicho: "Jefe, se acabó el pan.", resp: "Mira qué se está acabando y arma el pedido a tiempo." },
+  { clase: "", img: "cuanto", hora: "Lunes, el proveedor en la puerta", dicho: "¿Cuánto le pido?", resp: "Pedido sugerido según lo que vendiste en 30 días." },
+  { clase: "gris", img: "caja", hora: "Cierre, 10:47 p. m.", dicho: "¿Cuadró la caja?", resp: "Esperado, contado y diferencia, antes de cerrar." },
+];
+
+const planes = [
+  { id: "basico", n: "Básico", para: "Para el negocio que empieza.", i: RiUser3Line, l: ["1 sucursal y 3 usuarios", "Ventas, caja e inventario", "Tique con IVA", "Asistente con IA", "Pedido sugerido", "Soporte por correo"] },
+  { id: "estandar", n: "Estándar", para: "Para el que ya va creciendo.", i: RiRocket2Line, dest: true, l: ["Hasta 3 sucursales y 10 usuarios", "Todo lo de Básico", "Domicilios con app de repartidor", "Sin comisión por pedido", "Soporte por correo"] },
+  { id: "profesional", n: "Profesional", para: "Para cadenas con varios locales.", i: RiBuilding2Line, l: ["Sucursales y usuarios ilimitados", "Todo lo de Estándar", "Horarios con IA y fichaje con PIN", "Publicaciones con tu marca", "Soporte por correo"] },
+];
+
+const preguntas = [
+  [
+    { q: "¿Cuánto cuesta?", a: `Desde ${formatearPrecio(precioMensual("basico", false))} al mes. Pagando por año ahorras ${Math.round(DESCUENTO_ANUAL * 100)} %. Pruébalo gratis 14 días, sin tarjeta y sin permanencia.` },
+    { q: "¿amunpos le envía solo el pedido a mi proveedor?", a: "Hoy te deja el pedido listo: el sistema sugiere las cantidades, abre WhatsApp con el mensaje escrito y tú lo revisas y lo envías." },
+    { q: "¿Tiene facturación electrónica?", a: "Todavía no: emite tique con IVA. La facturación electrónica viene en camino. Si tu negocio ya está obligado a emitir documento electrónico, escríbenos antes de empezar." },
+    { q: "¿Los domicilios cobran comisión?", a: "amunpos no cobra comisión por pedido. Incluye app de repartidor en Estándar y Profesional. Quien reparte y su pago siguen siendo de tu negocio." },
+  ],
+  [
+    { q: "Ya tengo mis productos en otro sistema. ¿Cómo empiezo?", a: "Sube fotos de tus facturas o una lista y arma tu catálogo. Todavía no hay migración automática desde otro POS." },
+    { q: "¿Qué tan real es la IA?", a: "El asistente, el reporte de compra y la lectura de facturas funcionan hoy. El reporte es una estimación y el asistente actúa con tu confirmación." },
+    { q: "¿Puedo tener varias sucursales?", a: "Sí. Estándar llega a 3 sucursales y Profesional no tiene límite, con el stock de cada una por separado." },
+    { q: "¿Cómo pido ayuda?", a: "Por correo, en hola@amunpos.com." },
+  ],
+];
 ---
 
-<Layout>
-  <NavBar client:load config={config} />
-  <Hero />
-  <Highlights />
-  <!-- El problema DESPUES de ver el producto. Se probaron los dos ordenes: con
-       el problema delante, la pagina abre en tono de queja y tarda en ensenar
-       nada; detras, el visitante ya ha visto el producto y la lista de trastos
-       funciona como "y esto es lo que te quita de encima". -->
-  <Problema />
-  <!-- Y las integraciones a continuacion, que es cuando aparece la duda de
-       "?y lo que ya uso?". -->
-  <Integraciones />
-  <SectionDivider />
-  <AiFlow client:visible />
-  <WhatsInside />
-  <!-- Aquí NO va separador: el separador es para dar aire entre dos bloques que
-       comparten fondo. Entre la sección oscura y Planes (gris) el cambio de
-       fondo ya separa de sobra, y meterlo obligaba a abrir una franja blanca
-       entre el negro y el gris que se veía como un hueco sin rellenar. -->
-  <Pricing />
-  <Testimonials />
-  <SectionDivider />
-  <Faq />
-  <!-- Separador también DEBAJO: en alignui.com el bloque de preguntas va
-       enmarcado por arriba y por abajo, y es lo que lo separa del pie sin
-       necesidad de meterle un fondo distinto. -->
-  <SectionDivider />
-  <!-- El cierre antes del pie: es lo ultimo que ve todo el que baja del todo. -->
-  <Cierre />
-  <Footer />
-</Layout>
+<LayoutBento>
+  <NavAuth client:load config={config} />
+
+  <header id="Inicio" class="bloque-oscuro hero-marco">
+    <div class="barra">
+      <a class="marca" href="#Inicio" aria-label="amunpos, inicio"><img src="/logos/amunpos-logo-blanco.svg" alt="" width="525" height="116" /></a>
+      <nav aria-label="Principal">
+        <a href="#Producto">Producto</a>
+        <a href="#Compras">Compras</a>
+        <a href="#Planes">Planes</a>
+        <a href="#Preguntas">Preguntas</a>
+      </nav>
+      <div class="acciones">
+        <button class="btn-chico blanco" data-auth="entrar">Entrar</button>
+        <button class="btn-chico azul" data-auth="crear">Pruébalo gratis</button>
+      </div>
+    </div>
+
+    <span class="flotante flotante-1" aria-hidden="true"><RiFileChartLine /></span>
+    <span class="flotante flotante-2" aria-hidden="true"><RiWallet3Line /></span>
+    <span class="flotante flotante-3" aria-hidden="true">
+      <svg viewBox="0 0 60 60" fill="none"><circle cx="30" cy="30" r="25" stroke="#2a2a30" stroke-width="6" /><circle cx="30" cy="30" r="25" stroke="#2f9be3" stroke-width="6" stroke-linecap="round" stroke-dasharray="157" stroke-dashoffset="60" transform="rotate(-90 30 30)" /></svg>
+      <span><b class="cuenta" data-retraso="900">62</b> %</span>
+    </span>
+    <span class="flotante flotante-4" aria-hidden="true"><RiLineChartLine /></span>
+    <span class="flotante flotante-5" aria-hidden="true">{[30, 56, 42, 70, 36, 62, 48, 74, 40].map((h, k) => <i style={`height:${h}%;--i:${k}`}></i>)}</span>
+
+    <div class="hero-centro">
+      <h1 class="h1">
+        {"Vende hoy. Mañana ya sabes".split(" ").map((p, k) => <><span class="palabra" style={`--i:${k}`}>{p}</span>{" "}</>)}
+        <span class="sr-only">{frasesHero[0]}</span>
+        <span class="rotador" aria-hidden="true">
+          {frasesHero.map((f, n) => (
+            <span class:list={["frase", { activa: n === 0 }]}>{f.split(" ").map((w, j) => <><span class="w" style={`--j:${j}`}>{w}</span>{" "}</>)}</span>
+          ))}
+        </span>
+      </h1>
+      <p class="parrafo">Caja, inventario y domicilios en un solo sistema: pedido sugerido según lo que vendiste en 30 días, arqueo antes de cerrar y stock por sucursal.</p>
+      <div class="hero-cta">
+        <button class="btn-chevron" data-auth="crear">Pruébalo gratis 14 días <span class="caja"><RiArrowRightDoubleLine /></span></button>
+        <a class="btn-borde" href="#Compras">Mira cómo funciona</a>
+      </div>
+      <p class="hero-nota">Sin tarjeta y sin permanencia.</p>
+    </div>
+  </header>
+
+  <div class="panel-envoltura" id="Producto">
+    <PanelPos />
+    <p class="datos-ejemplo">Datos de ejemplo.</p>
+  </div>
+
+  <section id="Compras" class="seccion">
+    <div class="contenedor">
+      <div class="cabeza-doble" data-revela>
+        <h2 class="h2">Las compras dejan de ser <span class="acento">a ojo</span></h2>
+        <p class="parrafo">Cuadrar la caja lo hace cualquiera. amunpos también te muestra qué se está acabando, sugiere cuánto pedir y te deja el mensaje escrito.</p>
+      </div>
+      <div class="tres">
+        <article class="tarjeta funcion" data-revela>
+          <span class="tile"><RiBarChart2Line /></span>
+          <div class="visual" aria-hidden="true">
+            <div style="position:absolute;inset:18px 20px 0;display:flex;gap:10px;align-items:flex-end;-webkit-mask-image:linear-gradient(#000 60%,transparent);mask-image:linear-gradient(#000 60%,transparent)">
+              <div class="dia n" style="height:100%"><b style="height:44%"></b></div>
+              <div class="dia" style="height:100%"><b style="height:86%"></b></div>
+              <div class="dia m" style="height:100%"><b style="height:62%"></b></div>
+              <div class="dia c" style="height:100%"><b style="height:50%"></b></div>
+            </div>
+            <div class="burbuja" style="left:40%;top:30px">Pan: pedido sugerido<strong class="tnum">200 uds</strong></div>
+          </div>
+          <h3 class="h3">Pedido sugerido</h3>
+          <p class="parrafo">Agrupado por proveedor, con cantidades para cubrir 14 días según lo que vendiste en 30.</p>
+        </article>
+        <article class="tarjeta funcion" data-revela>
+          <span class="tile"><RiShoppingBasket2Line /></span>
+          <div class="visual" aria-hidden="true">
+            <div class="mov" style="top:4px;left:18%;width:78%"><span class="pildora azul">Media</span><strong>Queso</strong><small class="tnum">$ 96.000</small></div>
+            <div class="mov oscuro" style="top:88px"><span class="pildora exito">Alta</span><strong>Pan de hamburguesa</strong><small class="tnum" style="color:#a0a4ad">$ 180.000</small></div>
+            <div class="mov" style="top:176px;left:18%;width:78%"><span class="pildora blanca">Baja</span><strong>Salsa de la casa</strong><small class="tnum">$ 42.000</small></div>
+          </div>
+          <h3 class="h3">Reporte de compra con IA</h3>
+          <p class="parrafo">Qué comprar, en qué orden y un presupuesto estimado. Lo abres cuando lo necesitas.</p>
+        </article>
+        <article class="tarjeta funcion" data-revela>
+          <span class="tile"><RiWhatsappLine /></span>
+          <div class="visual" aria-hidden="true">
+            <div class="mensaje">
+              <strong>Pedido de La Esquina</strong>
+              Para: Distribuidora El Sol<br />• 200 × Pan<br />• 40 × Queso<br />• 15 × Salsa de la casa
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:12px"><span class="btn-chico blanco" style="height:34px;font-size:13px">Enviar</span><span class="btn-chico" style="height:34px;font-size:13px;border:1px solid #3a3a42">Editar</span></div>
+            </div>
+          </div>
+          <h3 class="h3">Pedido listo para WhatsApp</h3>
+          <p class="parrafo">Se abre con el mensaje escrito. Tú lo revisas y lo envías a tu proveedor.</p>
+        </article>
+      </div>
+      <p class="datos-ejemplo">Datos de ejemplo.</p>
+    </div>
+  </section>
+
+  <section class="contenedor reemplazo" aria-labelledby="titulo-reemplazo">
+    <div class="tarjeta-azul" data-revela>
+      <h2 id="titulo-reemplazo" class="h2">Todo el negocio, en una sola plataforma</h2>
+      <p>Menos herramientas sueltas y más control, para tiendas y restaurantes, con uno o con varios locales.</p>
+      <img src="/ilustraciones/canva/equipo.webp" alt="Equipo de un restaurante: cocinero, cajera, mesero y repartidor" />
+    </div>
+    <ul class="lista-reemplazo">
+      {reemplaza.map((r) => (
+        <li data-revela>
+          <span class="tile"><r.i /></span>
+          <div><s>{r.t}</s><strong>{r.q}</strong></div>
+          <RiArrowRightUpLine aria-hidden="true" />
+        </li>
+      ))}
+    </ul>
+  </section>
+
+  <section class="bloque-oscuro bloque-medio">
+    <div class="contenedor descubre">
+      <div class="escena" data-revela>
+        <div class="circulo-fondo" aria-hidden="true"></div>
+        <img class="peep" src="/ilustraciones/canva/revisa.webp" alt="Dueño revisando un estante con frascos casi vacíos" />
+        <div class="ficha" style="left:14px;bottom:14px;width:190px" aria-hidden="true"><span class="pildora peligro">Se está acabando</span><div style="font-size:20px;font-weight:500;letter-spacing:-.02em;margin-top:6px">Pan</div><small class="tnum" style="color:var(--gris-500)">18 uds · mínimo 40</small></div>
+        <div class="ficha" style="right:14px;bottom:14px" aria-hidden="true"><span style="color:var(--gris-500)">Distribuidora El Sol</span><div class="tnum" style="font-size:20px;font-weight:500;letter-spacing:-.02em">200 uds</div></div>
+      </div>
+      <div data-revela>
+        <h2 class="h2">Mira <span class="titulo-icono" aria-hidden="true"><RiSearchLine /></span> qué se está <span class="acento">acabando</span> antes del viernes</h2>
+        <p class="parrafo" style="margin:20px 0 28px;max-width:440px">La lista de stock bajo y el reporte de compra te muestran qué falta, por sucursal, para que el pedido salga a tiempo.</p>
+        <a class="btn-chevron" href="#Planes">Ver planes <span class="caja"><RiArrowRightDoubleLine /></span></a>
+      </div>
+    </div>
+
+    <div class="grupo-beneficios">
+      {beneficios.map((fila) => (
+        <div class="fila-beneficios">
+          {fila.map((b) => (
+            <article class="beneficio" data-revela>
+              <span class="tile"><b.i /></span>
+              <h3 class="h3">{b.t}</h3>
+              <p class="parrafo">{b.d}</p>
+            </article>
+          ))}
+        </div>
+      ))}
+    </div>
+
+    <div style="margin-top:88px;text-align:center" data-revela>
+      <h2 class="h2">Tres momentos que ya <span class="acento">conoces</span></h2>
+    </div>
+    <div class="carrusel" tabindex="0" role="group" aria-label="Situaciones del día a día">
+      {situaciones.map((s) => (
+        <article class:list={["situacion", s.clase]}>
+          <div class="hora">{s.hora}</div>
+          <p class="dicho">{s.dicho}</p>
+          <img src={`/ilustraciones/canva/${s.img}.webp`} alt="" />
+          <div class="respuesta">{s.resp}</div>
+        </article>
+      ))}
+    </div>
+    <div class="puntos-carrusel" role="group" aria-label="Elegir situación">
+      {situaciones.map((s, k) => <button type="button" aria-label={`Ver situación ${k + 1} de ${situaciones.length}: ${s.dicho}`} aria-current={k === 0 ? "true" : "false"}></button>)}
+    </div>
+
+    <div id="Planes" class="contenedor" style="margin-top:88px;scroll-margin-top:40px">
+      <div style="text-align:center" data-revela>
+        <h2 class="h2"><span class="acento">Planes</span> para cada tamaño de negocio</h2>
+        <p class="parrafo" style="margin-top:12px">Pruébalo gratis 14 días, sin tarjeta y sin permanencia.</p>
+        <div class="interruptor" role="group" aria-label="Forma de pago">
+          <button type="button" data-periodo="mensual" aria-pressed="true">Mensual</button>
+          <button type="button" data-periodo="anual" aria-pressed="false">Anual, ahorra {Math.round(DESCUENTO_ANUAL * 100)} %</button>
+        </div>
+      </div>
+      <div class="planes">
+        {planes.map((p, k) => (
+          <div class:list={["taco", { dest: p.dest }]} data-revela>
+            <span class="hoja hoja-2" aria-hidden="true"></span>
+            <span class="hoja hoja-1" aria-hidden="true"></span>
+            <div class="comanda-sombra">
+              <article class="comanda">
+                <div class="comanda-cab tnum"><h3>{p.n}</h3>{p.dest && <span class="pildora negra">Recomendado</span>}<b>#{String(k + 1).padStart(3, "0")}</b></div>
+                <p class="para">{p.para}</p>
+                <div class="monto tnum">
+                  <span data-mensual={formatearPrecio(precioMensual(p.id, false))} data-anual={formatearPrecio(precioMensual(p.id, true))}>{formatearPrecio(precioMensual(p.id, false))}</span>
+                  <small>al mes</small>
+                </div>
+                <ul>{p.l.map((x) => <li><span>{x}</span><i aria-hidden="true"></i><RiCheckLine /></li>)}</ul>
+                <button class="btn-plan" data-auth="crear" data-plan={p.id}>Elegir {p.n} <RiArrowRightSLine /></button>
+              </article>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section id="Preguntas" class="seccion">
+    <div class="contenedor">
+      <div class="cabeza-doble" data-revela>
+        <h2 class="h2">Preguntas <br /><span class="acento">frecuentes</span></h2>
+        <div>
+          <p class="parrafo" style="font-size:14px;margin-bottom:8px">¿No encuentras lo que buscas? Escribe aquí.</p>
+          <label class="buscador"><RiSearchLine /><input id="buscar-pregunta" type="search" placeholder="Busca tu pregunta…" aria-label="Buscar en preguntas frecuentes" /></label>
+        </div>
+      </div>
+      <div class="preguntas">
+        {preguntas.map((col, c) => (
+          <div class="preguntas-col">
+            {col.map((p, i) => (
+              <details class="pregunta" name="preguntas" open={c === 0 && i === 0}>
+                <summary>{p.q}<span class="mas" aria-hidden="true"><RiAddLine /></span></summary>
+                <p>{p.a}</p>
+              </details>
+            ))}
+          </div>
+        ))}
+      </div>
+      <p id="sin-resultados" class="parrafo" hidden style="margin-top:16px">No encontramos esa pregunta. Escríbenos a hola@amunpos.com.</p>
+    </div>
+  </section>
+
+  <section class="cierre contenedor">
+    <img class="peep-lado peep-izq" src="/ilustraciones/canva/reparto.webp" alt="" />
+    <img class="peep-lado peep-der" src="/ilustraciones/canva/ya-escrito.webp" alt="" />
+    <h2 class="h2" data-revela>Tu próximo pedido <span class="titulo-icono" aria-hidden="true"><RiArrowRightUpLine /></span> ya no va <span class="acento">a ojo</span></h2>
+    <button class="btn-chevron negro" data-auth="crear">Pruébalo gratis 14 días <span class="caja"><RiArrowRightDoubleLine /></span></button>
+  </section>
+
+  <footer class="bloque-oscuro pie">
+    <div class="pie-arriba">
+      <div class="pie-marca">
+        <img src="/logos/amunpos-logo-blanco.svg" alt="amunpos" width="525" height="116" />
+        <nav aria-label="Pie de página">
+          <a href="#Producto">Producto</a>
+          <a href="#Compras">Compras</a>
+          <a href="#Planes">Planes</a>
+          <a href="#Preguntas">Preguntas</a>
+        </nav>
+      </div>
+      <div>
+        <span class="pildora" style="border:1px solid #2a2a30;height:30px;padding-inline:12px;font-weight:500">Escríbenos</span>
+        <a class="correo" href="mailto:hola@amunpos.com">hola@amunpos.com</a>
+      </div>
+    </div>
+    <div class="pie-abajo"><span>© 2026 amunpos</span></div>
+  </footer>
+
+  <script>
+    // Precio mensual o anual.
+    const botones = document.querySelectorAll<HTMLButtonElement>("[data-periodo]");
+    botones.forEach((b) =>
+      b.addEventListener("click", () => {
+        const periodo = b.dataset.periodo as "mensual" | "anual";
+        botones.forEach((o) => o.setAttribute("aria-pressed", String(o === b)));
+        document.querySelectorAll<HTMLElement>("[data-mensual]").forEach((p) => {
+          p.textContent = p.dataset[periodo] ?? "";
+        });
+      }),
+    );
+    // Buscador de preguntas.
+    const buscar = document.getElementById("buscar-pregunta") as HTMLInputElement | null;
+    const normal = (t: string) => t.toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "");
+    buscar?.addEventListener("input", () => {
+      const q = normal(buscar.value.trim());
+      let vistas = 0;
+      document.querySelectorAll<HTMLElement>(".pregunta").forEach((d) => {
+        const si = normal(d.textContent ?? "").includes(q);
+        d.hidden = !si;
+        if (si) vistas++;
+      });
+      const vacio = document.getElementById("sin-resultados");
+      if (vacio) vacio.hidden = vistas > 0;
+    });
+  </script>
+</LayoutBento>

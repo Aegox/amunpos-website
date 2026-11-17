@@ -1,0 +1,133 @@
+---
+// El panel del POS en el sistema bento. Es la propuesta de rediseño, no una captura:
+// cuando el POS esté migrado, se reemplaza por capturas reales.
+import { RiSearchLine, RiArrowRightUpLine, RiArrowRightDownLine, RiAddLine, RiExpandDiagonalLine, RiNotification3Line, RiShareForwardLine } from "@remixicon/react";
+
+const semana = [
+  { d: "Lun", h: 52, c: "" },
+  { d: "Mar", h: 44, c: "c" },
+  { d: "Mié", h: 61, c: "m" },
+  { d: "Jue", h: 58, c: "c" },
+  { d: "Vie", h: 94, c: "", etq: "13 %" },
+  { d: "Sáb", h: 78, c: "n" },
+  { d: "Dom", h: 40, c: "c" },
+];
+
+// Medidor: arco de 180° partido en segmentos, 12 de 18 mesas ocupadas.
+const total = 18;
+const ocupadas = 12;
+const r = 76;
+const segmentos = Array.from({ length: total }, (_, i) => {
+  const a = Math.PI - (i / (total - 1)) * Math.PI;
+  const c = Math.cos(a), s = Math.sin(a);
+  return {
+    x1: 100 + (r - 14) * c, y1: 92 - (r - 14) * s,
+    x2: 100 + r * c, y2: 92 - r * s,
+    color: i < ocupadas ? (i < 8 ? "var(--azul)" : "var(--azul-marino)") : "var(--gris-200)",
+  };
+});
+
+const anillo = (p: number) => {
+  const l = 2 * Math.PI * 13;
+  return { l, f: l * (1 - p) };
+};
+const seAcaba = [
+  { n: "Pan", q: "18 uds · mínimo 40", p: .3 },
+  { n: "Queso", q: "6 kg · mínimo 10", p: .55 },
+  { n: "Salsa de la casa", q: "3 uds · mínimo 8", p: .35 },
+];
+---
+
+<div class="panel" role="img" aria-label="Panel de amunpos con ventas de la semana, caja, productos por acabarse, mesas y pagos de hoy. Datos de ejemplo.">
+  <div class="panel-barra" aria-hidden="true">
+    <img class="logo" src="/logos/amunpos-logo.svg" alt="" width="525" height="116" />
+    <span class="pest activa">Panel</span>
+    <span class="pest">Ventas</span>
+    <span class="pest">Caja</span>
+    <span class="pest">Inventario</span>
+    <span class="pest">Compras</span>
+    <span class="panel-buscar"><RiSearchLine /> Buscar…</span>
+    <span class="circulo-accion" style="width:36px;height:36px;border:0"><RiNotification3Line /></span>
+    <span class="panel-avatar"><img src="/ilustraciones/avatares/gerente.webp" alt="" /></span>
+  </div>
+
+  <div class="panel-cabeza" aria-hidden="true">
+    <div>
+      <h3>Resumen de hoy</h3>
+      <p>Sucursal Principal</p>
+    </div>
+    <div style="display:flex;gap:8px;align-items:center">
+      <span class="circulo-accion" style="width:36px;height:36px;border:0"><RiShareForwardLine /></span>
+      <span class="pest">Esta semana</span>
+    </div>
+  </div>
+
+  <div class="rejilla-panel" aria-hidden="true">
+    <div class="col">
+      <div class="tarjeta t">
+        <div class="t-cabeza"><span>Ventas de<br />la semana</span><span class="circulo-accion"><RiExpandDiagonalLine /></span></div>
+        <div class="cifra tnum cuenta">$ 4.820.000</div>
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-top:8px;gap:8px">
+          <span class="pildora exito"><RiArrowRightUpLine size={13} /> 9 %</span>
+          <span class="leyenda"><span><i style="background:var(--azul)"></i>Salón</span><span><i style="background:var(--azul-300)"></i>Domicilios</span></span>
+        </div>
+        <div class="barras">
+          {semana.map((s, k) => (
+            <div class:list={["dia", s.c]} style={`--i:${k}`}>
+              <b style={`height:${s.h}%`}></b>
+              {s.etq && <span class="pildora negra etq tnum" style={`bottom:calc(${s.h}% - 34px)`}><RiArrowRightUpLine size={13} />{s.etq}</span>}
+            </div>
+          ))}
+          <div class="burbuja" style="left:30%;top:6px">Viernes<strong class="tnum">$ 1.240.000</strong></div>
+        </div>
+        <div class="dias">{semana.map((s) => <span>{s.d}</span>)}</div>
+      </div>
+
+      <div class="par">
+        <div class="tarjeta t">
+          <div class="t-cabeza"><span>Mesas<br />ocupadas</span><span class="circulo-accion"><RiExpandDiagonalLine /></span></div>
+          <div class="medidor">
+            <svg viewBox="0 0 200 104">
+              {segmentos.map((g, k) => <line style={`--i:${k}`} x1={g.x1} y1={g.y1} x2={g.x2} y2={g.y2} stroke={g.color} stroke-width="8" stroke-linecap="round" />)}
+            </svg>
+            <div class="dentro"><strong class="tnum cuenta" style="font-size:24px;font-weight:500;letter-spacing:-.03em">12</strong><span style="font-size:12px;color:var(--gris-500)"> de 18</span></div>
+          </div>
+        </div>
+        <div class="tarjeta t">
+          <div class="t-cabeza" style="margin-bottom:12px"><span>Pagos de hoy</span><span class="circulo-accion"><RiExpandDiagonalLine /></span></div>
+          <div class="seg"><div class="lleno tnum" style="width:60%;background-color:var(--azul)">Efectivo <span class="pct">46 %</span></div><div class="vacio"></div></div>
+          <div class="seg"><div class="lleno tnum" style="width:50%;background-color:var(--azul-marino)">Tarjeta <span class="pct">32 %</span></div><div class="vacio"></div></div>
+          <div class="seg"><div class="lleno tnum" style="width:42%;background-color:var(--negro-2)">Transf. <span class="pct">22 %</span></div><div class="vacio"></div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="t-oscura">
+      <div class="t-cabeza"><span>Efectivo esperado<br />en caja</span><span class="circulo-accion" style="background:transparent;border-color:#3a3a42;color:#fff"><RiExpandDiagonalLine /></span></div>
+      <div>
+        <div class="cifra tnum cuenta" style="margin-top:0">$ 842.500</div>
+      </div>
+      <div class="fila">
+        <span class="btn-chico blanco"><RiArrowRightDownLine size={15} style={{ marginRight: 6 }} />Contar</span>
+        <span class="btn-chico borde">Cerrar caja</span>
+      </div>
+      <div class="sub">
+        <div class="t-cabeza"><span>Se está<br />acabando</span><span class="circulo-accion"><RiAddLine /></span></div>
+        {seAcaba.map((i, k) => {
+          const a = anillo(i.p);
+          return (
+            <div class="item" style={`--i:${k}`}>
+              <svg class="anillo" viewBox="0 0 34 34">
+                <rect width="34" height="34" rx="9" fill="var(--negro)" />
+                <circle cx="17" cy="17" r="10" fill="none" stroke="#3a3a42" stroke-width="3.5" />
+                <circle cx="17" cy="17" r="10" fill="none" stroke="#2f9be3" stroke-width="3.5" stroke-linecap="round" stroke-dasharray={2 * Math.PI * 10} stroke-dashoffset={2 * Math.PI * 10 * (1 - i.p)} transform="rotate(-90 17 17)" style={`--fin:${2 * Math.PI * 10 * (1 - i.p)}`} />
+              </svg>
+              <span>{i.n}<small class="tnum">{i.q}</small></span>
+            </div>
+          );
+        })}
+        <span class="btn-chico azul" style="height:38px;font-size:13px">Sugerir pedido</span>
+      </div>
+    </div>
+  </div>
+</div>

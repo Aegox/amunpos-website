@@ -558,8 +558,7 @@ body {
    caen por los lados de la sección oscura (.spark-line) y el deslizamiento del
    navbar al ocultarse y volver (NavBar.tsx, que por eso ya no lleva
    `motion-reduce:transition-none`), el parpadeo del cursor del titular
-   (.animate-caret), la tachadura de "El problema" (.tacha, con observador
-   propio en el propio componente) y el trazo de la flecha de precios
+   (.animate-caret) y el trazo de la flecha de precios
    (.dibuja-flecha) con el texto que se escribe y se repasa (.escribe-mano),
    que es EL efecto de esa anotación: sin escribirse ni trazarse es un cartel
    más de los muchos que ya hay.
@@ -732,73 +731,6 @@ body {
 }
 .emoji-remate {
   animation: emoji-remate 0.34s cubic-bezier(0.22, 1, 0.36, 1) both;
-}
-
-/* ── "El problema": tachado, viaje al centro y logo, EN BUCLE ───
-   Las tres cosas comparten UN MISMO ciclo y se reparten el turno con los
-   porcentajes de sus keyframes. Podrian ser tres animaciones con duraciones
-   distintas encadenadas por temporizadores, pero entonces se irian separando
-   poco a poco y a los pocos minutos el logo apareceria con los iconos todavia
-   volando. Con un ciclo unico eso no puede pasar.
-
-   El ciclo entero solo corre mientras la seccion se ve: lo enciende y lo apaga
-   el observador del propio componente. */
-:root {
-  --ciclo-problema: 7000ms;
-}
-
-/* 1. Se tachan los seis, uno detras de otro (0 %-8 %), se quedan tachados un
-      buen rato y se destachan al final para poder empezar otra vuelta.
-
-      Se recorta de izquierda a derecha en vez de usar `stroke-dashoffset`: con
-      dasharray el trazo se quedaba a media palabra porque `vector-effect:
-      non-scaling-stroke` calcula el patron de guiones en el espacio RENDERIZADO,
-      no en el normalizado por `pathLength`, y el SVG va estirado con
-      `preserveAspectRatio=none`. El recorte no depende de cuanto mida el trazo. */
-@keyframes ciclo-tacha {
-  0% { clip-path: inset(0 100% 0 0); }
-  8%, 62% { clip-path: inset(0 -2% 0 0); }
-  70%, 100% { clip-path: inset(0 100% 0 0); }
-}
-.tacha {
-  /* Sin JS se ve el trazo ya hecho: la seccion se entiende igual y no se queda
-     a medias esperando un observador que nunca va a llegar. */
-  clip-path: inset(0 -2% 0 0);
-}
-[data-ciclo] .tacha {
-  animation: ciclo-tacha var(--ciclo-problema) cubic-bezier(0.65, 0, 0.35, 1) infinite;
-  animation-delay: calc(var(--i, 0) * 0.16s);
-}
-
-/* 2. Los iconos esperan a que termine el tachado (22 %), viajan al centro
-      encogiendo, se quedan fuera mientras el logo esta puesto, y vuelven a su
-      sitio para la siguiente vuelta.
-
-      `translate` y `scale` van en la capa de composicion y no obligan a
-      recalcular la maqueta en cada fotograma: seis elementos moviendose a la vez
-      con `top`/`left` se notarian. */
-@keyframes ciclo-icono {
-  0%, 22% { transform: none; opacity: 1; }
-  34%, 62% { transform: translate(var(--dx, 0), var(--dy, 0)) scale(0.4); opacity: 0; }
-  76%, 100% { transform: none; opacity: 1; }
-}
-[data-ciclo] [data-trasto] {
-  animation: ciclo-icono var(--ciclo-problema) cubic-bezier(0.65, 0, 0.35, 1) infinite;
-  animation-delay: calc(var(--i, 0) * 0.055s);
-}
-
-/* 3. El logo aparece cuando los iconos ya han llegado y se va antes de que
-      vuelvan, para que no se crucen. */
-@keyframes ciclo-logo {
-  0%, 34% { opacity: 0; transform: scale(0.8); }
-  42%, 60% { opacity: 1; transform: none; }
-  68%, 100% { opacity: 0; transform: scale(0.8); }
-}
-[data-logo] {
-  opacity: 0;
-}
-[data-ciclo] [data-logo] {
-  animation: ciclo-logo var(--ciclo-problema) cubic-bezier(0.65, 0, 0.35, 1) infinite;
 }
 
 /* La entrada del modal de auth: sube un poco y aparece. Nada de rebotes — es

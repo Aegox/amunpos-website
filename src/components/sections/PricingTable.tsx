@@ -257,6 +257,7 @@ function Conmutador({ anual, alCambiar }: { anual: boolean; alCambiar: (v: boole
 
 export default function PricingTable() {
   const [anual, setAnual] = useState(true);
+  const [planVisible, setPlanVisible] = useState(() => (planes.find((p) => p.destacado) ?? planes[0]).id);
 
   return (
     <div className="relative w-full">
@@ -408,12 +409,30 @@ export default function PricingTable() {
             <div className="px-3 py-2">
               <Conmutador anual={anual} alCambiar={setAnual} />
             </div>
+            <div role="tablist" aria-label="Elige un plan" className="mx-1 grid grid-cols-3 gap-1 rounded-[13px] bg-gray-50 p-1 md:hidden">
+              {planes.map((plan) => (
+                <button
+                  key={plan.id}
+                  type="button"
+                  role="tab"
+                  aria-selected={planVisible === plan.id}
+                  onClick={() => setPlanVisible(plan.id)}
+                  className={cn(
+                    "h-10 rounded-[10px] text-label-sm transition-colors",
+                    planVisible === plan.id ? "bg-gray-0 text-gray-900 shadow-button-white" : "text-gray-600",
+                  )}
+                >
+                  {plan.nombre}
+                </button>
+              ))}
+            </div>
             {planes.map((plan) => (
               <div
                 key={plan.id}
                 data-plan
                 className={cn(
-                  "flex flex-col rounded-[18px] p-5",
+                  planVisible === plan.id ? "flex" : "hidden md:flex",
+                  "flex-col rounded-[18px] p-5",
                   plan.destacado ? "bg-gray-950" : "bg-gray-25",
                 )}
               >
@@ -426,8 +445,7 @@ export default function PricingTable() {
                         className={cn(
                           "text-paragraph-sm",
                           plan.destacado ? "text-gray-450" : "text-gray-700",
-                          plan.valores[i] === false &&
-                            "line-through opacity-60",
+                          plan.valores[i] === false && "opacity-60",
                         )}
                       >
                         {c.nombre}

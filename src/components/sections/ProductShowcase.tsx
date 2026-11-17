@@ -80,7 +80,9 @@ const tabs: {
 function Frame({ path, children }: { path: string; children: React.ReactNode }) {
   return (
     <div className="relative overflow-hidden rounded-[20px] border border-gray-200 bg-gray-0 shadow-[0_28px_70px_-24px_rgba(16,24,40,0.28)]">
-      <div className="relative flex items-center gap-2 bg-gray-50 px-4 py-3.5">
+      {/* En móvil la captura ya es de un teléfono: un marco de navegador de escritorio
+          alrededor no pinta nada. */}
+      <div className="relative hidden items-center gap-2 bg-gray-50 px-4 py-3.5 sm:flex">
         <span className="size-3 rounded-full bg-[#FF5F57]" />
         <span className="size-3 rounded-full bg-[#FEBC2E]" />
         <span className="size-3 rounded-full bg-[#28C840]" />
@@ -97,7 +99,10 @@ function Frame({ path, children }: { path: string; children: React.ReactNode }) 
         </span>
       </div>
       {/* Alto fijo: cambiar de pestaña no debe mover el resto de la página */}
-      <div className="h-[320px] overflow-hidden border-t border-gray-200 sm:h-[400px] lg:h-[460px]">{children}</div>
+      <div className="relative h-[540px] overflow-hidden sm:h-[400px] sm:border-t sm:border-gray-200 lg:h-[460px]">
+        {children}
+        <div aria-hidden="true" className="pointer-events-none absolute inset-x-0 bottom-0 h-16 bg-linear-to-t from-gray-0 to-transparent sm:hidden" />
+      </div>
     </div>
   );
 }
@@ -214,8 +219,11 @@ export default function ProductShowcase() {
                 ref={(el) => { botonesRef.current[i] = el; }}
                 role="tab"
                 aria-selected={isActive}
-                onClick={() => setActive(tab.id)}
-                className="group flex w-[190px] shrink-0 flex-col items-center px-4 text-center outline-none md:w-auto md:flex-1"
+                onClick={(e) => {
+                  setActive(tab.id);
+                  e.currentTarget.scrollIntoView({ behavior: "smooth", inline: "center", block: "nearest" });
+                }}
+                className="group flex w-[104px] shrink-0 flex-col items-center px-2 text-center outline-none md:w-auto md:flex-1"
               >
                 {/* En reposo: fondo gris con el icono en negro. Al
                     seleccionarlo se le da la vuelta — el fondo pasa al color de
@@ -226,7 +234,7 @@ export default function ProductShowcase() {
                     puesta. Invirtiendo el bloque entero se ve desde lejos. */}
                 <span
                   className={cn(
-                    "flex size-12 items-center justify-center rounded-[14px] ring-1 ring-inset transition-colors duration-300 ease-out group-focus-visible:ring-2 group-focus-visible:ring-primary-base/40",
+                    "flex size-10 items-center justify-center rounded-[12px] ring-1 ring-inset md:size-12 md:rounded-[14px] transition-colors duration-300 ease-out group-focus-visible:ring-2 group-focus-visible:ring-primary-base/40",
                     isActive
                       ? cn("text-gray-0 ring-transparent", tab.ai ? "bg-ai-base" : "bg-primary-base")
                       : "bg-gray-50 text-gray-900 ring-transparent group-hover:bg-gray-100",
@@ -235,7 +243,7 @@ export default function ProductShowcase() {
                   <Icon className="size-5" />
                 </span>
 
-                <span className="mt-4 flex items-center justify-center gap-1.5">
+                <span className="mt-2.5 flex items-center justify-center gap-1.5 md:mt-4">
                   <span
                     className={cn(
                       "text-label-sm transition-colors duration-200",
@@ -251,7 +259,7 @@ export default function ProductShowcase() {
                   )}
                 </span>
 
-                <span className="mt-1 max-w-[200px] text-pretty text-paragraph-xs text-gray-600">{tab.tagline}</span>
+                <span className="mt-1 hidden max-w-[200px] text-pretty text-paragraph-xs text-gray-600 md:block">{tab.tagline}</span>
               </button>
             </React.Fragment>
           );
@@ -271,27 +279,28 @@ export default function ProductShowcase() {
 
           Se regeneran con los guiones del scratchpad (`sembrar.mjs` para los
           datos y `capturas.mjs` para las fotos) apuntando a la API local. */}
-      <div className="relative mt-12 w-full max-w-[1080px]">
+      <div className="relative mt-5 w-full max-w-[1080px] md:mt-12">
         {/* inset-x-0 en móvil: con -inset-x-8 el glow sobresalía y generaba
             scroll horizontal en la página (12px) */}
-        <div className="pointer-events-none absolute inset-x-0 -top-6 bottom-6 rounded-[48px] bg-primary-base/10 blur-[90px] sm:-inset-x-8" />
+        <div className="pointer-events-none absolute inset-x-0 -top-6 bottom-6 rounded-[48px] bg-primary-base/10 blur-[90px] xl:-inset-x-8" />
         <div key={`v-${active}`} className="animate-fade-up relative">
           <Frame path={current.path}>
-            <img
-              src={`/capturas/${current.captura}.webp`}
-              width="1440"
-              height="900"
-              alt={current.alt}
-              /* En móvil, una captura de 1440 encogida a 390 px no se lee: ahí
-                 se muestra a ~0,62 de escala (560 px de alto) y desplazada para
-                 que se vea el contenido y no solo el menú lateral. Desde `sm`
-                 vuelve a verse entera. */
-              className="h-[560px] w-auto max-w-none -translate-x-[150px] sm:h-full sm:w-full sm:max-w-full sm:translate-x-0 sm:object-cover sm:object-top"
-              /* La primera no va diferida: es lo que se ve al abrir la página y
-                 con `lazy` aparecía en blanco un instante. */
-              loading={active === "panel" ? "eager" : "lazy"}
-              decoding="async"
-            />
+            <picture>
+              {/* Una captura de 1440 encogida a un teléfono no se lee, y recortarla
+                  dejaba tarjetas partidas. En móvil va la app en móvil. */}
+              <source media="(max-width: 639px)" srcSet={`/capturas/movil/${current.captura}.webp`} width="780" height="1688" />
+              <img
+                src={`/capturas/${current.captura}.webp`}
+                width="2160"
+                height="1350"
+                alt={current.alt}
+                className="block h-auto w-full"
+                /* La primera no va diferida: es lo que se ve al abrir la página y
+                   con `lazy` aparecía en blanco un instante. */
+                loading={active === "panel" ? "eager" : "lazy"}
+                decoding="async"
+              />
+            </picture>
           </Frame>
         </div>
       </div>

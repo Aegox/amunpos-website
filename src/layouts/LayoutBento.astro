@@ -1,0 +1,36 @@
+---
+import "../styles/globals.css";
+import "../styles/bento.css";
+import "../styles/movimiento.css";
+
+const title = "amunpos: caja, inventario y compras en un solo sistema";
+const description = "Punto de venta para negocios de comida: caja con arqueo, inventario y un pedido sugerido según lo que vendiste en 30 días. Pruébalo gratis 14 días.";
+---
+
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="icon" href="/favicon.ico" sizes="16x16 32x32 48x48" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="generator" content={Astro.generator} />
+    <meta name="description" content={description} />
+    <title>{title}</title>
+    <script is:inline>
+      // Las animaciones se muestran siempre, aunque el sistema pida menos movimiento
+      // (decisión de Diego, 2026-11-16). Sin IntersectionObserver, todo queda visible.
+      if ("IntersectionObserver" in window) document.documentElement.classList.add("js-revela");
+    </script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600&display=swap" rel="stylesheet" />
+  </head>
+  <body class="bento">
+    <slot />
+    <script>
+      import "../scripts/movimiento.ts";
+    </script>
+  </body>
+</html>

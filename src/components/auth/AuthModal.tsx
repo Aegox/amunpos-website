@@ -161,7 +161,7 @@ export function AuthModal({
         role="dialog"
         aria-modal="true"
         aria-labelledby={`${idBase}-titulo`}
-        className="modal-entra max-h-[calc(100dvh-24px)] w-full max-w-[460px] overflow-y-auto rounded-[28px] bg-white p-6 text-[#0D0C17] shadow-[0_30px_60px_-20px_rgba(13,12,23,.45)] sm:p-8"
+        className="modal-entra max-h-[calc(100dvh-24px)] w-full max-w-[460px] overflow-y-auto overscroll-contain [scrollbar-width:none] [&::-webkit-scrollbar]:hidden rounded-[28px] bg-white p-6 text-[#0D0C17] shadow-[0_30px_60px_-20px_rgba(13,12,23,.45)] sm:p-8"
       >
         <div className="flex items-center justify-between gap-3">
           {/* Las dos pestañas en píldora gris, como en el acceso del POS. */}
