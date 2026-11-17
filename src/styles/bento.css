@@ -100,8 +100,8 @@
 
 /* Barra superior */
 .barra { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 24px 40px; }
-.marca { display: inline-flex; align-items: center; height: 56px; padding-inline: 22px; border-radius: 999px; border: 1px solid #2a2a30; }
-.marca img { height: 32px; width: auto; }
+.marca { display: inline-flex; align-items: center; height: 58px; padding-inline: 22px; border-radius: 999px; border: 1px solid #2a2a30; }
+.marca img { height: 37px; width: auto; }
 .barra nav { display: flex; gap: 32px; font-size: 14px; font-weight: 500; }
 .barra nav a { opacity: .86; transition: opacity .2s; }
 .barra nav a:hover { opacity: 1; }
@@ -133,7 +133,7 @@
 .panel-envoltura { position: relative; z-index: 2; margin-top: -300px; }
 .panel { width: min(1010px, 100% - 40px); margin-inline: auto; background: var(--gris-100); border-radius: 30px; padding: 14px 20px 20px; box-shadow: 0 40px 80px -30px rgba(13, 12, 23, .45), 0 0 0 1px rgba(255,255,255,.7) inset; }
 .panel-barra { display: flex; align-items: center; gap: 8px; margin-bottom: 18px; }
-.panel-barra img.logo { height: 22px; width: auto; margin: 0 14px 0 4px; flex: none; }
+.panel-barra img.logo { height: 24px; width: auto; margin: 0 14px 0 4px; flex: none; }
 .pest { display: inline-flex; align-items: center; height: 36px; padding-inline: 15px; border-radius: 999px; background: #fff; font-size: 13px; font-weight: 500; color: var(--gris-700); white-space: nowrap; }
 .pest.activa { background: var(--negro); color: #fff; }
 .panel-buscar { margin-left: auto; display: flex; align-items: center; gap: 6px; height: 36px; padding-inline: 12px; width: 150px; border-radius: 999px; background: #fff; font-size: 13px; color: var(--gris-500); }
@@ -327,7 +327,7 @@
 .cierre .peep-der { right: 3%; }
 .pie { margin-inline: 16px; margin-bottom: 16px; overflow: hidden; }
 .pie-arriba { display: grid; grid-template-columns: 1fr 1.1fr; gap: 40px; padding: 56px 48px; }
-.pie-marca img { height: 40px; width: auto; margin-bottom: 28px; }
+.pie-marca img { height: 46px; width: auto; margin-bottom: 28px; }
 .pie nav { display: flex; flex-wrap: wrap; gap: 24px 28px; font-weight: 500; }
 .pie .correo { font-size: clamp(28px, 4.4vw, 54px); font-weight: 400; letter-spacing: -.03em; line-height: 1.1; display: block; overflow-wrap: anywhere; border-bottom: 1px solid #26262b; padding-bottom: 16px; margin-top: 12px; }
 .pie-abajo { padding: 18px 48px; background: #131316; font-size: 14px; display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
@@ -357,8 +357,8 @@
 @media (max-width: 640px) {
   .hero-marco, .bloque-medio, .pie { margin-inline: 8px; }
   .barra { padding: 16px; }
-  .marca { height: 48px; padding-inline: 16px; }
-  .marca img { height: 27px; }
+  .marca { height: 50px; padding-inline: 16px; }
+  .marca img { height: 31px; }
   .barra .acciones .btn-chico:first-child { display: none; }
   .hero-marco { padding-bottom: 240px; }
   .panel-envoltura { margin-top: -240px; }
