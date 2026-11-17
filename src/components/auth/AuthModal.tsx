@@ -1,4 +1,4 @@
-import React, { useEffect, useId, useRef, useState } from "react";
+import React, { useCallback, useEffect, useId, useLayoutEffect, useRef, useState } from "react";
 import { GoogleOAuthProvider } from "@react-oauth/google";
 import {
   RiCloseLine,
@@ -12,6 +12,7 @@ import {
 } from "@remixicon/react";
 import { cn } from "@/lib/utils";
 import { BotonGoogle } from "./BotonGoogle";
+import { PersonajeAsomado, altoSobreBorde, type PersonajeAsomadoRef } from "./PersonajeAsomado";
 import { entrar, registrar, entrarConGoogle, guardarSesion, irAlPos, ErrorAuth, type Config } from "@/lib/auth";
 
 export type Pestana = "entrar" | "crear";
@@ -55,9 +56,77 @@ export function AuthModal({
   const [error, setError] = useState("");
   const idBase = useId();
   const panel = useRef<HTMLDivElement>(null);
+  const marco = useRef<HTMLDivElement>(null);
   const primerCampo = useRef<HTMLInputElement>(null);
+  const personaje = useRef<PersonajeAsomadoRef>(null);
+  // Diego se asoma solo en "Crear cuenta": "Entrar" es de uso diario y va sin adorno.
+  const [conPersonaje, setConPersonaje] = useState(false);
+  const [retrasoPersonaje, setRetrasoPersonaje] = useState(450);
+  const [anchoModal, setAnchoModal] = useState(460);
+  const [movil, setMovil] = useState(false);
+  const yaAbierto = useRef(false);
 
   useEffect(() => setPestana(pestanaInicial), [pestanaInicial]);
+
+  // Ancho real del modal y si es celular: de ahí sale el tamaño de Diego.
+  useLayoutEffect(() => {
+    if (!abierto || !marco.current) return;
+    const mq = window.matchMedia("(max-width: 640px)");
+    const medir = () => {
+      if (marco.current) setAnchoModal(marco.current.clientWidth);
+      setMovil(mq.matches);
+    };
+    medir();
+    const ro = new ResizeObserver(medir);
+    ro.observe(marco.current);
+    mq.addEventListener("change", medir);
+    return () => {
+      ro.disconnect();
+      mq.removeEventListener("change", medir);
+    };
+  }, [abierto]);
+
+  // Al abrir en "Crear cuenta" el modal entra con un pop (escala .55 → 1 en 0,9 s) y Diego sube
+  // a los 0,45 s. Al cambiar de pestaña, Diego baja detrás del borde o vuelve a subir.
+  useLayoutEffect(() => {
+    if (!abierto) {
+      yaAbierto.current = false;
+      setConPersonaje(false);
+      return;
+    }
+    const primera = !yaAbierto.current;
+    yaAbierto.current = true;
+    if (pestana === "crear") {
+      setRetrasoPersonaje(primera ? 450 : 260);
+      setConPersonaje(true);
+      if (primera) panel.current?.animate([{ opacity: 0, transform: "scale(.55)" }, { opacity: 1, transform: "scale(1)" }], { duration: 900, easing: "cubic-bezier(.16,1,.3,1)" });
+    } else if (personaje.current) {
+      personaje.current.salir().then(() => setConPersonaje(false));
+    } else {
+      setConPersonaje(false);
+    }
+    // Los campos entran escalonados: 22 px y opacidad, 0,9 s, 150 ms + i × 70 ms.
+    panel.current?.querySelectorAll<HTMLElement>("[data-rv], form > *").forEach((n, i) =>
+      n.animate([{ opacity: 0, transform: "translateY(22px)" }, { opacity: 1, transform: "none" }], { duration: 900, delay: 150 + i * 70, easing: "cubic-bezier(.16,1,.3,1)", fill: "backwards" }),
+    );
+  }, [abierto, pestana]);
+
+  // Cerrar: si Diego está asomado, primero baja (0,42 s) y luego se cierra el modal.
+  const cerrar = useCallback(() => {
+    if (personaje.current) personaje.current.salir().then(onCerrar);
+    else onCerrar();
+  }, [onCerrar]);
+
+  // En celular, mientras se escribe, Diego se esconde para que el teclado no empuje el formulario.
+  const alEnfocar = (e: React.FocusEvent) => {
+    if (movil && (e.target as HTMLElement).matches("input")) personaje.current?.esconder(true);
+  };
+  const alDesenfocar = () =>
+    setTimeout(() => {
+      const activo = document.activeElement as HTMLElement | null;
+      if (activo && panel.current?.contains(activo) && activo.matches("input")) return;
+      personaje.current?.esconder(false);
+    }, 60);
 
   // Al abrir: limpiar lo de la vez anterior y llevar el foco dentro. Sin esto
   // el foco se queda en el botón que abrió el modal, detrás, y con el teclado
@@ -66,7 +135,10 @@ export function AuthModal({
     if (!abierto) return;
     setError("");
     setCargando(false);
-    const t = setTimeout(() => primerCampo.current?.focus(), 60);
+    // En celular no se enfoca solo: abriría el teclado y escondería a Diego de entrada.
+    const t = setTimeout(() => {
+      if (!window.matchMedia("(max-width: 640px)").matches) primerCampo.current?.focus();
+    }, 60);
     return () => clearTimeout(t);
   }, [abierto, pestana]);
 
@@ -74,7 +146,7 @@ export function AuthModal({
   useEffect(() => {
     if (!abierto) return;
     const alPulsar = (e: KeyboardEvent) => {
-      if (e.key === "Escape") onCerrar();
+      if (e.key === "Escape") cerrar();
       if (e.key !== "Tab" || !panel.current) return;
       // Atrapa el tabulador dentro del modal: si se escapa, el usuario acaba
       // rellenando la página de detrás sin verla.
@@ -99,9 +171,12 @@ export function AuthModal({
       document.removeEventListener("keydown", alPulsar);
       document.body.style.overflow = overflow;
     };
-  }, [abierto, onCerrar]);
+  }, [abierto, cerrar]);
 
   if (!abierto) return null;
+
+  // Espacio que ocupa Diego por encima del borde del modal (0 en "Entrar").
+  const arriba = pestana === "crear" ? Math.round(altoSobreBorde(anchoModal, movil)) : 0;
 
   const conSesion = async (accion: () => Promise<{ user: any; token: string }>) => {
     setError("");
@@ -154,14 +229,28 @@ export function AuthModal({
   const contenido = (
     <div
       className="fixed inset-0 z-[100] flex items-end justify-center bg-[#0D0C17]/45 p-3 backdrop-blur-[2px] sm:items-center sm:p-4"
-      onMouseDown={(e) => e.target === e.currentTarget && onCerrar()}
+      onMouseDown={(e) => e.target === e.currentTarget && cerrar()}
     >
+      {/* El marco envuelve al modal y deja espacio arriba para que a Diego no se le corte la cabeza. */}
+      <div
+        ref={marco}
+        className="relative w-full max-w-[460px] transition-[margin] duration-[420ms] ease-[cubic-bezier(.16,1,.3,1)]"
+        style={{ marginTop: arriba }}
+        onMouseDown={(e) => e.target === e.currentTarget && cerrar()}
+      >
+      {conPersonaje && <PersonajeAsomado ref={personaje} anchoModal={anchoModal} movil={movil} retraso={retrasoPersonaje} />}
       <div
         ref={panel}
         role="dialog"
         aria-modal="true"
         aria-labelledby={`${idBase}-titulo`}
-        className="modal-entra max-h-[calc(100dvh-24px)] w-full max-w-[460px] overflow-y-auto overscroll-contain [scrollbar-width:none] [&::-webkit-scrollbar]:hidden rounded-[28px] bg-white p-6 text-[#0D0C17] shadow-[0_30px_60px_-20px_rgba(13,12,23,.45)] sm:p-8"
+        onFocus={alEnfocar}
+        onBlur={alDesenfocar}
+        style={{ maxHeight: `calc(100dvh - 24px - ${arriba}px)` }}
+        className={cn(
+          "relative z-[1] w-full overflow-y-auto overscroll-contain [scrollbar-width:none] [&::-webkit-scrollbar]:hidden rounded-[28px] bg-white p-6 text-[#0D0C17] shadow-[0_30px_60px_-20px_rgba(13,12,23,.45)] sm:p-8",
+          pestanaInicial === "entrar" && "modal-entra",
+        )}
       >
         <div className="flex items-center justify-between gap-3">
           {/* Las dos pestañas en píldora gris, como en el acceso del POS. */}
@@ -184,7 +273,7 @@ export function AuthModal({
           </div>
           <button
             type="button"
-            onClick={onCerrar}
+            onClick={cerrar}
             aria-label="Cerrar"
             className="flex size-10 shrink-0 items-center justify-center rounded-full bg-[#F1F2F4] text-[#4A4F59] transition duration-200 hover:text-[#0D0C17]"
           >
@@ -192,10 +281,10 @@ export function AuthModal({
           </button>
         </div>
 
-        <h2 id={`${idBase}-titulo`} className="mt-6 text-[32px] font-medium leading-tight tracking-[-0.04em]">
+        <h2 data-rv id={`${idBase}-titulo`} className="mt-6 text-[32px] font-medium leading-tight tracking-[-0.04em]">
           {pestana === "entrar" ? "Entra a tu negocio" : "Crea tu negocio"}
         </h2>
-        <p className="mt-1 text-[15px] text-[#7B818C]">
+        <p data-rv className="mt-1 text-[15px] text-[#7B818C]">
           {pestana === "entrar" ? "Con la cuenta que ya tienes." : "Gratis para empezar. Sin tarjeta."}
         </p>
 
@@ -300,6 +389,7 @@ export function AuthModal({
         <p className="mt-3 text-center text-[12px] text-[#7B818C]">
           Al continuar aceptas nuestros términos y la política de privacidad.
         </p>
+      </div>
       </div>
     </div>
   );
