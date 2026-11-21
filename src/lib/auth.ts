@@ -104,7 +104,36 @@ export const registrar = (
 export const entrarConGoogle = (cfg: Config, idToken: string) =>
   pedir(`${cfg.api}/auth/google`, { id_token: idToken });
 
-/** Al POS, que es a donde va todo el mundo después de entrar. */
+/**
+ * Al POS, que es a donde va todo el mundo después de entrar. Con `replace`: la página de entrada
+ * no queda en el historial, y el "atrás" del celular no vuelve al formulario con la sesión
+ * abierta (Diego, 2026-11-20).
+ */
 export const irAlPos = (cfg: Config) => {
-  window.location.href = cfg.app || window.location.origin;
+  window.location.replace(cfg.app || window.location.origin);
+};
+
+/** Lee una cookie por nombre (la sesión del POS va en .amunpos.com). */
+const leerCookie = (nombre: string): string | null => {
+  const par = document.cookie.split("; ").find((c) => c.startsWith(`${nombre}=`));
+  return par ? decodeURIComponent(par.slice(nombre.length + 1)) : null;
+};
+
+/**
+ * ¿Hay una sesión abierta y vigente? Mira el token que comparten la web y el POS (la web lo
+ * guarda como `auth_token`; el POS, como `auth_token_client` o `auth_token`) y su vencimiento.
+ * No valida la firma: solo decide qué botón mostrar; el POS valida la sesión al entrar.
+ */
+export const sesionAbierta = (): boolean => {
+  if (typeof document === "undefined") return false;
+  const token = leerCookie("auth_token_client") || leerCookie("auth_token");
+  if (!token) return false;
+  try {
+    const parte = token.split(".")[1];
+    if (!parte) return false;
+    const datos = JSON.parse(atob(parte.replace(/-/g, "+").replace(/_/g, "/")));
+    return typeof datos.exp === "number" && datos.exp * 1000 > Date.now();
+  } catch {
+    return false;
+  }
 };
