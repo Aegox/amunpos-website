@@ -1,0 +1,122 @@
+/* Página de pago (/pagar): diseño "tique" aprobado por Diego el 2026-11-21.
+   Estándar de movimiento de amunpos: curva única, entradas escalonadas de 70 ms, cifras que cuentan. */
+.pago{
+  --azul:#0C78C0; --azul-suave:#E8F2FA; --gris:#F1F2F4; --tinta:#0D0C17; --sub:#4A4F59; --suave:#7B818C;
+  --ok:#067647; --ok-suave:#E9F7EF; --alerta:#B54708; --alerta-suave:#FEF3E2; --mal:#B42318; --mal-suave:#FEECEB;
+  --curva:cubic-bezier(.16,1,.3,1);
+  min-height:100vh; background:var(--gris); color:var(--tinta); font-family:"Plus Jakarta Sans",ui-sans-serif,system-ui,sans-serif;
+}
+.pago-barra{display:flex;justify-content:space-between;align-items:center;padding:16px max(20px,env(safe-area-inset-left,0px));background:var(--tinta)}
+.pago-barra a img{height:28px;display:block}
+.pago-barra .seguro{display:flex;gap:8px;align-items:center;color:#C9CDD4;font-size:13px;font-weight:600}
+.pago-barra .seguro img{height:16px}
+.pago-cuerpo{padding:40px max(16px,env(safe-area-inset-left,0px)) 56px;max-width:1080px;margin:0 auto}
+@media (max-width:640px){.pago-barra{padding:12px 16px}.pago-barra a img{height:22px}.pago-barra .seguro span{display:none}.pago-cuerpo{padding:22px 16px 40px}}
+
+.rv{animation:pago-entra .9s var(--curva) backwards;animation-delay:calc(.12s + var(--i,0) * 70ms)}
+@keyframes pago-entra{from{opacity:0;transform:translateY(22px)}}
+
+/* ---------- Pagar: tique ---------- */
+.pago-b{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:36px;align-items:center}
+@media (max-width:900px){.pago-b{grid-template-columns:minmax(0,1fr);gap:24px}.pago-tique{order:-1}}
+.pago-lado{display:flex;flex-direction:column;gap:16px;min-width:0}
+.pago-titulo{margin:0;font-size:42px;font-weight:800;letter-spacing:-.045em;line-height:1.05;text-wrap:balance}
+.pago-bajada{margin:0 0 4px;color:var(--sub);font-size:16px;line-height:1.5}
+@media (max-width:640px){.pago-titulo{font-size:30px}}
+.pago-planes{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+@media (max-width:640px){.pago-planes{grid-template-columns:1fr}}
+.pago-plan{font:inherit;text-align:left;border:0;cursor:pointer;background:#fff;border-radius:18px;padding:14px;display:flex;flex-direction:column;gap:4px;color:var(--tinta);transition:background .35s var(--curva),box-shadow .35s var(--curva),transform .35s var(--curva)}
+@media (max-width:640px){.pago-plan{flex-direction:row;justify-content:space-between;align-items:center}}
+.pago-plan b{font-size:15px}.pago-plan span{font-size:13px;color:#5B606B}
+.pago-plan[aria-pressed="true"]{background:var(--azul-suave);box-shadow:inset 0 0 0 2px var(--azul);transform:translateY(-2px)}
+.pago-plan[aria-pressed="true"] span{color:var(--azul)}
+.pago-ciclo{display:flex;background:#fff;border-radius:999px;padding:4px;gap:4px}
+.pago-ciclo button{font:inherit;flex:1;border:0;border-radius:999px;padding:10px;font-weight:700;font-size:14px;background:transparent;color:#5B606B;cursor:pointer;display:flex;gap:6px;justify-content:center;align-items:center;transition:background .3s var(--curva),color .3s}
+.pago-ciclo button[aria-pressed="true"]{background:var(--tinta);color:#fff}
+.pago-ciclo em{font-style:normal;font-size:11px;font-weight:800;color:var(--ok);background:var(--ok-suave);padding:3px 7px;border-radius:999px}
+.pago-incluye{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:8px;font-size:14px;color:var(--sub)}
+.pago-incluye li{display:flex;gap:10px;align-items:center}
+.pago-incluye li::before{content:"";flex:none;width:18px;height:18px;border-radius:50%;background:var(--azul-suave) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%230C78C0' stroke-width='3.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 12.5l4 4L18 8'/%3E%3C/svg%3E") center/12px no-repeat}
+.pago-boton{font:inherit;border:0;cursor:pointer;border-radius:999px;background:var(--azul);color:#fff;font-weight:800;font-size:15px;height:52px;padding:0 22px;display:flex;align-items:center;justify-content:center;gap:10px;position:relative;overflow:hidden;transition:transform .35s var(--curva),box-shadow .35s var(--curva),opacity .3s}
+.pago-boton:hover{transform:translateY(-2px);box-shadow:0 14px 30px rgba(12,120,192,.35)}
+.pago-boton:disabled{opacity:.7;cursor:wait;transform:none;box-shadow:none}
+.pago-boton.grande{height:58px;font-size:17px;width:100%}
+.pago-boton::after{content:"";position:absolute;inset:0;background:linear-gradient(110deg,transparent 30%,rgba(255,255,255,.28) 50%,transparent 70%);translate:-120% 0}
+.pago-boton:hover::after{animation:pago-brillo .8s var(--curva)}
+@keyframes pago-brillo{to{translate:120% 0}}
+.pago-boton.sec{background:#fff;color:var(--tinta);box-shadow:inset 0 0 0 1px #E2E4E8}.pago-boton.sec:hover{box-shadow:inset 0 0 0 1px #D0D3D8}
+.pago-boton:focus-visible,.pago-plan:focus-visible,.pago-ciclo button:focus-visible{outline:3px solid var(--azul);outline-offset:2px}
+.pago-bold{height:19px;width:auto;display:block}
+.pago-error{margin:0;background:var(--mal-suave);color:var(--mal);border-radius:14px;padding:12px 14px;font-size:14px;line-height:1.5}
+.pago-letra{margin:0;font-size:12px;color:var(--suave);line-height:1.55;text-align:center}
+.pago-medios{display:flex;flex-direction:column;gap:10px;align-items:center}
+.pago-medios>span{font-size:12px;font-weight:700;color:var(--suave)}
+.pago-medios .destacados{display:flex;flex-wrap:wrap;gap:8px;justify-content:center}
+.pago-medios .medio{display:flex;align-items:center;gap:7px;background:#fff;border-radius:12px;padding:7px 11px;font-size:13px;font-weight:700;color:#3B3F47}
+.pago-medios .medio img{height:22px;width:auto;display:block}
+.pago-medios .tarjetas{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;align-items:center}
+.pago-medios .tarjetas img{height:20px;width:auto;display:block}
+
+.pago-tique{background:#fff;padding:30px 30px 46px;border-radius:22px 22px 0 0;font-variant-numeric:tabular-nums;display:flex;flex-direction:column;gap:14px;
+  -webkit-mask:linear-gradient(#000 0 0) top/100% calc(100% - 16px) no-repeat,conic-gradient(from -45deg at bottom,#0000,#000 1deg 89deg,#0000 90deg) bottom/32px 16px repeat-x;
+  mask:linear-gradient(#000 0 0) top/100% calc(100% - 16px) no-repeat,conic-gradient(from -45deg at bottom,#0000,#000 1deg 89deg,#0000 90deg) bottom/32px 16px repeat-x;
+  filter:drop-shadow(0 24px 40px rgba(13,12,23,.08));animation:pago-imprime 1.1s var(--curva) both}
+@keyframes pago-imprime{from{clip-path:inset(0 0 100% 0);transform:translateY(-14px)}to{clip-path:inset(0 0 -20px 0)}}
+.pago-tique .cab{display:flex;justify-content:space-between;align-items:center;padding-bottom:14px;border-bottom:2px dashed #DADDE2}
+.pago-tique .cab img{height:22px}
+.pago-tique .cab span{font-size:12px;font-weight:700;color:var(--suave);font-family:ui-monospace,Consolas,monospace}
+.pago-tique .mono{font-family:ui-monospace,Consolas,monospace;font-size:13px;color:var(--sub);display:flex;flex-direction:column;gap:6px}
+.pago-tique .mono div{display:flex;justify-content:space-between;align-items:center;gap:10px}
+.pago-tique .mono .desc{color:var(--ok)}
+.pago-tique .sep{border-top:2px dashed #DADDE2;margin:2px 0}
+.pago-tique .grande{display:flex;justify-content:space-between;align-items:baseline;gap:10px}
+.pago-tique .grande span{font-weight:800}
+.pago-tique .grande b{font-size:34px;font-weight:800;letter-spacing:-.03em}
+.pago-tique .bold-tq{height:14px;width:auto;display:block}
+.pago-tique .codigo{height:44px;background:repeating-linear-gradient(90deg,#0D0C17 0 2px,transparent 2px 5px,#0D0C17 5px 6px,transparent 6px 9px,#0D0C17 9px 12px,transparent 12px 14px);opacity:.85;border-radius:2px}
+@media (max-width:640px){.pago-tique{padding:24px 20px 40px}.pago-tique .grande b{font-size:28px}}
+
+/* ---------- Resultados ---------- */
+.pago-estado{max-width:560px;margin:0 auto;position:relative}
+.pago-estado.con-pj{padding-top:150px}
+@media (max-width:640px){.pago-estado.con-pj{padding-top:118px}}
+.pago-tarjeta{background:#fff;border-radius:28px;padding:30px 28px;text-align:center;display:flex;flex-direction:column;align-items:center;gap:14px;box-shadow:0 30px 70px rgba(13,12,23,.10);position:relative}
+.pago-estado.con-pj .pago-tarjeta{padding-top:46px}
+.pago-tarjeta h2{margin:0;font-size:30px;font-weight:800;letter-spacing:-.04em;line-height:1.1}
+.pago-tarjeta p{margin:0;color:var(--sub);font-size:15px;line-height:1.55;max-width:42ch}
+.pago-filas{width:100%;text-align:left;display:flex;flex-direction:column}
+.pago-filas .fila{display:flex;justify-content:space-between;gap:12px;padding:11px 0;border-top:1px solid #ECEEF1;font-size:14px;color:var(--sub)}
+.pago-filas .fila:first-child{border-top:0}
+.pago-filas .fila b{color:var(--tinta);font-variant-numeric:tabular-nums}
+.pago-botones{display:flex;gap:10px;width:100%}
+.pago-botones .pago-boton{flex:1}
+@media (max-width:640px){.pago-botones{flex-direction:column-reverse}.pago-botones .pago-boton{flex:none;width:100%;height:54px}.pago-tarjeta{padding:26px 18px}}
+.pago-icono{width:64px;height:64px;border-radius:50%;display:grid;place-items:center}
+.pago-icono svg{width:30px;height:30px}
+.pago-icono.ok{background:var(--ok-suave);color:var(--ok)}.pago-icono.mal{background:var(--mal-suave);color:var(--mal)}.pago-icono.alerta{background:var(--alerta-suave);color:var(--alerta)}
+.pago-icono .trazo{stroke-dasharray:40;stroke-dashoffset:40;animation:pago-traza .7s var(--curva) 1.2s forwards}
+@keyframes pago-traza{to{stroke-dashoffset:0}}
+.pago-impresora{width:180px;margin:6px auto 0}
+.pago-impresora .ranura{height:14px;border-radius:999px;background:var(--tinta);position:relative;z-index:2}
+.pago-impresora .papel{width:130px;margin:-6px auto 0;height:120px;background:#fff;border:2px solid #E6E8EB;border-top:0;border-radius:0 0 6px 6px;animation:pago-papel 2.4s var(--curva) infinite;padding:18px 14px;display:flex;flex-direction:column;gap:7px}
+.pago-impresora .papel i{display:block;height:7px;border-radius:9px;background:#E6E8EB}
+.pago-impresora .papel i:nth-child(2){width:70%}.pago-impresora .papel i:nth-child(3){width:85%;background:var(--azul-suave)}.pago-impresora .papel i:nth-child(4){width:50%}
+@keyframes pago-papel{0%{clip-path:inset(0 0 100% 0)}60%,85%{clip-path:inset(0 0 0 0)}100%{clip-path:inset(0 0 0 0);opacity:0}}
+.pago-puntos{display:flex;gap:6px;justify-content:center}
+.pago-puntos i{width:8px;height:8px;border-radius:50%;background:var(--azul);animation:pago-salta 1.2s ease-in-out infinite}
+.pago-puntos i:nth-child(2){animation-delay:.15s}.pago-puntos i:nth-child(3){animation-delay:.3s}
+@keyframes pago-salta{0%,100%{transform:translateY(0);opacity:.35}50%{transform:translateY(-6px);opacity:1}}
+.pago-chispa{position:absolute;width:20px;height:20px;color:var(--azul);z-index:3;animation:pago-chispa .9s var(--curva) backwards,pago-flota 4s ease-in-out infinite}
+@keyframes pago-chispa{from{opacity:0;scale:.4;rotate:-40deg}}
+@keyframes pago-flota{50%{translate:0 -8px}}
+
+/* Personaje asomado: el cuerpo sube recortado en el filo de la tarjeta y luego aparecen los dedos. */
+.pago-pj{position:absolute;z-index:2;pointer-events:none;width:var(--w);left:50%;translate:-50% 0;top:calc(150px - var(--w) * var(--r))}
+@media (max-width:640px){.pago-pj{top:calc(118px - var(--w) * var(--r));scale:.8;transform-origin:50% 100%}}
+.pago-pj-vaiven{position:absolute;inset:0;animation:pago-respira 4.2s ease-in-out 1.5s infinite}
+.pago-pj img{position:absolute;left:0;top:0;width:100%;height:auto;display:block}
+.pago-pj-cuerpo{clip-path:inset(0 0 calc((1 - var(--e)) * 100%) 0);animation:pago-sube 1s var(--curva) .35s backwards}
+.pago-pj-completo{opacity:0;animation:pago-aparece .22s ease-out 1.11s forwards}
+@keyframes pago-sube{from{transform:translateY(calc(var(--e) * 90%))}}
+@keyframes pago-aparece{to{opacity:1}}
+@keyframes pago-respira{50%{translate:0 -3px}}

@@ -124,6 +124,12 @@ const leerCookie = (nombre: string): string | null => {
  * guarda como `auth_token`; el POS, como `auth_token_client` o `auth_token`) y su vencimiento.
  * No valida la firma: solo decide qué botón mostrar; el POS valida la sesión al entrar.
  */
+/** El token de la sesión abierta, para llamar a la API como ese usuario (null si no hay). */
+export const tokenDeSesion = (): string | null => {
+  if (typeof document === "undefined") return null;
+  return leerCookie("auth_token_client") || leerCookie("auth_token") || localStorage.getItem("auth_token");
+};
+
 export const sesionAbierta = (): boolean => {
   if (typeof document === "undefined") return false;
   const token = leerCookie("auth_token_client") || leerCookie("auth_token");

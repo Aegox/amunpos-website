@@ -35,6 +35,7 @@ export function AuthModal({
   onCerrar,
   config,
   plan,
+  alEntrar,
 }: {
   abierto: boolean;
   pestanaInicial: Pestana;
@@ -49,6 +50,11 @@ export function AuthModal({
    * valor que no reconozca.
    */
   plan?: string | null;
+  /**
+   * Qué hacer al entrar. Por defecto se va al POS; la página de pago lo cambia para quedarse
+   * y seguir con el pago en vez de perderlo.
+   */
+  alEntrar?: () => void;
 }) {
   const [pestana, setPestana] = useState<Pestana>(pestanaInicial);
   const [verClave, setVerClave] = useState(false);
@@ -183,7 +189,12 @@ export function AuthModal({
     setCargando(true);
     try {
       guardarSesion(await accion());
-      irAlPos(config);
+      if (alEntrar) {
+        setCargando(false);
+        alEntrar();
+      } else {
+        irAlPos(config);
+      }
     } catch (e) {
       setError(e instanceof ErrorAuth ? e.message : "Algo salió mal. Inténtalo otra vez.");
       setCargando(false);

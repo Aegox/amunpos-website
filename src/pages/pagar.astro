@@ -1,0 +1,31 @@
+---
+/**
+ * Pagar la suscripción con Bold. Diseño "tique" aprobado por Diego el 2026-11-21.
+ * También es la página a la que Bold devuelve al cliente (?bold-order-id=…&bold-tx-status=…).
+ * Lógica y conexión con la API en components/pago/Pagar.tsx.
+ */
+import LayoutBento from "../layouts/LayoutBento.astro";
+import Pagar from "../components/pago/Pagar";
+import "../styles/pagar.css";
+
+const config = {
+  api: import.meta.env.NEXT_PUBLIC_API_URL ?? "",
+  app: import.meta.env.NEXT_PUBLIC_APP_URL ?? "",
+  googleClientId: import.meta.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID ?? "",
+};
+---
+
+<LayoutBento title="Pagar tu plan · amunpos" ruta="/pagar" noindex>
+  <div class="pago">
+    <header class="pago-barra">
+      <a href="/" aria-label="amunpos, inicio"><img src="/logos/amunpos-oscuro-tique-blanco.svg" alt="amunpos" /></a>
+      <div class="seguro">
+        <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>
+        <span>Pago seguro con</span><img src="/pagos/medios/bold-dark.svg" alt="Bold" />
+      </div>
+    </header>
+    <main class="pago-cuerpo">
+      <Pagar client:load config={config} />
+    </main>
+  </div>
+</LayoutBento>
