@@ -1,0 +1,86 @@
+---
+// Página propia de precios: Google arma las "secciones" bajo el resultado con páginas como esta
+// (título y dirección propios), no con anclas de una sola página. Diego, 2026-11-23.
+import LayoutBento from "../layouts/LayoutBento.astro";
+import NavAuth from "../components/bento/NavAuth";
+import Barra from "../components/paginas/Barra.astro";
+import Planes from "../components/paginas/Planes.astro";
+import Pie from "../components/paginas/Pie.astro";
+import { precioMensual, formatearPrecio, DESCUENTO_ANUAL } from "@/data/precios";
+import { SITIO } from "@/data/seo";
+import { RiAddLine, RiArrowRightDoubleLine } from "@remixicon/react";
+
+const config = {
+  api: import.meta.env.NEXT_PUBLIC_API_URL ?? "",
+  app: import.meta.env.NEXT_PUBLIC_APP_URL ?? "",
+  googleClientId: import.meta.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID ?? "",
+};
+
+// Solo lo que hoy se cumple (amunpos-marca/00-empresa/verdad-comercial.md).
+const preguntas = [
+  { q: "¿Cuánto cuesta amunpos?", a: `Desde ${formatearPrecio(precioMensual("basico", false))} al mes en el plan Básico. Estándar cuesta ${formatearPrecio(precioMensual("estandar", false))} y Profesional ${formatearPrecio(precioMensual("profesional", false))} al mes.` },
+  { q: "¿Hay prueba gratis?", a: "Sí: 14 días gratis, sin tarjeta y sin permanencia." },
+  { q: "¿Cuánto ahorro pagando por año?", a: `Pagando por año ahorras ${Math.round(DESCUENTO_ANUAL * 100)} % frente al pago mensual.` },
+  { q: "¿Cuántas sucursales y usuarios incluye cada plan?", a: "Básico: 1 sucursal y 3 usuarios. Estándar: hasta 3 sucursales y 10 usuarios. Profesional: sucursales y usuarios ilimitados." },
+  { q: "¿Los domicilios cobran comisión?", a: "amunpos no cobra comisión por pedido. La app de repartidor viene en Estándar y Profesional." },
+  { q: "¿Tiene facturación electrónica?", a: "Todavía no: emite tique con IVA. La facturación electrónica viene en camino." },
+];
+
+const jsonld = [
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      { "@type": "ListItem", position: 1, name: "Inicio", item: `${SITIO}/` },
+      { "@type": "ListItem", position: 2, name: "Precios", item: `${SITIO}/precios` },
+    ],
+  },
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: preguntas.map((p) => ({ "@type": "Question", name: p.q, acceptedAnswer: { "@type": "Answer", text: p.a } })),
+  },
+];
+---
+
+<LayoutBento
+  ruta="/precios"
+  title="Precios de amunpos: planes del punto de venta en pesos colombianos"
+  description={`Planes Básico, Estándar y Profesional desde ${formatearPrecio(precioMensual("basico", false))} al mes. Prueba gratis 14 días, sin tarjeta y sin permanencia.`}
+  jsonld={jsonld}
+>
+  <NavAuth client:load config={config} />
+
+  <header class="bloque-oscuro pagina-marco">
+    <Barra />
+    <Planes titulo="h1" margen={false} />
+  </header>
+
+  <section class="seccion">
+    <div class="contenedor">
+      <div class="cabeza-doble" data-revela>
+        <h2 class="h2">Preguntas sobre <br /><span class="acento">precios</span></h2>
+        <p class="parrafo">¿Otra duda? Escríbenos a <a href="mailto:hola@amunpos.com">hola@amunpos.com</a>.</p>
+      </div>
+      <div class="preguntas">
+        {[preguntas.slice(0, 3), preguntas.slice(3)].map((col, c) => (
+          <div class="preguntas-col">
+            {col.map((p, i) => (
+              <details class="pregunta" name="preguntas" open={c === 0 && i === 0}>
+                <summary>{p.q}<span class="mas" aria-hidden="true"><RiAddLine /></span></summary>
+                <p>{p.a}</p>
+              </details>
+            ))}
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="cierre contenedor">
+    <h2 class="h2" data-revela>Empieza hoy, <span class="acento">gratis</span> 14 días</h2>
+    <button class="btn-chevron negro" data-auth="crear">Pruébalo gratis <span class="caja"><RiArrowRightDoubleLine /></span></button>
+  </section>
+
+  <Pie />
+</LayoutBento>

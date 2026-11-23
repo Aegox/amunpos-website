@@ -1,0 +1,16 @@
+---
+// Barra de arriba (logo, menú y botones). El menú lleva a páginas reales, no solo a anclas.
+---
+<div class="barra">
+  <a class="marca" href="/" aria-label="amunpos, inicio"><img src="/logos/amunpos-oscuro-tique-blanco.svg" alt="" width="437" height="98" /></a>
+  <nav aria-label="Principal">
+    <a href="/#Producto">Producto</a>
+    <a href="/#Compras">Compras</a>
+    <a href="/precios" aria-current={Astro.url.pathname.startsWith("/precios") ? "page" : undefined}>Precios</a>
+    <a href="/#Preguntas">Preguntas</a>
+  </nav>
+  <div class="acciones">
+    <button class="btn-chico blanco" data-auth="entrar">Entrar</button>
+    <button class="btn-chico azul" data-auth="crear">Pruébalo gratis</button>
+  </div>
+</div>

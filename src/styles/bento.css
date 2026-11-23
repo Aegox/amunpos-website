@@ -382,3 +382,11 @@
   .btn-chevron, .btn-borde { height: 48px; }
   .btn-chevron .caja { width: 38px; height: 38px; }
 }
+
+/* Páginas propias (/precios…): bloque oscuro con la barra y el contenido, sin el alto del hero. */
+.pagina-marco { margin: 16px 16px 0; padding-bottom: 88px; position: relative; overflow: hidden; }
+.pagina-marco .contenedor { padding-top: 48px; }
+@media (max-width: 640px) {
+  .pagina-marco { margin-inline: 8px; padding-bottom: 56px; }
+  .pagina-marco .contenedor { padding-top: 24px; }
+}

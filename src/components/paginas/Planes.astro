@@ -1,0 +1,59 @@
+---
+// Los planes con su interruptor mensual/anual. Lo usan la portada (#Planes) y /precios.
+import { precioMensual, formatearPrecio, DESCUENTO_ANUAL } from "@/data/precios";
+import { RiUser3Line, RiRocket2Line, RiBuilding2Line, RiCheckLine, RiArrowRightSLine } from "@remixicon/react";
+
+interface Props { titulo?: "h1" | "h2"; margen?: boolean }
+const { titulo = "h2", margen = true } = Astro.props;
+const Titulo = titulo;
+
+const planes = [
+  { id: "basico", n: "Básico", para: "Para el negocio que empieza.", i: RiUser3Line, l: ["1 sucursal y 3 usuarios", "Ventas, caja e inventario", "Tique con IVA", "Asistente con IA", "Pedido sugerido", "Soporte por correo"] },
+  { id: "estandar", n: "Estándar", para: "Para el que ya va creciendo.", i: RiRocket2Line, dest: true, l: ["Hasta 3 sucursales y 10 usuarios", "Todo lo de Básico", "Domicilios con app de repartidor", "Sin comisión por pedido", "Soporte por correo"] },
+  { id: "profesional", n: "Profesional", para: "Para cadenas con varios locales.", i: RiBuilding2Line, l: ["Sucursales y usuarios ilimitados", "Todo lo de Estándar", "Horarios con IA y fichaje con PIN", "Publicaciones con tu marca", "Soporte por correo"] },
+];
+---
+<div id="Planes" class="contenedor" style={`${margen ? "margin-top:88px;" : ""}scroll-margin-top:40px`}>
+  <div style="text-align:center" data-revela>
+    <Titulo class="h2"><span class="acento">Planes</span> para cada tamaño de negocio</Titulo>
+    <p class="parrafo" style="margin-top:12px">Pruébalo gratis 14 días, sin tarjeta y sin permanencia.</p>
+    <div class="interruptor" role="group" aria-label="Forma de pago">
+      <button type="button" data-periodo="mensual" aria-pressed="true">Mensual</button>
+      <button type="button" data-periodo="anual" aria-pressed="false">Anual, ahorra {Math.round(DESCUENTO_ANUAL * 100)} %</button>
+    </div>
+  </div>
+  <div class="planes">
+    {planes.map((p, k) => (
+      <div class:list={["taco", { dest: p.dest }]} data-revela>
+        <span class="hoja hoja-2" aria-hidden="true"></span>
+        <span class="hoja hoja-1" aria-hidden="true"></span>
+        <div class="comanda-sombra">
+          <article class="comanda">
+            <div class="comanda-cab tnum"><h3>{p.n}</h3>{p.dest && <span class="pildora negra">Recomendado</span>}<b>#{String(k + 1).padStart(3, "0")}</b></div>
+            <p class="para">{p.para}</p>
+            <div class="monto tnum">
+              <span data-mensual={formatearPrecio(precioMensual(p.id, false))} data-anual={formatearPrecio(precioMensual(p.id, true))}>{formatearPrecio(precioMensual(p.id, false))}</span>
+              <small>al mes</small>
+            </div>
+            <ul>{p.l.map((x) => <li><span>{x}</span><i aria-hidden="true"></i><RiCheckLine /></li>)}</ul>
+            <button class="btn-plan" data-auth="crear" data-plan={p.id}>Elegir {p.n} <RiArrowRightSLine /></button>
+          </article>
+        </div>
+      </div>
+    ))}
+  </div>
+</div>
+
+<script>
+  // Precio mensual o anual.
+  const botones = document.querySelectorAll<HTMLButtonElement>("[data-periodo]");
+  botones.forEach((b) =>
+    b.addEventListener("click", () => {
+      const periodo = b.dataset.periodo as "mensual" | "anual";
+      botones.forEach((o) => o.setAttribute("aria-pressed", String(o === b)));
+      document.querySelectorAll<HTMLElement>("[data-mensual]").forEach((p) => {
+        p.textContent = p.dataset[periodo] ?? "";
+      });
+    }),
+  );
+</script>
