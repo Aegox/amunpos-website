@@ -15,11 +15,32 @@ export const SITIO = "https://www.amunpos.com";
 
 /** Secciones de la página, en el orden del menú. */
 export const SECCIONES = [
-  { id: "Producto", nombre: "Producto", descripcion: "El panel de amunpos: ventas, caja, inventario y reportes." },
-  { id: "Compras", nombre: "Compras", descripcion: "Pedido sugerido según lo que vendiste en 30 días." },
-  { id: "Planes", nombre: "Planes y precios", descripcion: "Básico, Estándar y Profesional, en pesos colombianos." },
-  { id: "Preguntas", nombre: "Preguntas frecuentes", descripcion: "Precio, facturación, domicilios, sucursales e IA." },
+  { ruta: "/funciones", nombre: "Funciones", descripcion: "Ventas, caja, inventario, domicilios, equipo y compras con IA." },
+  { ruta: "/precios", nombre: "Precios", descripcion: "Básico, Estándar y Profesional, en pesos colombianos." },
+  { ruta: "/preguntas-frecuentes", nombre: "Preguntas frecuentes", descripcion: "Precio, facturación, domicilios, sucursales e IA." },
+  { ruta: "/contacto", nombre: "Contacto", descripcion: "Escríbenos a hola@amunpos.com." },
 ];
+
+/** Ruta "Inicio › Página" de una página propia. */
+export function migas(nombre: string, ruta: string) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      { "@type": "ListItem", position: 1, name: "Inicio", item: `${SITIO}/` },
+      { "@type": "ListItem", position: 2, name: nombre, item: `${SITIO}${ruta}` },
+    ],
+  };
+}
+
+/** Preguntas frecuentes en el formato que lee Google. */
+export function faqDe(preguntas: { q: string; a: string }[]) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: preguntas.map((p) => ({ "@type": "Question", name: p.q, acceptedAnswer: { "@type": "Answer", text: p.a } })),
+  };
+}
 
 export function datosEstructurados(preguntas: { q: string; a: string }[]) {
   const valores = Object.values(precios);
@@ -81,7 +102,7 @@ export function datosEstructurados(preguntas: { q: string; a: string }[]) {
       position: i + 1,
       name: s.nombre,
       description: s.descripcion,
-      url: `${SITIO}/#${s.id}`,
+      url: `${SITIO}${s.ruta}`,
     })),
   };
   return [organizacion, sitio, aplicacion, faq, navegacion];

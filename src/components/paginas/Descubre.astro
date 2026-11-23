@@ -1,0 +1,51 @@
+---
+// Stock que se acaba, los beneficios y las tres situaciones del día (va dentro del bloque oscuro).
+import { beneficios, situaciones } from "@/data/landing";
+import { RiArrowRightDoubleLine, RiSearchLine } from "@remixicon/react";
+interface Props { planes?: string }
+const { planes = "#Planes" } = Astro.props;
+---
+  <div class="contenedor descubre">
+    <div class="escena" data-revela>
+      <div class="circulo-fondo" aria-hidden="true"></div>
+      <img class="peep" src="/ilustraciones/canva/revisa.webp" alt="Dueño revisando un estante con frascos casi vacíos" />
+      <div class="ficha" style="left:14px;bottom:14px;width:190px" aria-hidden="true"><span class="pildora peligro">Se está acabando</span><div style="font-size:20px;font-weight:500;letter-spacing:-.02em;margin-top:6px">Pan</div><small class="tnum" style="color:var(--gris-500)">18 uds · mínimo 40</small></div>
+      <div class="ficha" style="right:14px;bottom:14px" aria-hidden="true"><span style="color:var(--gris-500)">Distribuidora El Sol</span><div class="tnum" style="font-size:20px;font-weight:500;letter-spacing:-.02em">200 uds</div></div>
+    </div>
+    <div data-revela>
+      <h2 class="h2">Mira <span class="titulo-icono" aria-hidden="true"><RiSearchLine /></span> qué se está <span class="acento">acabando</span> antes del viernes</h2>
+      <p class="parrafo" style="margin:20px 0 28px;max-width:440px">La lista de stock bajo y el reporte de compra te muestran qué falta, por sucursal, para que el pedido salga a tiempo.</p>
+      <a class="btn-chevron" href={planes}>Ver planes <span class="caja"><RiArrowRightDoubleLine /></span></a>
+    </div>
+  </div>
+
+  <div class="grupo-beneficios">
+    {beneficios.map((fila) => (
+      <div class="fila-beneficios">
+        {fila.map((b) => (
+          <article class="beneficio" data-revela>
+            <span class="tile"><b.i /></span>
+            <h3 class="h3">{b.t}</h3>
+            <p class="parrafo">{b.d}</p>
+          </article>
+        ))}
+      </div>
+    ))}
+  </div>
+
+  <div style="margin-top:88px;text-align:center" data-revela>
+    <h2 class="h2">Tres momentos que ya <span class="acento">conoces</span></h2>
+  </div>
+  <div class="carrusel" tabindex="0" role="group" aria-label="Situaciones del día a día">
+    {situaciones.map((s) => (
+      <article class:list={["situacion", s.clase]}>
+        <div class="hora">{s.hora}</div>
+        <p class="dicho">{s.dicho}</p>
+        <img src={`/ilustraciones/canva/${s.img}.webp`} alt="" />
+        <div class="respuesta">{s.resp}</div>
+      </article>
+    ))}
+  </div>
+  <div class="puntos-carrusel" role="group" aria-label="Elegir situación">
+    {situaciones.map((s, k) => <button type="button" aria-label={`Ver situación ${k + 1} de ${situaciones.length}: ${s.dicho}`} aria-current={k === 0 ? "true" : "false"}></button>)}
+  </div>

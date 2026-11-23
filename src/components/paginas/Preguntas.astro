@@ -1,0 +1,48 @@
+---
+// Preguntas frecuentes con buscador. Lo usan la portada y /preguntas-frecuentes.
+import { preguntas } from "@/data/landing";
+import { RiAddLine, RiSearchLine } from "@remixicon/react";
+interface Props { titulo?: "h1" | "h2" }
+const { titulo = "h2" } = Astro.props;
+const Titulo = titulo;
+---
+<section id="Preguntas" class="seccion">
+  <div class="contenedor">
+    <div class="cabeza-doble" data-revela>
+      <Titulo class="h2">Preguntas <br /><span class="acento">frecuentes</span></Titulo>
+      <div>
+        <p class="parrafo" style="font-size:14px;margin-bottom:8px">¿No encuentras lo que buscas? Escribe aquí.</p>
+        <label class="buscador"><RiSearchLine /><input id="buscar-pregunta" type="search" placeholder="Busca tu pregunta…" aria-label="Buscar en preguntas frecuentes" /></label>
+      </div>
+    </div>
+    <div class="preguntas">
+      {preguntas.map((col, c) => (
+        <div class="preguntas-col">
+          {col.map((p, i) => (
+            <details class="pregunta" name="preguntas" open={c === 0 && i === 0}>
+              <summary>{p.q}<span class="mas" aria-hidden="true"><RiAddLine /></span></summary>
+              <p>{p.a}</p>
+            </details>
+          ))}
+        </div>
+      ))}
+    </div>
+    <p id="sin-resultados" class="parrafo" hidden style="margin-top:16px">No encontramos esa pregunta. Escríbenos a hola@amunpos.com.</p>
+  </div>
+</section>
+<script>
+  // Buscador de preguntas.
+  const buscar = document.getElementById("buscar-pregunta") as HTMLInputElement | null;
+  const normal = (t: string) => t.toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "");
+  buscar?.addEventListener("input", () => {
+    const q = normal(buscar.value.trim());
+    let vistas = 0;
+    document.querySelectorAll<HTMLElement>(".pregunta").forEach((d) => {
+      const si = normal(d.textContent ?? "").includes(q);
+      d.hidden = !si;
+      if (si) vistas++;
+    });
+    const vacio = document.getElementById("sin-resultados");
+    if (vacio) vacio.hidden = vistas > 0;
+  });
+</script>

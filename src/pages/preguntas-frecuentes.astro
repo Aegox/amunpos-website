@@ -1,0 +1,33 @@
+---
+// Página propia de preguntas frecuentes. Diego, 2026-11-23.
+import LayoutBento from "../layouts/LayoutBento.astro";
+import NavAuth from "../components/bento/NavAuth";
+import Cabecera from "../components/paginas/Cabecera.astro";
+import Preguntas from "../components/paginas/Preguntas.astro";
+import Pie from "../components/paginas/Pie.astro";
+import { preguntas } from "@/data/landing";
+import { migas, faqDe } from "@/data/seo";
+import { RiArrowRightDoubleLine } from "@remixicon/react";
+
+const config = {
+  api: import.meta.env.NEXT_PUBLIC_API_URL ?? "",
+  app: import.meta.env.NEXT_PUBLIC_APP_URL ?? "",
+  googleClientId: import.meta.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID ?? "",
+};
+---
+
+<LayoutBento
+  ruta="/preguntas-frecuentes"
+  title="Preguntas frecuentes sobre amunpos: precio, facturación, domicilios e IA"
+  description="Resolvemos tus dudas sobre amunpos: cuánto cuesta, facturación, domicilios sin comisión, varias sucursales, cómo empezar y qué hace la inteligencia artificial."
+  jsonld={[migas("Preguntas frecuentes", "/preguntas-frecuentes"), faqDe(preguntas.flat())]}
+>
+  <NavAuth client:load config={config} />
+  <Cabecera />
+  <Preguntas titulo="h1" />
+  <section class="cierre contenedor">
+    <h2 class="h2" data-revela>¿Listo para <span class="acento">probarlo</span>?</h2>
+    <button class="btn-chevron negro" data-auth="crear">Pruébalo gratis 14 días <span class="caja"><RiArrowRightDoubleLine /></span></button>
+  </section>
+  <Pie />
+</LayoutBento>

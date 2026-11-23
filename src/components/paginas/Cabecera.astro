@@ -1,0 +1,17 @@
+---
+// Bloque oscuro de arriba de cada página propia: la barra y, si viene, el título con su texto.
+import Barra from "./Barra.astro";
+interface Props { texto?: string }
+const { texto } = Astro.props;
+const conTitulo = Astro.slots.has("default");
+---
+<header class:list={["bloque-oscuro", "pagina-marco", { "pagina-solo-barra": !conTitulo }]}>
+  <Barra />
+  {conTitulo && (
+    <div class="contenedor pagina-intro">
+      <h1 class="h1"><slot /></h1>
+      {texto && <p class="parrafo">{texto}</p>}
+      <slot name="extra" />
+    </div>
+  )}
+</header>

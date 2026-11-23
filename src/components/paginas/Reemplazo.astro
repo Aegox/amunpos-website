@@ -1,0 +1,21 @@
+---
+// Lo que amunpos reemplaza.
+import { reemplaza } from "@/data/landing";
+import { RiArrowRightUpLine } from "@remixicon/react";
+---
+<section class="contenedor reemplazo" aria-labelledby="titulo-reemplazo">
+  <div class="tarjeta-azul" data-revela>
+    <h2 id="titulo-reemplazo" class="h2">Todo el negocio, en una sola plataforma</h2>
+    <p>Menos herramientas sueltas y más control, para tiendas y restaurantes, con uno o con varios locales.</p>
+    <img src="/ilustraciones/canva/equipo.webp" alt="Equipo de un restaurante: cocinero, cajera, mesero y repartidor" />
+  </div>
+  <ul class="lista-reemplazo">
+    {reemplaza.map((r) => (
+      <li data-revela>
+        <span class="tile"><r.i /></span>
+        <div><s>{r.t}</s><strong>{r.q}</strong></div>
+        <RiArrowRightUpLine aria-hidden="true" />
+      </li>
+    ))}
+  </ul>
+</section>

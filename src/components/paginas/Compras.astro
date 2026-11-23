@@ -1,0 +1,51 @@
+---
+// Las compras: pedido sugerido, reporte con IA y pedido para WhatsApp.
+import { RiBarChart2Line, RiShoppingBasket2Line, RiWhatsappLine } from "@remixicon/react";
+---
+<section id="Compras" class="seccion">
+  <div class="contenedor">
+    <div class="cabeza-doble" data-revela>
+      <h2 class="h2">Las compras dejan de ser <span class="acento">a ojo</span></h2>
+      <p class="parrafo">Cuadrar la caja lo hace cualquiera. amunpos también te muestra qué se está acabando, sugiere cuánto pedir y te deja el mensaje escrito.</p>
+    </div>
+    <div class="tres">
+      <article class="tarjeta funcion" data-revela>
+        <span class="tile"><RiBarChart2Line /></span>
+        <div class="visual" aria-hidden="true">
+          <div style="position:absolute;inset:18px 20px 0;display:flex;gap:10px;align-items:flex-end;-webkit-mask-image:linear-gradient(#000 60%,transparent);mask-image:linear-gradient(#000 60%,transparent)">
+            <div class="dia n" style="height:100%"><b style="height:44%"></b></div>
+            <div class="dia" style="height:100%"><b style="height:86%"></b></div>
+            <div class="dia m" style="height:100%"><b style="height:62%"></b></div>
+            <div class="dia c" style="height:100%"><b style="height:50%"></b></div>
+          </div>
+          <div class="burbuja" style="left:40%;top:30px">Pan: pedido sugerido<strong class="tnum">200 uds</strong></div>
+        </div>
+        <h3 class="h3">Pedido sugerido</h3>
+        <p class="parrafo">Agrupado por proveedor, con cantidades para cubrir 14 días según lo que vendiste en 30.</p>
+      </article>
+      <article class="tarjeta funcion" data-revela>
+        <span class="tile"><RiShoppingBasket2Line /></span>
+        <div class="visual" aria-hidden="true">
+          <div class="mov" style="top:4px;left:18%;width:78%"><span class="pildora azul">Media</span><strong>Queso</strong><small class="tnum">$ 96.000</small></div>
+          <div class="mov oscuro" style="top:88px"><span class="pildora exito">Alta</span><strong>Pan de hamburguesa</strong><small class="tnum" style="color:#a0a4ad">$ 180.000</small></div>
+          <div class="mov" style="top:176px;left:18%;width:78%"><span class="pildora blanca">Baja</span><strong>Salsa de la casa</strong><small class="tnum">$ 42.000</small></div>
+        </div>
+        <h3 class="h3">Reporte de compra con IA</h3>
+        <p class="parrafo">Qué comprar, en qué orden y un presupuesto estimado. Lo abres cuando lo necesitas.</p>
+      </article>
+      <article class="tarjeta funcion" data-revela>
+        <span class="tile"><RiWhatsappLine /></span>
+        <div class="visual" aria-hidden="true">
+          <div class="mensaje">
+            <strong>Pedido de La Esquina</strong>
+            Para: Distribuidora El Sol<br />• 200 × Pan<br />• 40 × Queso<br />• 15 × Salsa de la casa
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:12px"><span class="btn-chico blanco" style="height:34px;font-size:13px">Enviar</span><span class="btn-chico" style="height:34px;font-size:13px;border:1px solid #3a3a42">Editar</span></div>
+          </div>
+        </div>
+        <h3 class="h3">Pedido listo para WhatsApp</h3>
+        <p class="parrafo">Se abre con el mensaje escrito. Tú lo revisas y lo envías a tu proveedor.</p>
+      </article>
+    </div>
+    <p class="datos-ejemplo">Datos de ejemplo.</p>
+  </div>
+</section>

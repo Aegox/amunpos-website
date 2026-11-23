@@ -1,0 +1,48 @@
+---
+// Página propia de funciones (Google arma con páginas así las secciones bajo el resultado). Diego, 2026-11-23.
+import LayoutBento from "../layouts/LayoutBento.astro";
+import NavAuth from "../components/bento/NavAuth";
+import Cabecera from "../components/paginas/Cabecera.astro";
+import Compras from "../components/paginas/Compras.astro";
+import Reemplazo from "../components/paginas/Reemplazo.astro";
+import Descubre from "../components/paginas/Descubre.astro";
+import Pie from "../components/paginas/Pie.astro";
+import { migas } from "@/data/seo";
+import { RiArrowRightDoubleLine } from "@remixicon/react";
+
+const config = {
+  api: import.meta.env.NEXT_PUBLIC_API_URL ?? "",
+  app: import.meta.env.NEXT_PUBLIC_APP_URL ?? "",
+  googleClientId: import.meta.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID ?? "",
+};
+---
+
+<LayoutBento
+  ruta="/funciones"
+  title="Funciones de amunpos: ventas, caja, inventario, domicilios y compras con IA"
+  description="Todo lo que hace amunpos: ventas con mesas, caja con arqueo, inventario por sucursal, domicilios sin comisión, nómina, fidelización y pedido sugerido según lo que vendiste en 30 días."
+  jsonld={[migas("Funciones", "/funciones")]}
+>
+  <NavAuth client:load config={config} />
+
+  <Cabecera texto="Ventas, caja, inventario, domicilios y equipo en un solo sistema, con inteligencia artificial que te ayuda a comprar a tiempo.">
+    Todo lo que hace <span class="acento">amunpos</span>
+    <div class="hero-cta" slot="extra">
+      <button class="btn-chevron" data-auth="crear">Pruébalo gratis 14 días <span class="caja"><RiArrowRightDoubleLine /></span></button>
+      <a class="btn-borde" href="/precios">Ver precios</a>
+    </div>
+  </Cabecera>
+
+  <Compras />
+  <Reemplazo />
+  <section class="bloque-oscuro bloque-medio">
+    <Descubre planes="/precios" />
+  </section>
+
+  <section class="cierre contenedor">
+    <h2 class="h2" data-revela>Pruébalo en tu negocio, <span class="acento">gratis</span> 14 días</h2>
+    <button class="btn-chevron negro" data-auth="crear">Pruébalo gratis <span class="caja"><RiArrowRightDoubleLine /></span></button>
+  </section>
+
+  <Pie />
+</LayoutBento>

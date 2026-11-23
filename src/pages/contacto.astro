@@ -1,0 +1,53 @@
+---
+// Página propia de contacto. Solo los canales que existen hoy: el correo. Diego, 2026-11-23.
+import LayoutBento from "../layouts/LayoutBento.astro";
+import NavAuth from "../components/bento/NavAuth";
+import Cabecera from "../components/paginas/Cabecera.astro";
+import Pie from "../components/paginas/Pie.astro";
+import { migas } from "@/data/seo";
+import { RiMailLine, RiRocket2Line, RiLoginBoxLine, RiArrowRightSLine } from "@remixicon/react";
+
+const config = {
+  api: import.meta.env.NEXT_PUBLIC_API_URL ?? "",
+  app: import.meta.env.NEXT_PUBLIC_APP_URL ?? "",
+  googleClientId: import.meta.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID ?? "",
+};
+---
+
+<LayoutBento
+  ruta="/contacto"
+  title="Contacto de amunpos: escríbenos a hola@amunpos.com"
+  description="¿Dudas sobre amunpos, tu plan o tu cuenta? Escríbenos a hola@amunpos.com. También puedes probarlo gratis 14 días o entrar a tu cuenta."
+  jsonld={[migas("Contacto", "/contacto")]}
+>
+  <NavAuth client:load config={config} />
+
+  <Cabecera texto="Te respondemos por correo. Si aún no lo usas, pruébalo gratis 14 días, sin tarjeta.">
+    Hablemos de tu <span class="acento">negocio</span>
+  </Cabecera>
+
+  <section class="seccion contacto">
+    <div class="contenedor tres">
+      <article class="tarjeta contacto-tarjeta" data-revela>
+        <span class="tile"><RiMailLine /></span>
+        <h2 class="h3">Escríbenos</h2>
+        <p class="parrafo">Dudas, ayuda con tu cuenta o con tu plan.</p>
+        <a class="btn-chevron negro accion" href="mailto:hola@amunpos.com">hola@amunpos.com <span class="caja"><RiArrowRightSLine /></span></a>
+      </article>
+      <article class="tarjeta contacto-tarjeta" data-revela>
+        <span class="tile"><RiRocket2Line /></span>
+        <h2 class="h3">Pruébalo gratis</h2>
+        <p class="parrafo">14 días, sin tarjeta y sin permanencia.</p>
+        <button class="btn-chevron accion" data-auth="crear">Crear cuenta <span class="caja"><RiArrowRightSLine /></span></button>
+      </article>
+      <article class="tarjeta contacto-tarjeta" data-revela>
+        <span class="tile"><RiLoginBoxLine /></span>
+        <h2 class="h3">Ya soy cliente</h2>
+        <p class="parrafo">Entra a tu cuenta de amunpos.</p>
+        <button class="btn-borde accion" style="color:var(--negro,#0a0a0c);border-color:#d5d7dc" data-auth="entrar">Entrar</button>
+      </article>
+    </div>
+  </section>
+
+  <Pie />
+</LayoutBento>

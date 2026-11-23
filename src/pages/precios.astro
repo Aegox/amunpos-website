@@ -7,7 +7,7 @@ import Barra from "../components/paginas/Barra.astro";
 import Planes from "../components/paginas/Planes.astro";
 import Pie from "../components/paginas/Pie.astro";
 import { precioMensual, formatearPrecio, DESCUENTO_ANUAL } from "@/data/precios";
-import { SITIO } from "@/data/seo";
+import { migas, faqDe } from "@/data/seo";
 import { RiAddLine, RiArrowRightDoubleLine } from "@remixicon/react";
 
 const config = {
@@ -26,21 +26,7 @@ const preguntas = [
   { q: "¿Tiene facturación electrónica?", a: "Todavía no: emite tique con IVA. La facturación electrónica viene en camino." },
 ];
 
-const jsonld = [
-  {
-    "@context": "https://schema.org",
-    "@type": "BreadcrumbList",
-    itemListElement: [
-      { "@type": "ListItem", position: 1, name: "Inicio", item: `${SITIO}/` },
-      { "@type": "ListItem", position: 2, name: "Precios", item: `${SITIO}/precios` },
-    ],
-  },
-  {
-    "@context": "https://schema.org",
-    "@type": "FAQPage",
-    mainEntity: preguntas.map((p) => ({ "@type": "Question", name: p.q, acceptedAnswer: { "@type": "Answer", text: p.a } })),
-  },
-];
+const jsonld = [migas("Precios", "/precios"), faqDe(preguntas)];
 ---
 
 <LayoutBento
