@@ -38,7 +38,7 @@ export const situaciones = [
 
 export const preguntas = [
   [
-    { q: "¿Cuánto cuesta?", a: `Desde ${formatearPrecio(precioMensual("basico", false))} al mes. Pagando por año ahorras ${Math.round(DESCUENTO_ANUAL * 100)} %. Pruébalo gratis 14 días, sin tarjeta y sin permanencia.` },
+    { q: "¿Cuánto cuesta?", a: `Desde ${formatearPrecio(precioMensual("basico", false))} al mes. Pagando por año ahorras ${Math.round(DESCUENTO_ANUAL * 100)} %. Sin permanencia.` },
     { q: "¿amunpos le envía solo el pedido a mi proveedor?", a: "Hoy te deja el pedido listo: el sistema sugiere las cantidades, abre WhatsApp con el mensaje escrito y tú lo revisas y lo envías." },
     { q: "¿Tiene facturación electrónica?", a: "Todavía no: emite tique con IVA. La facturación electrónica viene en camino. Si tu negocio ya está obligado a emitir documento electrónico, escríbenos antes de empezar." },
     { q: "¿Los domicilios cobran comisión?", a: "amunpos no cobra comisión por pedido. Incluye app de repartidor en Estándar y Profesional. Quien reparte y su pago siguen siendo de tu negocio." },

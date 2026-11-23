@@ -18,7 +18,10 @@ import { precios, DESCUENTO_ANUAL, precioMensual, formatearPrecio } from "../../
 
 type Plan = "basico" | "estandar" | "profesional";
 type Ciclo = "mensual" | "anual";
-type Estado = "pagar" | "preparando" | "procesando" | "aprobado" | "rechazado" | "pendiente";
+type Estado = "pagar" | "preparando" | "procesando" | "aprobado" | "rechazado" | "pendiente" | "revision";
+
+/** Datos de quien pide la cuenta (pasarela sin cobro en línea, Diego 2026-11-23). */
+type Datos = { nombre: string; correo: string; whatsapp: string; negocio: string };
 
 const PLANES: Record<Plan, { nombre: string; incluye: string[] }> = {
   basico: { nombre: "Básico", incluye: ["Ventas, caja e inventario", "Asistente con IA", "Tique con IVA"] },
@@ -128,6 +131,9 @@ export default function Pagar({ config }: { config: Config }) {
   const [auth, setAuth] = useState(false);
   const [resultado, setResultado] = useState<{ orderId: string; plan: Plan; ciclo: Ciclo; monto: number } | null>(null);
   const [conSesion, setConSesion] = useState(false);
+  const [datos, setDatos] = useState<Datos>({ nombre: "", correo: "", whatsapp: "", negocio: "" });
+  const [solicitud, setSolicitud] = useState<{ id: string; monto: number } | null>(null);
+  const campo = (k: keyof Datos) => ({ value: datos[k], onChange: (e: React.ChangeEvent<HTMLInputElement>) => setDatos((d) => ({ ...d, [k]: e.target.value })) });
 
   // Plan y ciclo desde la URL (?plan=estandar&ciclo=mensual), y el regreso desde Bold.
   useEffect(() => {
@@ -181,7 +187,42 @@ export default function Pagar({ config }: { config: Config }) {
     [api],
   );
 
+  /**
+   * Por ahora no hay cobro en línea ni registro por cuenta propia (Diego, 2026-11-23): la pasarela
+   * deja una solicitud (POST /solicitud-cuenta) y el equipo de amunpos crea la cuenta y coordina el
+   * pago. No se hace ningún cobro aquí, y el resultado lo dice. El cobro real con Bold (pagarConBold)
+   * queda listo para cuando se active.
+   */
   const pagar = async () => {
+    setError("");
+    if (datos.nombre.trim().length < 2) return setError("Escribe tu nombre.");
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(datos.correo.trim())) return setError("Revisa tu correo.");
+    if (datos.whatsapp.replace(/\D/g, "").length < 7) return setError("Revisa tu WhatsApp.");
+    if (datos.negocio.trim().length < 2) return setError("Escribe el nombre de tu negocio.");
+    setEstado("preparando");
+    try {
+      const r = await fetch(`${config.api}/solicitud-cuenta`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ ...datos, plan, ciclo }),
+      });
+      let d: any = {};
+      try { d = await r.json(); } catch { /* sin JSON */ }
+      if (!r.ok || !d?.data) throw new Error(d?.error || "No pudimos enviar tus datos. Inténtalo otra vez.");
+      setSolicitud({ id: String(d.data.id || ""), monto: Number(d.data.monto) || cuentas(plan, ciclo).total });
+      // El tique "se imprime" unos segundos antes del resultado, como en el diseño.
+      setEstado("procesando");
+      setTimeout(() => setEstado("revision"), 3200);
+    } catch (e) {
+      setEstado("pagar");
+      setError(e instanceof Error ? e.message : "No pudimos enviar tus datos. Inténtalo otra vez.");
+    }
+  };
+
+  // Cobro real con Bold: se usará cuando se active el pago en línea.
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const pagarConBold = async () => {
+
     setError("");
     if (!sesionAbierta()) return setAuth(true);
     setEstado("preparando");
@@ -218,8 +259,8 @@ export default function Pagar({ config }: { config: Config }) {
     return (
       <div className="pago-estado"><div className="pago-tarjeta">
         <div className="pago-impresora rv" aria-hidden="true"><div className="ranura" /><div className="papel"><i /><i /><i /><i /></div></div>
-        <h2 className="rv" style={{ ["--i" as string]: 1 }}>Confirmando tu pago…</h2>
-        <p className="rv" style={{ ["--i" as string]: 2 }}>Bold nos está avisando cómo salió. Esto toma unos segundos: no cierres esta página.</p>
+        <h2 className="rv" style={{ ["--i" as string]: 1 }}>{solicitud ? "Procesando tu solicitud…" : "Confirmando tu pago…"}</h2>
+        <p className="rv" style={{ ["--i" as string]: 2 }}>{solicitud ? "Esto toma unos segundos: no cierres esta página." : "Bold nos está avisando cómo salió. Esto toma unos segundos: no cierres esta página."}</p>
         <div className="pago-puntos rv" style={{ ["--i" as string]: 3 }} aria-hidden="true"><i /><i /><i /></div>
       </div></div>
     );
@@ -266,6 +307,25 @@ export default function Pagar({ config }: { config: Config }) {
     );
   }
 
+  if (estado === "revision" && solicitud) {
+    return (
+      <div className="pago-estado"><div className="pago-tarjeta">
+        <div className="pago-icono alerta rv"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.6" strokeLinecap="round"><circle cx="12" cy="12" r="8.5" /><path d="M12 7.5V12l3 2" /></svg></div>
+        <h2 className="rv" style={{ ["--i" as string]: 1 }}>Tu solicitud está en revisión</h2>
+        <p className="rv" style={{ ["--i" as string]: 2 }}>Te escribimos a <b>{datos.correo.trim()}</b> o por WhatsApp para activar tu cuenta de amunpos y coordinar el pago. No se hizo ningún cobro.</p>
+        <div className="pago-filas rv" style={{ ["--i" as string]: 3 }}>
+          <div className="fila"><span>Plan</span><b>{PLANES[plan].nombre} · {ciclo === "anual" ? "Anual" : "Mensual"}</b></div>
+          <div className="fila"><span>Total</span><b>{formatearPrecio(solicitud.monto)} COP</b></div>
+          {solicitud.id && <div className="fila"><span>Referencia</span><b>{solicitud.id.slice(0, 8).toUpperCase()}</b></div>}
+        </div>
+        <div className="pago-botones rv" style={{ ["--i" as string]: 4 }}>
+          <a className="pago-boton" href="/">Volver a amunpos.com <Flecha /></a>
+        </div>
+        <p className="pago-letra rv" style={{ ["--i" as string]: 5 }}>¿Dudas? Escríbenos a hola@amunpos.com.</p>
+      </div></div>
+    );
+  }
+
   if (estado === "pendiente") {
     return (
       <div className="pago-estado"><div className="pago-tarjeta">
@@ -305,11 +365,18 @@ export default function Pagar({ config }: { config: Config }) {
           <button aria-pressed={ciclo === "anual"} onClick={() => setCiclo("anual")}>Anual <em>−{Math.round(DESCUENTO_ANUAL * 100)} %</em></button>
         </div>
         <ul className="pago-incluye rv" style={{ ["--i" as string]: 4 }}>{p.incluye.map((t) => <li key={t}>{t}</li>)}</ul>
+        <fieldset className="pago-datos rv" style={{ ["--i" as string]: 5 }}>
+          <legend>Tus datos</legend>
+          <label><span>Nombre</span><input autoComplete="name" {...campo("nombre")} /></label>
+          <label><span>Negocio</span><input autoComplete="organization" {...campo("negocio")} /></label>
+          <label><span>Correo</span><input type="email" autoComplete="email" inputMode="email" {...campo("correo")} /></label>
+          <label><span>WhatsApp</span><input type="tel" autoComplete="tel" inputMode="tel" {...campo("whatsapp")} /></label>
+        </fieldset>
         <button className="pago-boton grande rv" style={{ ["--i" as string]: 5 }} onClick={pagar} disabled={estado === "preparando"} aria-label="Pagar con Bold">
-          {estado === "preparando" ? "Preparando el pago…" : <>Pagar con <img className="pago-bold" src="/pagos/medios/bold-dark.svg" alt="" /> <Flecha /></>}
+          {estado === "preparando" ? "Enviando…" : <>Pagar con <img className="pago-bold" src="/pagos/medios/bold-dark.svg" alt="" /> <Flecha /></>}
         </button>
         {error && <p className="pago-error" role="alert">{error}</p>}
-        {!conSesion && <p className="pago-letra">Te pediremos entrar a tu cuenta antes de pagar.</p>}
+        
         <div className="pago-medios rv" style={{ ["--i" as string]: 6 }}>
           <span>Paga como prefieras</span>
           <div className="destacados">
@@ -320,7 +387,7 @@ export default function Pagar({ config }: { config: Config }) {
             {TARJETAS.map((t) => <img key={t} src={`/pagos/medios/${t}`} alt="" />)}
           </div>
         </div>
-        <p className="pago-letra rv" style={{ ["--i" as string]: 7 }}>Pagas en la página segura de Bold: amunpos nunca ve ni guarda tu tarjeta.</p>
+        <p className="pago-letra rv" style={{ ["--i" as string]: 7 }}>Tus datos solo los usa el equipo de amunpos para activar tu cuenta. amunpos nunca ve ni guarda tu tarjeta.</p>
       </div>
 
       <div className="pago-tique" key={plan + ciclo}>

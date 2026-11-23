@@ -19,7 +19,7 @@ const config = {
 // Solo lo que hoy se cumple (amunpos-marca/00-empresa/verdad-comercial.md).
 const preguntas = [
   { q: "¿Cuánto cuesta amunpos?", a: `Desde ${formatearPrecio(precioMensual("basico", false))} al mes en el plan Básico. Estándar cuesta ${formatearPrecio(precioMensual("estandar", false))} y Profesional ${formatearPrecio(precioMensual("profesional", false))} al mes.` },
-  { q: "¿Hay prueba gratis?", a: "Sí: 14 días gratis, sin tarjeta y sin permanencia." },
+  { q: "¿Cómo empiezo?", a: "Eliges tu plan, dejas tus datos y te escribimos para activar tu cuenta. Sin permanencia." },
   { q: "¿Cuánto ahorro pagando por año?", a: `Pagando por año ahorras ${Math.round(DESCUENTO_ANUAL * 100)} % frente al pago mensual.` },
   { q: "¿Cuántas sucursales y usuarios incluye cada plan?", a: "Básico: 1 sucursal y 3 usuarios. Estándar: hasta 3 sucursales y 10 usuarios. Profesional: sucursales y usuarios ilimitados." },
   { q: "¿Los domicilios cobran comisión?", a: "amunpos no cobra comisión por pedido. La app de repartidor viene en Estándar y Profesional." },
@@ -32,7 +32,7 @@ const jsonld = [migas("Precios", "/precios"), faqDe(preguntas)];
 <LayoutBento
   ruta="/precios"
   title="Precios de amunpos: planes del punto de venta en pesos colombianos"
-  description={`Planes Básico, Estándar y Profesional desde ${formatearPrecio(precioMensual("basico", false))} al mes. Prueba gratis 14 días, sin tarjeta y sin permanencia.`}
+  description={`Planes Básico, Estándar y Profesional desde ${formatearPrecio(precioMensual("basico", false))} al mes, sin permanencia. Pagando por año ahorras ${Math.round(DESCUENTO_ANUAL * 100)} %.`}
   jsonld={jsonld}
 >
   <NavAuth client:load config={config} />
@@ -64,8 +64,8 @@ const jsonld = [migas("Precios", "/precios"), faqDe(preguntas)];
   </section>
 
   <section class="cierre contenedor">
-    <h2 class="h2" data-revela>Empieza hoy, <span class="acento">gratis</span> 14 días</h2>
-    <button class="btn-chevron negro" data-auth="crear">Pruébalo gratis <span class="caja"><RiArrowRightDoubleLine /></span></button>
+    <h2 class="h2" data-revela>Empieza <span class="acento">hoy</span></h2>
+    <button class="btn-chevron negro" data-auth="crear">Elegir mi plan <span class="caja"><RiArrowRightDoubleLine /></span></button>
   </section>
 
   <Pie />

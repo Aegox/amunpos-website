@@ -120,3 +120,12 @@
 @keyframes pago-sube{from{transform:translateY(calc(var(--e) * 90%))}}
 @keyframes pago-aparece{to{opacity:1}}
 @keyframes pago-respira{50%{translate:0 -3px}}
+
+/* Datos de quien pide la cuenta (pasarela sin cobro en línea, 2026-11-23). */
+.pago-datos{border:0;margin:0;padding:0;display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.pago-datos legend{font-weight:800;font-size:14px;margin-bottom:8px;padding:0}
+.pago-datos label{display:flex;flex-direction:column;gap:4px;font-size:12px;font-weight:700;color:var(--sub)}
+.pago-datos input{font:inherit;font-size:15px;font-weight:500;color:var(--tinta);background:#fff;border:0;border-radius:14px;padding:12px 14px;box-shadow:inset 0 0 0 1.5px transparent;transition:box-shadow .25s var(--curva)}
+.pago-datos input:focus{outline:none;box-shadow:inset 0 0 0 2px var(--azul)}
+@media (max-width:640px){.pago-datos{grid-template-columns:1fr}}
+a.pago-boton{text-decoration:none;color:#fff}

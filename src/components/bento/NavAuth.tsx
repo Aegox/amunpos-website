@@ -41,8 +41,14 @@ export default function NavAuth({ config }: { config: Config }) {
         irAlPos(config);
         return;
       }
+      // Las cuentas nuevas pasan por la pasarela (Diego, 2026-11-23): el equipo las activa.
+      if (destino.getAttribute("data-auth") === "crear") {
+        const p = destino.getAttribute("data-plan");
+        location.href = `/pagar${p ? `?plan=${encodeURIComponent(p)}` : ""}`;
+        return;
+      }
       setPlan(destino.getAttribute("data-plan"));
-      setAuth(destino.getAttribute("data-auth") === "crear" ? "crear" : "entrar");
+      setAuth("entrar");
     };
     const alVolver = () => {
       setAuth(null);

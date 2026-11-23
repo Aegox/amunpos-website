@@ -272,7 +272,8 @@ export function AuthModal({
                 type="button"
                 role="tab"
                 aria-selected={pestana === p}
-                onClick={() => setPestana(p)}
+                // "Crear cuenta" lleva a la pasarela: las cuentas nuevas las activa el equipo (2026-11-23).
+                onClick={() => (p === "crear" ? (location.href = `/pagar${plan ? `?plan=${encodeURIComponent(plan)}` : ""}`) : setPestana(p))}
                 className={cn(
                   "h-9 flex-1 rounded-full text-[14px] transition duration-200",
                   pestana === p ? "bg-white font-medium text-[#0D0C17] shadow-[0_1px_2px_rgba(13,12,23,.12)]" : "text-[#4A4F59] hover:text-[#0D0C17]",

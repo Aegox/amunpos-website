@@ -17,12 +17,12 @@ const config = {
 <LayoutBento
   ruta="/contacto"
   title="Contacto de amunpos: escríbenos a hola@amunpos.com"
-  description="¿Dudas sobre amunpos, tu plan o tu cuenta? Escríbenos a hola@amunpos.com. También puedes probarlo gratis 14 días o entrar a tu cuenta."
+  description="¿Dudas sobre amunpos, tu plan o tu cuenta? Escríbenos a hola@amunpos.com. También puedes elegir tu plan o entrar a tu cuenta."
   jsonld={[migas("Contacto", "/contacto")]}
 >
   <NavAuth client:load config={config} />
 
-  <Cabecera texto="Te respondemos por correo. Si aún no lo usas, pruébalo gratis 14 días, sin tarjeta.">
+  <Cabecera texto="Te respondemos por correo. Si aún no lo usas, elige tu plan y activamos tu cuenta.">
     Hablemos de tu <span class="acento">negocio</span>
   </Cabecera>
 
@@ -36,9 +36,9 @@ const config = {
       </article>
       <article class="tarjeta contacto-tarjeta" data-revela>
         <span class="tile"><RiRocket2Line /></span>
-        <h2 class="h3">Pruébalo gratis</h2>
-        <p class="parrafo">14 días, sin tarjeta y sin permanencia.</p>
-        <button class="btn-chevron accion" data-auth="crear">Crear cuenta <span class="caja"><RiArrowRightSLine /></span></button>
+        <h2 class="h3">Empieza con amunpos</h2>
+        <p class="parrafo">Elige tu plan y activamos tu cuenta. Sin permanencia.</p>
+        <button class="btn-chevron accion" data-auth="crear">Elegir mi plan <span class="caja"><RiArrowRightSLine /></span></button>
       </article>
       <article class="tarjeta contacto-tarjeta" data-revela>
         <span class="tile"><RiLoginBoxLine /></span>
