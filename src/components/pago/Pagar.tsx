@@ -188,12 +188,14 @@ export default function Pagar({ config }: { config: Config }) {
   );
 
   /**
-   * Por ahora no hay cobro en línea ni registro por cuenta propia (Diego, 2026-11-23): la pasarela
-   * deja una solicitud (POST /solicitud-cuenta) y el equipo de amunpos crea la cuenta y coordina el
-   * pago. No se hace ningún cobro aquí, y el resultado lo dice. El cobro real con Bold (pagarConBold)
-   * queda listo para cuando se active.
+   * Dos caminos (Diego, 2026-11-24):
+   * - Con sesión (un negocio que el equipo ya creó): paga con Bold y el plan se activa solo.
+   * - Sin cuenta (el registro está cerrado): deja una solicitud (POST /solicitud-cuenta) y el equipo
+   *   crea la cuenta. Ahí no se hace ningún cobro, y el resultado lo dice.
    */
-  const pagar = async () => {
+  const pagar = () => (conSesion ? pagarConBold() : pedirCuenta());
+
+  const pedirCuenta = async () => {
     setError("");
     if (datos.nombre.trim().length < 2) return setError("Escribe tu nombre.");
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(datos.correo.trim())) return setError("Revisa tu correo.");
@@ -219,8 +221,7 @@ export default function Pagar({ config }: { config: Config }) {
     }
   };
 
-  // Cobro real con Bold: se usará cuando se active el pago en línea.
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  // Cobro real con Bold (sesión abierta): la API firma la orden y el plan se activa al aprobarse.
   const pagarConBold = async () => {
 
     setError("");
@@ -233,7 +234,8 @@ export default function Pagar({ config }: { config: Config }) {
       if (!r.ok || !datos?.data) throw new Error(datos?.error || "No pudimos preparar el pago. Inténtalo otra vez.");
       const d = datos.data;
       await cargarBold();
-      const volver = `${location.origin}/pagar`;
+      // Bold solo acepta direcciones https (BTN-001 con http://localhost): en local vuelve a la web pública.
+      const volver = location.protocol === "https:" ? `${location.origin}/pagar` : "https://www.amunpos.com/pagar";
       new window.BoldCheckout!({
         orderId: d.orderId,
         currency: d.moneda || "COP",
@@ -365,6 +367,7 @@ export default function Pagar({ config }: { config: Config }) {
           <button aria-pressed={ciclo === "anual"} onClick={() => setCiclo("anual")}>Anual <em>−{Math.round(DESCUENTO_ANUAL * 100)} %</em></button>
         </div>
         <ul className="pago-incluye rv" style={{ ["--i" as string]: 4 }}>{p.incluye.map((t) => <li key={t}>{t}</li>)}</ul>
+        {conSesion ? null : (<>
         <fieldset className="pago-datos rv" style={{ ["--i" as string]: 5 }}>
           <legend>Tus datos</legend>
           <label><span>Nombre</span><input autoComplete="name" {...campo("nombre")} /></label>
@@ -372,6 +375,8 @@ export default function Pagar({ config }: { config: Config }) {
           <label><span>Correo</span><input type="email" autoComplete="email" inputMode="email" {...campo("correo")} /></label>
           <label><span>WhatsApp</span><input type="tel" autoComplete="tel" inputMode="tel" {...campo("whatsapp")} /></label>
         </fieldset>
+        <p className="pago-letra">¿Ya tienes cuenta? <button type="button" className="pago-enlace" onClick={() => setAuth(true)}>Entra para pagar con Bold</button></p>
+        </>)}
         <button className="pago-boton grande rv" style={{ ["--i" as string]: 5 }} onClick={pagar} disabled={estado === "preparando"} aria-label="Pagar con Bold">
           {estado === "preparando" ? "Enviando…" : <>Pagar con <img className="pago-bold" src="/pagos/medios/bold-dark.svg" alt="" /> <Flecha /></>}
         </button>
@@ -387,7 +392,7 @@ export default function Pagar({ config }: { config: Config }) {
             {TARJETAS.map((t) => <img key={t} src={`/pagos/medios/${t}`} alt="" />)}
           </div>
         </div>
-        <p className="pago-letra rv" style={{ ["--i" as string]: 7 }}>Tus datos solo los usa el equipo de amunpos para activar tu cuenta. amunpos nunca ve ni guarda tu tarjeta.</p>
+        <p className="pago-letra rv" style={{ ["--i" as string]: 7 }}>{conSesion ? "Pagas en la página segura de Bold: amunpos nunca ve ni guarda tu tarjeta." : "Tus datos solo los usa el equipo de amunpos para activar tu cuenta. amunpos nunca ve ni guarda tu tarjeta."}</p>
       </div>
 
       <div className="pago-tique" key={plan + ciclo}>
