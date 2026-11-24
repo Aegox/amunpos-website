@@ -131,3 +131,12 @@
 a.pago-boton{text-decoration:none;color:#fff}
 .pago-enlace{font:inherit;border:0;background:none;padding:0;color:var(--azul);font-weight:700;cursor:pointer;text-decoration:underline}
 .pago-datos .ancho{grid-column:1/-1}
+/* Clave con botón para verla. */
+.pago-clave{position:relative;display:block}
+.pago-clave input{width:100%;padding-right:84px}
+.pago-clave button{position:absolute;right:6px;top:50%;transform:translateY(-50%);font:inherit;font-size:13px;font-weight:700;border:0;border-radius:10px;padding:7px 12px;background:var(--gris);color:var(--tinta);cursor:pointer}
+.pago-clave button:hover{background:var(--azul-suave);color:var(--azul)}
+/* "Continuar con Google" y el separador "o con tu correo". */
+.pago-google{display:flex;flex-direction:column;gap:12px}
+.pago-o{display:flex;align-items:center;gap:12px;margin:0;font-size:12px;font-weight:700;color:var(--suave)}
+.pago-o::before,.pago-o::after{content:"";flex:1;height:1px;background:#D9DCE1}

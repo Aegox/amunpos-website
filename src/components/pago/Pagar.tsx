@@ -1,5 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { AuthModal } from "../auth/AuthModal";
+import { BotonGoogle } from "../auth/BotonGoogle";
+import { GoogleOAuthProvider } from "@react-oauth/google";
 import { sesionAbierta, tokenDeSesion, irAlPos, guardarSesion, type Config, type Usuario } from "../../lib/auth";
 import { precios, DESCUENTO_ANUAL, precioMensual, formatearPrecio } from "../../data/precios";
 
@@ -134,6 +136,9 @@ export default function Pagar({ config }: { config: Config }) {
   const [conSesion, setConSesion] = useState(false);
   const [datos, setDatos] = useState<Datos>({ nombre: "", correo: "", whatsapp: "", negocio: "" });
   const [clave, setClave] = useState("");
+  // El correo repetido evita el error más caro (cuenta con un correo mal escrito) y la clave se puede ver.
+  const [correo2, setCorreo2] = useState("");
+  const [verClave, setVerClave] = useState(false);
   const [solicitud, setSolicitud] = useState<{ id: string; monto: number } | null>(null);
   const campo = (k: keyof Datos) => ({ value: datos[k], onChange: (e: React.ChangeEvent<HTMLInputElement>) => setDatos((d) => ({ ...d, [k]: e.target.value })) });
 
@@ -261,10 +266,18 @@ export default function Pagar({ config }: { config: Config }) {
   const pagarSinCuenta = async () => {
     setError("");
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(datos.correo.trim())) return setError("Revisa tu correo.");
+    if (correo2.trim().toLowerCase() !== datos.correo.trim().toLowerCase()) return setError("Los dos correos no coinciden. Revísalos.");
     if (clave.length < 8) return setError("Tu clave debe tener al menos 8 caracteres.");
+    return prepararPagoNuevo({ correo: datos.correo.trim(), password: clave });
+  };
+
+  /** "Continuar con Google": correo verificado por Google, sin clave; luego el mismo pago con Bold. */
+  const pagarConGoogle = (idToken: string) => { setError(""); return prepararPagoNuevo({ idToken }); };
+
+  const prepararPagoNuevo = async (cuenta: { correo?: string; password?: string; idToken?: string }) => {
     setEstado("preparando");
     try {
-      const { r, datos: res } = await api("/pago-nuevo", { method: "POST", body: JSON.stringify({ correo: datos.correo.trim(), password: clave, plan, ciclo }) });
+      const { r, datos: res } = await api("/pago-nuevo", { method: "POST", body: JSON.stringify({ ...cuenta, plan, ciclo }) });
       if (res?.code === "SIN_PASARELA") throw new Error("Los pagos en línea se activan muy pronto. Mientras tanto escríbenos a hola@amunpos.com y te ayudamos a empezar.");
       if (res?.code === "CUENTA_EXISTE") { setEstado("pagar"); setError(res.error); return setAuth(true); }
       if (!r.ok || !res?.data) throw new Error(res?.error || "No pudimos preparar el pago. Inténtalo otra vez.");
@@ -420,10 +433,25 @@ export default function Pagar({ config }: { config: Config }) {
         </div>
         <ul className="pago-incluye rv" style={{ ["--i" as string]: 4 }}>{p.incluye.map((t) => <li key={t}>{t}</li>)}</ul>
         {conSesion ? null : (<>
+        {config.googleClientId && (
+          <div className="pago-google rv" style={{ ["--i" as string]: 5 }}>
+            <GoogleOAuthProvider clientId={config.googleClientId}>
+              <BotonGoogle texto="Continuar con Google" deshabilitado={estado === "preparando"} onCredencial={pagarConGoogle}
+                onFallo={() => setError("No pudimos conectar con Google. Inténtalo otra vez o usa tu correo.")} />
+            </GoogleOAuthProvider>
+            <p className="pago-o"><span>o con tu correo</span></p>
+          </div>
+        )}
         <fieldset className="pago-datos rv" style={{ ["--i" as string]: 5 }}>
           <legend>Tu cuenta</legend>
           <label><span>Correo</span><input type="email" autoComplete="email" inputMode="email" {...campo("correo")} /></label>
-          <label><span>Clave para entrar (mínimo 8)</span><input type="password" autoComplete="new-password" value={clave} onChange={(e) => setClave(e.target.value)} /></label>
+          <label><span>Repite tu correo</span><input type="email" autoComplete="off" inputMode="email" value={correo2} onChange={(e) => setCorreo2(e.target.value)} onPaste={(e) => e.preventDefault()} /></label>
+          <label className="ancho"><span>Clave para entrar (mínimo 8)</span>
+            <span className="pago-clave">
+              <input type={verClave ? "text" : "password"} autoComplete="new-password" value={clave} onChange={(e) => setClave(e.target.value)} />
+              <button type="button" onClick={() => setVerClave((v) => !v)} aria-label={verClave ? "Ocultar la clave" : "Ver la clave"} aria-pressed={verClave}>{verClave ? "Ocultar" : "Ver"}</button>
+            </span>
+          </label>
         </fieldset>
         <p className="pago-letra">¿Ya tienes cuenta? <button type="button" className="pago-enlace" onClick={() => setAuth(true)}>Entra para pagar con Bold</button></p>
         </>)}
