@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { AuthModal } from "../auth/AuthModal";
-import { sesionAbierta, tokenDeSesion, irAlPos, type Config } from "../../lib/auth";
+import { sesionAbierta, tokenDeSesion, irAlPos, guardarSesion, type Config, type Usuario } from "../../lib/auth";
 import { precios, DESCUENTO_ANUAL, precioMensual, formatearPrecio } from "../../data/precios";
 
 /**
@@ -176,7 +176,7 @@ export default function Pagar({ config }: { config: Config }) {
           if (r.ok && datos?.data) {
             const d = datos.data;
             setResultado({ orderId: d.orderId, plan: d.plan, ciclo: d.ciclo, monto: Number(d.monto), nueva: !!d.correo, correo: d.correo });
-            if (d.estado === "aprobado") return setEstado("aprobado");
+            if (d.estado === "aprobado") { if (alOnboarding(d)) return; return setEstado("aprobado"); }
             if (["rechazado", "fallido", "anulado"].includes(d.estado)) return setEstado("rechazado");
             if (d.estado === "revisar") return setEstado("pendiente");
           } else if (r.status === 404 || r.status === 401) {
@@ -194,10 +194,49 @@ export default function Pagar({ config }: { config: Config }) {
   /**
    * Dos caminos, los dos con Bold (Diego, 2026-11-24):
    * - Con sesión: paga su negocio y el plan se activa solo.
-   * - Sin cuenta: paga con sus datos y una clave; al aprobarse el pago se crea su cuenta.
-   * Si Bold no está configurado en el servidor, el camino sin cuenta deja la solicitud de antes.
+   * - Sin cuenta: paga con correo y clave; al aprobarse se crea su cuenta y pasa al onboarding.
    */
   const pagar = () => (conSesion ? pagarConBold() : pagarSinCuenta());
+
+  /** Cuenta recién creada con su sesión de un solo uso: se guarda y va derecho al onboarding. */
+  const alOnboarding = (d: { sesion?: { token: string; user: Usuario } | null }) => {
+    if (!d?.sesion?.token) return false;
+    guardarSesion(d.sesion);
+    window.location.replace(`${config.app || window.location.origin}/onboarding`);
+    return true;
+  };
+
+  /** Quita la ventana de Bold (modo incrustado) cuando el pago ya se resolvió aquí. */
+  const cerrarBold = () => {
+    // Bold inserta su ventana como <bold-embedded-checkout> (el marco va dentro, en su shadow DOM).
+    document.querySelectorAll("bold-embedded-checkout").forEach((e) => e.remove());
+    document.body.style.overflow = "";
+  };
+
+  // Mientras la ventana de Bold está abierta, se pregunta por el pago: al aprobarse se cierra y
+  // sigue aquí, sin esperar la cuenta regresiva de Bold. Un pago nuevo cancela la vigilancia anterior.
+  const vigilancia = useRef(0);
+  const vigilar = (orderId: string, nueva: boolean) => {
+    const yo = ++vigilancia.current;
+    const ruta = nueva ? `/pago-nuevo/${encodeURIComponent(orderId)}` : `/subscription/pago/${encodeURIComponent(orderId)}`;
+    const fin = Date.now() + 20 * 60_000;
+    const vuelta = async () => {
+      if (yo !== vigilancia.current || Date.now() > fin) return;
+      try {
+        const { r, datos } = await api(ruta);
+        const d = r.ok ? datos?.data : null;
+        if (d?.estado === "aprobado") {
+          vigilancia.current++;
+          cerrarBold();
+          setResultado({ orderId: d.orderId, plan: d.plan, ciclo: d.ciclo, monto: Number(d.monto), nueva, correo: d.correo });
+          if (alOnboarding(d)) return;
+          return setEstado("aprobado");
+        }
+      } catch { /* sin conexión: se reintenta */ }
+      setTimeout(vuelta, 4000);
+    };
+    setTimeout(vuelta, 4000);
+  };
 
   /** Abre el checkout de Bold con la orden que firmó el servidor. */
   const abrirBold = async (d: { orderId: string; moneda?: string; monto: number; llaveIdentidad: string; firmaIntegridad: string; descripcion: string }) => {
@@ -213,53 +252,28 @@ export default function Pagar({ config }: { config: Config }) {
       description: d.descripcion,
       redirectionUrl: volver,
       originUrl: `${volver}?plan=${plan}&ciclo=${ciclo}`,
+      // El formulario de Bold dentro de la página de amunpos, sin ir a la página de Bold.
+      renderMode: "embedded",
     }).open();
   };
 
+  // Solo correo y clave (Diego, 2026-11-24): el nombre del negocio y lo demás lo pide el onboarding.
   const pagarSinCuenta = async () => {
     setError("");
-    if (datos.nombre.trim().length < 2) return setError("Escribe tu nombre.");
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(datos.correo.trim())) return setError("Revisa tu correo.");
-    if (datos.whatsapp.replace(/\D/g, "").length < 7) return setError("Revisa tu WhatsApp.");
-    if (datos.negocio.trim().length < 2) return setError("Escribe el nombre de tu negocio.");
     if (clave.length < 8) return setError("Tu clave debe tener al menos 8 caracteres.");
     setEstado("preparando");
     try {
-      const { r, datos: res } = await api("/pago-nuevo", { method: "POST", body: JSON.stringify({ ...datos, password: clave, plan, ciclo }) });
-      if (res?.code === "SIN_PASARELA") { setEstado("pagar"); return pedirCuenta(); }
+      const { r, datos: res } = await api("/pago-nuevo", { method: "POST", body: JSON.stringify({ correo: datos.correo.trim(), password: clave, plan, ciclo }) });
+      if (res?.code === "SIN_PASARELA") throw new Error("Los pagos en línea se activan muy pronto. Mientras tanto escríbenos a hola@amunpos.com y te ayudamos a empezar.");
       if (res?.code === "CUENTA_EXISTE") { setEstado("pagar"); setError(res.error); return setAuth(true); }
       if (!r.ok || !res?.data) throw new Error(res?.error || "No pudimos preparar el pago. Inténtalo otra vez.");
       await abrirBold(res.data);
+      vigilar(res.data.orderId, true);
       setEstado("pagar");
     } catch (e) {
       setEstado("pagar");
       setError(e instanceof Error ? e.message : "No pudimos preparar el pago. Inténtalo otra vez.");
-    }
-  };
-
-  const pedirCuenta = async () => {
-    setError("");
-    if (datos.nombre.trim().length < 2) return setError("Escribe tu nombre.");
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(datos.correo.trim())) return setError("Revisa tu correo.");
-    if (datos.whatsapp.replace(/\D/g, "").length < 7) return setError("Revisa tu WhatsApp.");
-    if (datos.negocio.trim().length < 2) return setError("Escribe el nombre de tu negocio.");
-    setEstado("preparando");
-    try {
-      const r = await fetch(`${config.api}/solicitud-cuenta`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ ...datos, plan, ciclo }),
-      });
-      let d: any = {};
-      try { d = await r.json(); } catch { /* sin JSON */ }
-      if (!r.ok || !d?.data) throw new Error(d?.error || "No pudimos enviar tus datos. Inténtalo otra vez.");
-      setSolicitud({ id: String(d.data.id || ""), monto: Number(d.data.monto) || cuentas(plan, ciclo).total });
-      // El tique "se imprime" unos segundos antes del resultado, como en el diseño.
-      setEstado("procesando");
-      setTimeout(() => setEstado("revision"), 3200);
-    } catch (e) {
-      setEstado("pagar");
-      setError(e instanceof Error ? e.message : "No pudimos enviar tus datos. Inténtalo otra vez.");
     }
   };
 
@@ -275,6 +289,7 @@ export default function Pagar({ config }: { config: Config }) {
       if (datos?.code === "SIN_PASARELA") throw new Error("Los pagos en línea se activan muy pronto. Mientras tanto escríbenos a hola@amunpos.com y te ayudamos a activar tu plan.");
       if (!r.ok || !datos?.data) throw new Error(datos?.error || "No pudimos preparar el pago. Inténtalo otra vez.");
       await abrirBold(datos.data);
+      vigilar(datos.data.orderId, false);
       setEstado("pagar");
     } catch (e) {
       setEstado("pagar");
@@ -406,12 +421,9 @@ export default function Pagar({ config }: { config: Config }) {
         <ul className="pago-incluye rv" style={{ ["--i" as string]: 4 }}>{p.incluye.map((t) => <li key={t}>{t}</li>)}</ul>
         {conSesion ? null : (<>
         <fieldset className="pago-datos rv" style={{ ["--i" as string]: 5 }}>
-          <legend>Tus datos para crear tu cuenta</legend>
-          <label><span>Nombre</span><input autoComplete="name" {...campo("nombre")} /></label>
-          <label><span>Negocio</span><input autoComplete="organization" {...campo("negocio")} /></label>
+          <legend>Tu cuenta</legend>
           <label><span>Correo</span><input type="email" autoComplete="email" inputMode="email" {...campo("correo")} /></label>
-          <label><span>WhatsApp</span><input type="tel" autoComplete="tel" inputMode="tel" {...campo("whatsapp")} /></label>
-          <label className="ancho"><span>Clave para entrar (mínimo 8)</span><input type="password" autoComplete="new-password" value={clave} onChange={(e) => setClave(e.target.value)} /></label>
+          <label><span>Clave para entrar (mínimo 8)</span><input type="password" autoComplete="new-password" value={clave} onChange={(e) => setClave(e.target.value)} /></label>
         </fieldset>
         <p className="pago-letra">¿Ya tienes cuenta? <button type="button" className="pago-enlace" onClick={() => setAuth(true)}>Entra para pagar con Bold</button></p>
         </>)}
@@ -430,7 +442,7 @@ export default function Pagar({ config }: { config: Config }) {
             {TARJETAS.map((t) => <img key={t} src={`/pagos/medios/${t}`} alt="" />)}
           </div>
         </div>
-        <p className="pago-letra rv" style={{ ["--i" as string]: 7 }}>{conSesion ? "Pagas en la página segura de Bold: amunpos nunca ve ni guarda tu tarjeta." : "Pagas en la página segura de Bold y tu cuenta se crea al aprobarse el pago. amunpos nunca ve ni guarda tu tarjeta."}</p>
+        <p className="pago-letra rv" style={{ ["--i" as string]: 7 }}>{conSesion ? "Pagas con Bold sin salir de amunpos. amunpos nunca ve ni guarda tu tarjeta." : "Pagas con Bold sin salir de amunpos y tu cuenta se crea al aprobarse el pago. amunpos nunca ve ni guarda tu tarjeta."}</p>
       </div>
 
       <div className="pago-tique" key={plan + ciclo}>
