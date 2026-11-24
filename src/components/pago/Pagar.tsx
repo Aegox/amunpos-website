@@ -129,9 +129,11 @@ export default function Pagar({ config }: { config: Config }) {
   const [estado, setEstado] = useState<Estado>("pagar");
   const [error, setError] = useState("");
   const [auth, setAuth] = useState(false);
-  const [resultado, setResultado] = useState<{ orderId: string; plan: Plan; ciclo: Ciclo; monto: number } | null>(null);
+  // `nueva`: el pago de alguien sin cuenta; al aprobarse se creó su cuenta con `correo`.
+  const [resultado, setResultado] = useState<{ orderId: string; plan: Plan; ciclo: Ciclo; monto: number; nueva?: boolean; correo?: string } | null>(null);
   const [conSesion, setConSesion] = useState(false);
   const [datos, setDatos] = useState<Datos>({ nombre: "", correo: "", whatsapp: "", negocio: "" });
+  const [clave, setClave] = useState("");
   const [solicitud, setSolicitud] = useState<{ id: string; monto: number } | null>(null);
   const campo = (k: keyof Datos) => ({ value: datos[k], onChange: (e: React.ChangeEvent<HTMLInputElement>) => setDatos((d) => ({ ...d, [k]: e.target.value })) });
 
@@ -166,12 +168,14 @@ export default function Pagar({ config }: { config: Config }) {
     async (orderId: string, estadoBold: string) => {
       setEstado("procesando");
       const fin = Date.now() + 45_000;
+      // Sin sesión es el pago de alguien sin cuenta: se consulta por la ruta pública.
+      const ruta = sesionAbierta() ? `/subscription/pago/${encodeURIComponent(orderId)}` : `/pago-nuevo/${encodeURIComponent(orderId)}`;
       while (Date.now() < fin) {
         try {
-          const { r, datos } = await api(`/subscription/pago/${encodeURIComponent(orderId)}`);
+          const { r, datos } = await api(ruta);
           if (r.ok && datos?.data) {
             const d = datos.data;
-            setResultado({ orderId: d.orderId, plan: d.plan, ciclo: d.ciclo, monto: Number(d.monto) });
+            setResultado({ orderId: d.orderId, plan: d.plan, ciclo: d.ciclo, monto: Number(d.monto), nueva: !!d.correo, correo: d.correo });
             if (d.estado === "aprobado") return setEstado("aprobado");
             if (["rechazado", "fallido", "anulado"].includes(d.estado)) return setEstado("rechazado");
             if (d.estado === "revisar") return setEstado("pendiente");
@@ -188,12 +192,50 @@ export default function Pagar({ config }: { config: Config }) {
   );
 
   /**
-   * Dos caminos (Diego, 2026-11-24):
-   * - Con sesión (un negocio que el equipo ya creó): paga con Bold y el plan se activa solo.
-   * - Sin cuenta (el registro está cerrado): deja una solicitud (POST /solicitud-cuenta) y el equipo
-   *   crea la cuenta. Ahí no se hace ningún cobro, y el resultado lo dice.
+   * Dos caminos, los dos con Bold (Diego, 2026-11-24):
+   * - Con sesión: paga su negocio y el plan se activa solo.
+   * - Sin cuenta: paga con sus datos y una clave; al aprobarse el pago se crea su cuenta.
+   * Si Bold no está configurado en el servidor, el camino sin cuenta deja la solicitud de antes.
    */
-  const pagar = () => (conSesion ? pagarConBold() : pedirCuenta());
+  const pagar = () => (conSesion ? pagarConBold() : pagarSinCuenta());
+
+  /** Abre el checkout de Bold con la orden que firmó el servidor. */
+  const abrirBold = async (d: { orderId: string; moneda?: string; monto: number; llaveIdentidad: string; firmaIntegridad: string; descripcion: string }) => {
+    await cargarBold();
+    // Bold solo acepta direcciones https (BTN-001 con http://localhost): en local vuelve a la web pública.
+    const volver = location.protocol === "https:" ? `${location.origin}/pagar` : "https://www.amunpos.com/pagar";
+    new window.BoldCheckout!({
+      orderId: d.orderId,
+      currency: d.moneda || "COP",
+      amount: String(d.monto),
+      apiKey: d.llaveIdentidad,
+      integritySignature: d.firmaIntegridad,
+      description: d.descripcion,
+      redirectionUrl: volver,
+      originUrl: `${volver}?plan=${plan}&ciclo=${ciclo}`,
+    }).open();
+  };
+
+  const pagarSinCuenta = async () => {
+    setError("");
+    if (datos.nombre.trim().length < 2) return setError("Escribe tu nombre.");
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(datos.correo.trim())) return setError("Revisa tu correo.");
+    if (datos.whatsapp.replace(/\D/g, "").length < 7) return setError("Revisa tu WhatsApp.");
+    if (datos.negocio.trim().length < 2) return setError("Escribe el nombre de tu negocio.");
+    if (clave.length < 8) return setError("Tu clave debe tener al menos 8 caracteres.");
+    setEstado("preparando");
+    try {
+      const { r, datos: res } = await api("/pago-nuevo", { method: "POST", body: JSON.stringify({ ...datos, password: clave, plan, ciclo }) });
+      if (res?.code === "SIN_PASARELA") { setEstado("pagar"); return pedirCuenta(); }
+      if (res?.code === "CUENTA_EXISTE") { setEstado("pagar"); setError(res.error); return setAuth(true); }
+      if (!r.ok || !res?.data) throw new Error(res?.error || "No pudimos preparar el pago. Inténtalo otra vez.");
+      await abrirBold(res.data);
+      setEstado("pagar");
+    } catch (e) {
+      setEstado("pagar");
+      setError(e instanceof Error ? e.message : "No pudimos preparar el pago. Inténtalo otra vez.");
+    }
+  };
 
   const pedirCuenta = async () => {
     setError("");
@@ -232,20 +274,7 @@ export default function Pagar({ config }: { config: Config }) {
       if (r.status === 401) { setEstado("pagar"); return setAuth(true); }
       if (datos?.code === "SIN_PASARELA") throw new Error("Los pagos en línea se activan muy pronto. Mientras tanto escríbenos a hola@amunpos.com y te ayudamos a activar tu plan.");
       if (!r.ok || !datos?.data) throw new Error(datos?.error || "No pudimos preparar el pago. Inténtalo otra vez.");
-      const d = datos.data;
-      await cargarBold();
-      // Bold solo acepta direcciones https (BTN-001 con http://localhost): en local vuelve a la web pública.
-      const volver = location.protocol === "https:" ? `${location.origin}/pagar` : "https://www.amunpos.com/pagar";
-      new window.BoldCheckout!({
-        orderId: d.orderId,
-        currency: d.moneda || "COP",
-        amount: String(d.monto),
-        apiKey: d.llaveIdentidad,
-        integritySignature: d.firmaIntegridad,
-        description: d.descripcion,
-        redirectionUrl: volver,
-        originUrl: `${volver}?plan=${plan}&ciclo=${ciclo}`,
-      }).open();
+      await abrirBold(datos.data);
       setEstado("pagar");
     } catch (e) {
       setEstado("pagar");
@@ -279,14 +308,22 @@ export default function Pagar({ config }: { config: Config }) {
         <div className="pago-tarjeta">
           <div className="pago-icono ok rv"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><path className="trazo" d="M5 12.5l4.5 4.5L19 7.5" /></svg></div>
           <h2 className="rv" style={{ ["--i" as string]: 1 }}>¡Pago aprobado!</h2>
-          <p className="rv" style={{ ["--i" as string]: 2 }}>Tu plan <b>{pr.nombre}</b> ya está activo. Gracias por confiar en amunpos.</p>
+          <p className="rv" style={{ ["--i" as string]: 2 }}>
+            {resultado.nueva
+              ? <>Tu cuenta de amunpos con el plan <b>{pr.nombre}</b> está lista. Entra con <b>{resultado.correo}</b> y la clave que elegiste.</>
+              : <>Tu plan <b>{pr.nombre}</b> ya está activo. Gracias por confiar en amunpos.</>}
+          </p>
           <div className="pago-filas rv" style={{ ["--i" as string]: 3 }}>
             <div className="fila"><span>Pagaste</span><b>{formatearPrecio(resultado.monto)} COP</b></div>
             <div className="fila"><span>Ciclo</span><b>{resultado.ciclo === "anual" ? "Anual" : "Mensual"}</b></div>
             <div className="fila"><span>Referencia</span><b>{resultado.orderId}</b></div>
           </div>
-          <button className="pago-boton rv" style={{ ["--i" as string]: 4 }} onClick={() => irAlPos(config)}>Ir a mi punto de venta <Flecha /></button>
+          {resultado.nueva && !conSesion
+            ? <button className="pago-boton rv" style={{ ["--i" as string]: 4 }} onClick={() => setAuth(true)}>Entrar a mi cuenta <Flecha /></button>
+            : <button className="pago-boton rv" style={{ ["--i" as string]: 4 }} onClick={() => irAlPos(config)}>Ir a mi punto de venta <Flecha /></button>}
         </div>
+        <AuthModal abierto={auth} pestanaInicial="entrar" onCerrar={() => setAuth(false)} config={config} plan={resultado.plan}
+          alEntrar={() => { setAuth(false); setConSesion(true); irAlPos(config); }} />
       </div>
     );
   }
@@ -369,11 +406,12 @@ export default function Pagar({ config }: { config: Config }) {
         <ul className="pago-incluye rv" style={{ ["--i" as string]: 4 }}>{p.incluye.map((t) => <li key={t}>{t}</li>)}</ul>
         {conSesion ? null : (<>
         <fieldset className="pago-datos rv" style={{ ["--i" as string]: 5 }}>
-          <legend>Tus datos</legend>
+          <legend>Tus datos para crear tu cuenta</legend>
           <label><span>Nombre</span><input autoComplete="name" {...campo("nombre")} /></label>
           <label><span>Negocio</span><input autoComplete="organization" {...campo("negocio")} /></label>
           <label><span>Correo</span><input type="email" autoComplete="email" inputMode="email" {...campo("correo")} /></label>
           <label><span>WhatsApp</span><input type="tel" autoComplete="tel" inputMode="tel" {...campo("whatsapp")} /></label>
+          <label className="ancho"><span>Clave para entrar (mínimo 8)</span><input type="password" autoComplete="new-password" value={clave} onChange={(e) => setClave(e.target.value)} /></label>
         </fieldset>
         <p className="pago-letra">¿Ya tienes cuenta? <button type="button" className="pago-enlace" onClick={() => setAuth(true)}>Entra para pagar con Bold</button></p>
         </>)}
@@ -392,7 +430,7 @@ export default function Pagar({ config }: { config: Config }) {
             {TARJETAS.map((t) => <img key={t} src={`/pagos/medios/${t}`} alt="" />)}
           </div>
         </div>
-        <p className="pago-letra rv" style={{ ["--i" as string]: 7 }}>{conSesion ? "Pagas en la página segura de Bold: amunpos nunca ve ni guarda tu tarjeta." : "Tus datos solo los usa el equipo de amunpos para activar tu cuenta. amunpos nunca ve ni guarda tu tarjeta."}</p>
+        <p className="pago-letra rv" style={{ ["--i" as string]: 7 }}>{conSesion ? "Pagas en la página segura de Bold: amunpos nunca ve ni guarda tu tarjeta." : "Pagas en la página segura de Bold y tu cuenta se crea al aprobarse el pago. amunpos nunca ve ni guarda tu tarjeta."}</p>
       </div>
 
       <div className="pago-tique" key={plan + ciclo}>

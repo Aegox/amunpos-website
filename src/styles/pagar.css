@@ -130,3 +130,4 @@
 @media (max-width:640px){.pago-datos{grid-template-columns:1fr}}
 a.pago-boton{text-decoration:none;color:#fff}
 .pago-enlace{font:inherit;border:0;background:none;padding:0;color:var(--azul);font-weight:700;cursor:pointer;text-decoration:underline}
+.pago-datos .ancho{grid-column:1/-1}
