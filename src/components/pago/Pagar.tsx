@@ -22,6 +22,9 @@ type Plan = "basico" | "estandar" | "profesional";
 type Ciclo = "mensual" | "anual";
 type Estado = "pagar" | "preparando" | "procesando" | "aprobado" | "rechazado" | "pendiente" | "revision";
 
+/** Pantalla chica o táctil: ahí Bold se abre a pantalla completa en vez de incrustado. */
+const enCelular = () => typeof window !== "undefined" && window.matchMedia("(max-width: 759px), (pointer: coarse)").matches;
+
 /** Datos de quien pide la cuenta (pasarela sin cobro en línea, Diego 2026-11-23). */
 type Datos = { nombre: string; correo: string; whatsapp: string; negocio: string };
 
@@ -224,7 +227,7 @@ export default function Pagar({ config }: { config: Config }) {
   const vigilar = (orderId: string, nueva: boolean) => {
     const yo = ++vigilancia.current;
     const ruta = nueva ? `/pago-nuevo/${encodeURIComponent(orderId)}` : `/subscription/pago/${encodeURIComponent(orderId)}`;
-    const fin = Date.now() + 20 * 60_000;
+    const fin = Date.now() + 15 * 60_000;
     const vuelta = async () => {
       if (yo !== vigilancia.current || Date.now() > fin) return;
       try {
@@ -238,9 +241,9 @@ export default function Pagar({ config }: { config: Config }) {
           return setEstado("aprobado");
         }
       } catch { /* sin conexión: se reintenta */ }
-      setTimeout(vuelta, 4000);
+      setTimeout(vuelta, 5000);
     };
-    setTimeout(vuelta, 4000);
+    setTimeout(vuelta, 5000);
   };
 
   /** Abre el checkout de Bold con la orden que firmó el servidor. */
@@ -257,8 +260,10 @@ export default function Pagar({ config }: { config: Config }) {
       description: d.descripcion,
       redirectionUrl: volver,
       originUrl: `${volver}?plan=${plan}&ciclo=${ciclo}`,
-      // El formulario de Bold dentro de la página de amunpos, sin ir a la página de Bold.
-      renderMode: "embedded",
+      // En computador, el formulario de Bold dentro de la página de amunpos. En celular, la página de
+      // Bold a pantalla completa: incrustado, el marco perdía toques cuando la página de atrás se movía
+      // (Diego, 2026-11-24). Al terminar vuelve a /pagar y sigue igual (aprobado u onboarding).
+      ...(enCelular() ? {} : { renderMode: "embedded" }),
     }).open();
   };
 
