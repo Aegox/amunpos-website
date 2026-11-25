@@ -432,6 +432,14 @@ export default function Pagar({ config }: { config: Config }) {
           <button aria-pressed={ciclo === "anual"} onClick={() => setCiclo("anual")}>Anual <em>−{Math.round(DESCUENTO_ANUAL * 100)} %</em></button>
         </div>
         <ul className="pago-incluye rv" style={{ ["--i" as string]: 4 }}>{p.incluye.map((t) => <li key={t}>{t}</li>)}</ul>
+        {/* En celular el tique grande no se ve: este resumen queda justo antes de pagar. */}
+        <div className="pago-resumen-movil" aria-label="Resumen del pago">
+          <div className="fila"><span>Plan {p.nombre}</span><span>{formatearPrecio(c.mensual)}/mes</span></div>
+          <div className="fila"><span>{c.anual ? "12 meses" : "1 mes"}</span><span>{formatearPrecio(c.sinDescuento)}</span></div>
+          {c.anual && <div className="fila desc"><span>Descuento anual {Math.round(DESCUENTO_ANUAL * 100)} %</span><span>−{formatearPrecio(c.ahorro)}</span></div>}
+          <div className="fila"><span>Renueva</span><span>{renovacion(ciclo)}</span></div>
+          <div className="total"><span>TOTAL</span><b>{formatearPrecio(c.total)}</b></div>
+        </div>
         {conSesion ? null : (<>
         {config.googleClientId && (
           <div className="pago-google rv" style={{ ["--i" as string]: 5 }}>

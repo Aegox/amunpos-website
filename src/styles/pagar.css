@@ -17,8 +17,24 @@
 @keyframes pago-entra{from{opacity:0;transform:translateY(22px)}}
 
 /* ---------- Pagar: tique ---------- */
-.pago-b{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:36px;align-items:center}
-@media (max-width:900px){.pago-b{grid-template-columns:minmax(0,1fr);gap:24px}.pago-tique{order:-1}}
+/* Responsive (Diego, 2026-11-24): en tablet y computador dos columnas con el tique fijo al lado;
+   en celular el tique grande se oculta y va un resumen compacto justo antes de pagar. */
+.pago-b{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:36px;align-items:start}
+.pago-b>.pago-tique{position:sticky;top:24px}
+@media (max-width:1000px){.pago-b{grid-template-columns:minmax(0,1.15fr) minmax(0,.85fr);gap:24px}.pago-b>.pago-tique{padding:24px 20px 40px}.pago-b>.pago-tique .grande b{font-size:28px}}
+@media (max-width:759px){.pago-b{grid-template-columns:minmax(0,1fr)}.pago-b>.pago-tique{display:none}}
+.pago-resumen-movil{display:none}
+@media (max-width:759px){
+  .pago-resumen-movil{display:flex;flex-direction:column;gap:8px;background:#fff;border-radius:18px;padding:16px 18px;font-variant-numeric:tabular-nums}
+  .pago-resumen-movil .fila{display:flex;justify-content:space-between;gap:10px;font-family:ui-monospace,Consolas,monospace;font-size:13px;color:var(--sub)}
+  .pago-resumen-movil .fila.desc{color:var(--ok)}
+  .pago-resumen-movil .total{display:flex;justify-content:space-between;align-items:baseline;border-top:2px dashed #DADDE2;padding-top:10px;margin-top:2px}
+  .pago-resumen-movil .total span{font-weight:800}
+  .pago-resumen-movil .total b{font-size:26px;font-weight:800;letter-spacing:-.03em}
+  .pago-medios .destacados{gap:6px}
+  .pago-medios .medio{padding:6px 9px;font-size:12px;gap:5px}
+  .pago-medios .medio img{height:18px}
+}
 .pago-lado{display:flex;flex-direction:column;gap:16px;min-width:0}
 .pago-titulo{margin:0;font-size:42px;font-weight:800;letter-spacing:-.045em;line-height:1.05;text-wrap:balance}
 .pago-bajada{margin:0 0 4px;color:var(--sub);font-size:16px;line-height:1.5}
@@ -140,3 +156,4 @@ a.pago-boton{text-decoration:none;color:#fff}
 .pago-google{display:flex;flex-direction:column;gap:12px}
 .pago-o{display:flex;align-items:center;gap:12px;margin:0;font-size:12px;font-weight:700;color:var(--suave)}
 .pago-o::before,.pago-o::after{content:"";flex:1;height:1px;background:#D9DCE1}
+.pago-datos label{min-width:0}.pago-datos input{width:100%;min-width:0;box-sizing:border-box}
