@@ -139,6 +139,8 @@ export default function Pagar({ config }: { config: Config }) {
   const [conSesion, setConSesion] = useState(false);
   const [datos, setDatos] = useState<Datos>({ nombre: "", correo: "", whatsapp: "", negocio: "" });
   const [clave, setClave] = useState("");
+  const [montado, setMontado] = useState(false);
+  useEffect(() => setMontado(true), []);
   // El correo repetido evita el error más caro (cuenta con un correo mal escrito) y la clave se puede ver.
   const [correo2, setCorreo2] = useState("");
   const [verClave, setVerClave] = useState(false);
@@ -317,7 +319,10 @@ export default function Pagar({ config }: { config: Config }) {
 
   const c = cuentas(plan, ciclo);
   const p = PLANES[plan];
-  const hoy = fechaCorta(new Date());
+  // Las fechas se calculan solo en el navegador: armadas en el servidor (UTC, otro día) no coincidían
+  // con las de Colombia y React daba errores de hidratación (#418/#423/#425) en producción.
+  const hoy = montado ? fechaCorta(new Date()) : "";
+  const renueva = montado ? renovacion(ciclo) : "";
 
   if (estado === "procesando") {
     return (
@@ -442,7 +447,7 @@ export default function Pagar({ config }: { config: Config }) {
           <div className="fila"><span>Plan {p.nombre}</span><span>{formatearPrecio(c.mensual)}/mes</span></div>
           <div className="fila"><span>{c.anual ? "12 meses" : "1 mes"}</span><span>{formatearPrecio(c.sinDescuento)}</span></div>
           {c.anual && <div className="fila desc"><span>Descuento anual {Math.round(DESCUENTO_ANUAL * 100)} %</span><span>−{formatearPrecio(c.ahorro)}</span></div>}
-          <div className="fila"><span>Renueva</span><span>{renovacion(ciclo)}</span></div>
+          <div className="fila"><span>Renueva</span><span>{renueva}</span></div>
           <div className="total"><span>TOTAL</span><b>{formatearPrecio(c.total)}</b></div>
         </div>
         {conSesion ? null : (<>
@@ -492,7 +497,7 @@ export default function Pagar({ config }: { config: Config }) {
           <div><span>Plan {p.nombre}</span><span>{formatearPrecio(c.mensual)}/mes</span></div>
           <div><span>{c.anual ? "12 meses" : "1 mes"}</span><span>{formatearPrecio(c.sinDescuento)}</span></div>
           {c.anual && <div className="desc"><span>Descuento anual {Math.round(DESCUENTO_ANUAL * 100)} %</span><span>−{formatearPrecio(c.ahorro)}</span></div>}
-          <div><span>Renueva</span><span>{renovacion(ciclo)}</span></div>
+          <div><span>Renueva</span><span>{renueva}</span></div>
         </div>
         <div className="sep" />
         <div className="grande"><span>TOTAL</span><b><CifraQueCuenta valor={c.total} /></b></div>
